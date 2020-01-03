@@ -37,7 +37,6 @@ configure:
 		--without-smi \
 		--without-cap-ng \
 		--disable-smb \
-		$(if $(CONFIG_IPV6),--enable-ipv6,--disable-ipv6) \
 		--host=$(HOST_TARGET) \
 		--build=$(HOST_BUILD) ; \
 	)
