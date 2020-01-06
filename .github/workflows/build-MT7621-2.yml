@@ -50,21 +50,25 @@ jobs:
         exit 1
         fi
         cp -f configs/templates/$m.config .config
-        #####################################################################################
-        sed -i '/CONFIG_FIRMWARE_INCLUDE_MENTOHUST/d' .config #É¾³ýÅäÖÃÏîMENTOHUST
-        sed -i '/CONFIG_FIRMWARE_INCLUDE_SOFTETHERVPN_SERVER/d' .config #É¾³ýÅäÖÃÏîSOFTETHERVPN
-        sed -i '/CONFIG_FIRMWARE_INCLUDE_SOFTETHERVPN_CLIENT/d' .config #É¾³ýÅäÖÃÏîSOFTETHERVPN
-        sed -i '/CONFIG_FIRMWARE_INCLUDE_SOFTETHERVPN_CMD/d' .config #É¾³ýÅäÖÃÏîSOFTETHERVPN
-        sed -i '/CONFIG_FIRMWARE_INCLUDE_SCUTCLIENT/d' .config #É¾³ýÅäÖÃÏîSCUTCLIENT
-        sed -i '/CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS/d' .config #É¾³ýÅäÖÃÏîSS plus+
-        sed -i '/CONFIG_FIRMWARE_INCLUDE_SSSERVER/d' .config #É¾³ýÅäÖÃÏîSS server
-        sed -i '/CONFIG_FIRMWARE_INCLUDE_DNSFORWARDER/d' .config #É¾³ýÅäÖÃÏîDNSFORWARDER
-        sed -i '/CONFIG_FIRMWARE_INCLUDE_ADBYBY/d' .config #É¾³ýÅäÖÃÏîadbyby plus+
-        sed -i '/CONFIG_FIRMWARE_INCLUDE_FRPC/d' .config #É¾³ýÅäÖÃÏîadbyby plus+
-        sed -i '/CONFIG_FIRMWARE_INCLUDE_FRPS/d' .config #É¾³ýÅäÖÃÏîadbyby plus+
-        sed -i '/CONFIG_FIRMWARE_INCLUDE_TUNSAFE/d' .config #É¾³ýÅäÖÃÏîadbyby plus+
-        sed -i '/CONFIG_FIRMWARE_INCLUDE_ALIDDNS/d' .config #É¾³ýÅäÖÃÏî°¢ÀïDDNS
+        ################################################################################################
+        #å› ä¸åŒåž‹å·é…ç½®åŠŸèƒ½ä¸ä¸€æ ·ï¼Œæ‰€ä»¥å…ˆæŠŠé…ç½®é¡¹åˆ é™¤ï¼Œå¦‚æžœä½ è‡ªå·±è¦æ·»åŠ å…¶ä»–çš„ï¼Œä¹Ÿè¦å†™ä¸Šåˆ é™¤è¿™ä¸€æ¡ï¼Œåˆ‡è®°ï¼ï¼ï¼
+        ################################################################################################
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_MENTOHUST/d' .config #åˆ é™¤é…ç½®é¡¹MENTOHUST
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_SOFTETHERVPN_SERVER/d' .config #åˆ é™¤é…ç½®é¡¹SOFTETHERVPN
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_SOFTETHERVPN_CLIENT/d' .config #åˆ é™¤é…ç½®é¡¹SOFTETHERVPN
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_SOFTETHERVPN_CMD/d' .config #åˆ é™¤é…ç½®é¡¹SOFTETHERVPN
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_SCUTCLIENT/d' .config #åˆ é™¤é…ç½®é¡¹SCUTCLIENT
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS/d' .config #åˆ é™¤é…ç½®é¡¹SS plus+
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_SSSERVER/d' .config #åˆ é™¤é…ç½®é¡¹SS server
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_DNSFORWARDER/d' .config #åˆ é™¤é…ç½®é¡¹DNSFORWARDER
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_ADBYBY/d' .config #åˆ é™¤é…ç½®é¡¹adbyby plus+
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_FRPC/d' .config #åˆ é™¤é…ç½®é¡¹adbyby plus+
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_FRPS/d' .config #åˆ é™¤é…ç½®é¡¹adbyby plus+
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_TUNSAFE/d' .config #åˆ é™¤é…ç½®é¡¹adbyby plus+
+        sed -i '/CONFIG_FIRMWARE_INCLUDE_ALIDDNS/d' .config #åˆ é™¤é…ç½®é¡¹é˜¿é‡ŒDDNS
         sed -i '/CONFIG_FIRMWARE_INCLUDE_SMARTDNS/d' .config
+        ######################################################################
+        #ä»¥ä¸‹é€‰é¡¹æ˜¯å®šä¹‰ä½ éœ€è¦çš„åŠŸèƒ½ï¼ˆy=é›†æˆ,n=å¿½ç•¥ï¼‰ï¼Œé‡æ–°å†™å…¥åˆ°.configæ–‡ä»¶
         ######################################################################
         echo "CONFIG_FIRMWARE_INCLUDE_MENTOHUST=n" >> .config #MENTOHUST
         echo "CONFIG_FIRMWARE_INCLUDE_SOFTETHERVPN_SERVER=n" >> .config #SOFTETHERVPN
@@ -75,14 +79,19 @@ jobs:
         echo "CONFIG_FIRMWARE_INCLUDE_SSSERVER=n" >> .config #SS server
         echo "CONFIG_FIRMWARE_INCLUDE_DNSFORWARDER=n" >> .config #DNSFORWARDER
         echo "CONFIG_FIRMWARE_INCLUDE_ADBYBY=y" >> .config #adbyby plus+
-        echo "CONFIG_FIRMWARE_INCLUDE_FRPC=n" >> .config #ÄÚÍø´©Í¸FRPC
-        echo "CONFIG_FIRMWARE_INCLUDE_FRPS=n" >> .config #ÄÚÍø´©Í¸FRPS
+        echo "CONFIG_FIRMWARE_INCLUDE_FRPC=n" >> .config #å†…ç½‘ç©¿é€FRPC
+        echo "CONFIG_FIRMWARE_INCLUDE_FRPS=n" >> .config #å†…ç½‘ç©¿é€FRPS
         echo "CONFIG_FIRMWARE_INCLUDE_TUNSAFE=n" >> .config #TUNSAFE
-        echo "CONFIG_FIRMWARE_INCLUDE_ALIDDNS=y" >> .config #°¢ÀïDDNS
+        echo "CONFIG_FIRMWARE_INCLUDE_ALIDDNS=y" >> .config #é˜¿é‡ŒDDNS
         echo "CONFIG_FIRMWARE_INCLUDE_SMARTDNS=y" >> .config
-        echo "CONFIG_FIRMWARE_INCLUDE_SMARTDNSBIN=y" >> .config #smartdns¶þ½øÖÆÎÄ¼þ
-        echo "CONFIG_FIRMWARE_INCLUDE_V2RAY=y" >> .config #v2ray¶þ½øÖÆÎÄ¼þ
-        ####################################################################################
+        echo "CONFIG_FIRMWARE_INCLUDE_SMARTDNSBIN=y" >> .config #smartdnsäºŒè¿›åˆ¶æ–‡ä»¶
+        echo "CONFIG_FIRMWARE_INCLUDE_V2RAY=y" >> .config #v2rayäºŒè¿›åˆ¶æ–‡ä»¶
+        #########################################################################################
+        #è‡ªå®šä¹‰æ·»åŠ å…¶å®ƒåŠŸèƒ½è¯·å‚è€ƒæºç configs/templates/ç›®å½•ä¸‹çš„configæ–‡ä»¶ã€‚æŒ‰ç…§ä¸Šé¢çš„æ ¼å¼æ·»åŠ å³å¯
+        #æ ¼å¼å¦‚ä¸‹ï¼š
+        #sed -i '/è‡ªå®šä¹‰é¡¹/d' .config
+        #echo "è‡ªå®šä¹‰é¡¹=y" >> .config
+        #########################################################################################
         sed -i "s/^CONFIG_TOOLCHAIN_DIR=.*$/CONFIG_TOOLCHAIN_DIR=${CONFIG_TOOLCHAIN_DIR}/g" .config
         sudo ./clear_tree_simple
         sudo ./build_firmware_bkye $m
