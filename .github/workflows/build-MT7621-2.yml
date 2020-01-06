@@ -112,4 +112,5 @@ jobs:
        allowUpdates: true
        name: Padavan-firmware 
        token: ${{ secrets.R_TOKEN }}
-    - Releases
+   
+    - name: Releases
