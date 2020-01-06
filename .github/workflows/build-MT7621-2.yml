@@ -110,5 +110,6 @@ jobs:
        bodyFile: "changelog.md"
        tag: AtuoBuild
        allowUpdates: true
-       name: Padavan-firmware
+       name: Padavan-firmware 
        token: ${{ secrets.R_TOKEN }}
+    - Releases
