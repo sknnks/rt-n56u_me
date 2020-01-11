@@ -1295,6 +1295,16 @@ handle_notifications(void)
 			restart_vlmcsd();
 		}
 #endif
+#if defined(APP_KOOLPROXY)
+		else if (strcmp(entry->d_name, RCN_RESTART_KOOLPROXY) == 0)
+		{
+			restart_koolproxy();
+		}
+		else if (strcmp(entry->d_name, RCN_RESTART_KPUPDATE) == 0)
+		{
+			update_kp();
+		}
+#endif
 #if defined(APP_ADBYBY)
 		else if (strcmp(entry->d_name, RCN_RESTART_ADBYBY) == 0)
 		{
@@ -1309,6 +1319,12 @@ handle_notifications(void)
 		else if (strcmp(entry->d_name, RCN_RESTART_SMARTDNS) == 0)
 		{
 			restart_smartdns();
+		}
+#endif
+#if defined(APP_FRP)
+		else if (strcmp(entry->d_name, RCN_RESTART_FRP) == 0)
+		{
+			restart_frp();
 		}
 #endif
 #if defined(APP_ALIDDNS)
@@ -1654,7 +1670,16 @@ main(int argc, char **argv)
 	}
 
 	if (!strcmp(base, "reboot")) {
-		return sys_exit();
+		int reboot_mode = nvram_get_int("reboot_mode");
+	    if ( reboot_mode == 0)
+	{
+	    return sys_exit();
+	}
+	else if ( reboot_mode == 1)
+	{
+		doSystem("/sbin/mtd_storage.sh %s", "save");
+		system("mtd_write -r unlock mtd1");
+	}
 	}
 
 	if (!strcmp(base, "shutdown") || !strcmp(base, "halt")) {

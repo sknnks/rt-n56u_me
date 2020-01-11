@@ -27,7 +27,8 @@ jobs:
         #sudo apt-get update
         sudo apt-get -y install unzip libtool-bin curl cmake gperf gawk flex bison nano xxd \
         cpio git python-docutils gettext automake autopoint texinfo build-essential help2man \
-        pkg-config zlib1g-dev libgmp3-dev libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev
+        pkg-config zlib1g-dev libgmp3-dev libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev \
+        gcc-multilib
     - name: Clone source code
       run: |
         cd toolchain-mipsel
@@ -37,7 +38,7 @@ jobs:
         mkdir -p /opt/images/
     - name: Build Firmware
       env:
-        TNAME: "PSG1208 PSG1218_nano PSG712 NEWIFI-MINI MI-MINI MI-3 OYE-001"
+        TNAME: "PSG1208 PSG1218 PSG712 NEWIFI-MINI MI-MINI MI-3 OYE-001 YK-L1 JCG-AC836M"
       run: |
         cwd=`pwd`
         CONFIG_TOOLCHAIN_DIR=${cwd//\//\\\/}\\/toolchain-mipsel
@@ -72,13 +73,18 @@ jobs:
         echo "CONFIG_FIRMWARE_INCLUDE_FRPS=n" >> .config #内网穿透FRPS
         echo "CONFIG_FIRMWARE_INCLUDE_TUNSAFE=n" >> .config #TUNSAFE
         echo "CONFIG_FIRMWARE_INCLUDE_ALIDDNS=y" >> .config #阿里DDNS
-        echo "CONFIG_FIRMWARE_INCLUDE_SMARTDNS=y" >> .config
+        echo "CONFIG_FIRMWARE_INCLUDE_SMARTDNS=y" >> .config #smartdns
+        echo "CONFIG_FIRMWARE_INCLUDE_SMARTDNSBIN=y" >> .config #smartdns二进制文件
+        echo "CONFIG_FIRMWARE_INCLUDE_V2RAY=n" >> .config #v2ray二进制文件
+        echo "CONFIG_FIRMWARE_INCLUDE_KOOLPROXY=y" >> .config
         ####################################################################################
-        if [ "$m"="PSG1218_nano" ]; then
+        if [ "$m" = "PSG1208" ] || [ "$m" = "PSG1218" ] || [ "$m" = "PSG712" ]; then
         sed -i '/CONFIG_FIRMWARE_INCLUDE_TTYD/d' .config
         sed -i '/CONFIG_FIRMWARE_INCLUDE_ALIDDNS/d' .config
         echo "CONFIG_FIRMWARE_INCLUDE_TTYD=n" >> .config
         echo "CONFIG_FIRMWARE_INCLUDE_ALIDDNS=n" >> .config
+        echo "CONFIG_FIRMWARE_INCLUDE_SMARTDNSBIN=n" >> .config
+        echo "CONFIG_FIRMWARE_INCLUDE_KOOLPROXY=n" >> .config
         fi
         sed -i "s/^CONFIG_TOOLCHAIN_DIR=.*$/CONFIG_TOOLCHAIN_DIR=${CONFIG_TOOLCHAIN_DIR}/g" .config
         sudo ./clear_tree_simple

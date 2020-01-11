@@ -658,7 +658,7 @@ dump_file(webs_t wp, char *filename)
 	}
 
 	extensions = strrchr(filename, '.');
-	if (extensions && strcmp(extensions, ".key") == 0) {
+	if (!get_login_safe() && extensions && strcmp(extensions, ".key") == 0) {
 		return websWrite(wp, "%s", "# !!!This is hidden write-only secret key file!!!\n");
 	}
 
@@ -2062,6 +2062,26 @@ static int dnsforwarder_status_hook(int eid, webs_t wp, int argc, char **argv)
 }
 #endif
 
+#if defined (APP_KOOLPROXY)
+static int koolproxy_action_hook(int eid, webs_t wp, int argc, char **argv)
+{
+	int needed_seconds = 3;
+	char *kp_action = websGetVar(wp, "connect_action", "");
+	
+	if (!strcmp(kp_action, "resetkp")) {
+		notify_rc(RCN_RESTART_KPUPDATE);
+	}
+	websWrite(wp, "<script>restart_needed_time(%d);</script>\n", needed_seconds);
+	return 0;
+}
+
+static int koolproxy_status_hook(int eid, webs_t wp, int argc, char **argv)
+{
+	int kp_status_code = pids("koolproxy");
+	websWrite(wp, "function koolproxy_status() { return %d;}\n", kp_status_code);
+	return 0;
+}
+#endif
 
 #if defined (APP_ADBYBY)
 static int adbyby_action_hook(int eid, webs_t wp, int argc, char **argv)
@@ -2100,19 +2120,19 @@ static int smartdns_status_hook(int eid, webs_t wp, int argc, char **argv)
 	websWrite(wp, "function smartdns_status() { return %d;}\n", smartdns_status_code);
 	return 0;
 }
-static int smartdns_version_hook(int eid, webs_t wp, int argc, char **argv)
+#endif
+
+#if defined (APP_FRP)
+static int frpc_status_hook(int eid, webs_t wp, int argc, char **argv)
 {
-	FILE *fstream = NULL;
-	char ver[18];
-	memset(ver, 0, sizeof(ver));
-	fstream = popen("/tmp/smartdns -v | awk '{printf $2}'","r");
-	if(fstream) {
-		fgets(ver, sizeof(ver), fstream);
-		pclose(fstream);
-	} else {
-		sprintf(ver, "%s", "unknown");
-	}
-	websWrite(wp, "function smartdns_version() { return '%s';}\n", ver);
+	int frpc_status_code = pids("frpc");
+	websWrite(wp, "function frpc_status() { return %d;}\n", frpc_status_code);
+	return 0;
+}
+static int frps_status_hook(int eid, webs_t wp, int argc, char **argv)
+{
+	int frps_status_code = pids("frps");
+	websWrite(wp, "function frps_status() { return %d;}\n", frps_status_code);
 	return 0;
 }
 #endif
@@ -2301,6 +2321,11 @@ ej_firmware_caps_hook(int eid, webs_t wp, int argc, char **argv)
 #else
 	int found_app_shadowsocks = 0;
 #endif
+#if defined(APP_KOOLPROXY)
+	int found_app_koolproxy = 1;
+#else
+	int found_app_koolproxy = 0;
+#endif
 #if defined(APP_ADBYBY)
 	int found_app_adbyby = 1;
 #else
@@ -2310,6 +2335,11 @@ ej_firmware_caps_hook(int eid, webs_t wp, int argc, char **argv)
 	int found_app_smartdns = 1;
 #else
 	int found_app_smartdns = 0;
+#endif
+#if defined(APP_FRP)
+	int found_app_frp = 1;
+#else
+	int found_app_frp = 0;
 #endif
 #if defined(APP_ALIDDNS)
 	int found_app_aliddns = 1;
@@ -2490,8 +2520,10 @@ ej_firmware_caps_hook(int eid, webs_t wp, int argc, char **argv)
 		"function found_app_napt66() { return %d;}\n"
 		"function found_app_dnsforwarder() { return %d;}\n"
 		"function found_app_shadowsocks() { return %d;}\n"
+		"function found_app_koolproxy() { return %d;}\n"
 		"function found_app_adbyby() { return %d;}\n"
 		"function found_app_smartdns() { return %d;}\n"
+		"function found_app_frp() { return %d;}\n"
 		"function found_app_aliddns() { return %d;}\n"
 		"function found_app_xupnpd() { return %d;}\n"
 		"function found_app_mentohust() { return %d;}\n",
@@ -2515,8 +2547,10 @@ ej_firmware_caps_hook(int eid, webs_t wp, int argc, char **argv)
 		found_app_napt66,
 		found_app_dnsforwarder,
 		found_app_shadowsocks,
+		found_app_koolproxy,
 		found_app_adbyby,
 		found_app_smartdns,
+		found_app_frp,
 		found_app_aliddns,
 		found_app_xupnpd,
 		found_app_mentohust
@@ -3275,7 +3309,16 @@ apply_cgi(const char *url, webs_t wp)
 	}
 	else if (!strcmp(value, " Reboot "))
 	{
-		sys_reboot();
+	    int reboot_mode = nvram_get_int("reboot_mode");
+	    if ( reboot_mode == 0)
+	{
+	    sys_reboot();
+	}
+	else if ( reboot_mode == 1)
+	{
+		doSystem("/sbin/mtd_storage.sh %s", "save");
+		system("mtd_write -r unlock mtd1");
+	}
 		return 0;
 	}
 	else if (!strcmp(value, " Shutdown "))
@@ -4224,6 +4267,10 @@ struct ej_handler ej_handlers[] =
 	{ "rules_count", rules_count_hook},
 	{ "pdnsd_status", pdnsd_status_hook},
 #endif
+#if defined (APP_KOOLPROXY)
+	{ "koolproxy_action", koolproxy_action_hook},
+	{ "koolproxy_status", koolproxy_status_hook},
+#endif
 #if defined(APP_DNSFORWARDER)
 	{ "dnsforwarder_status", dnsforwarder_status_hook},
 #endif
@@ -4233,7 +4280,10 @@ struct ej_handler ej_handlers[] =
 #endif
 #if defined (APP_SMARTDNS)
 	{ "smartdns_status", smartdns_status_hook},
-	{ "smartdns_version", smartdns_version_hook},
+#endif
+#if defined (APP_FRP)
+	{ "frpc_status", frpc_status_hook},
+	{ "frps_status", frps_status_hook},
 #endif
 	{ "openssl_util_hook", openssl_util_hook},
 	{ "openvpn_srv_cert_hook", openvpn_srv_cert_hook},

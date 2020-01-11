@@ -131,7 +131,9 @@ dir_y						+= xl2tpd
 dir_$(CONFIG_FIRMWARE_INCLUDE_RPL2TP)		+= rp-l2tp
 dir_y						+= lldt
 dir_y						+= scripts
+dir_$(CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS)      	+= jq
 dir_$(CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS)	        += pdnsd
+dir_$(CONFIG_FIRMWARE_INCLUDE_V2RAY)	        += v2ray
 dir_$(OPENSSH_ENABLED)				+= openssh
 dir_$(DROPBEAR_ENABLED)				+= dropbear
 dir_$(CONFIG_FIRMWARE_INCLUDE_HTOP)		+= htop
@@ -180,7 +182,6 @@ dir_$(CONFIG_FIRMWARE_INCLUDE_LPRD)		+= LPRng
 dir_$(CONFIG_FIRMWARE_INCLUDE_U2EC)		+= u2ec
 dir_$(CONFIG_FIRMWARE_INCLUDE_DUMP1090)	+= dump1090
 endif
-
 ifeq ($(STORAGE_ENABLED),y)
 dir_$(CONFIG_FIRMWARE_INCLUDE_NFSD)		+= nfs-utils
 ifneq (,$(filter y,$(CONFIG_FIRMWARE_INCLUDE_NFSD) $(CONFIG_FIRMWARE_INCLUDE_NFSC)))
@@ -199,6 +200,7 @@ dir_$(CONFIG_FIRMWARE_INCLUDE_TRANSMISSION)	+= transmission
 dir_$(ARIA2_ENABLED)		+= aria2
 endif
 
+dir_$(CONFIG_FIRMWARE_INCLUDE_KOOLPROXY)		+= koolproxy
 dir_$(CONFIG_FIRMWARE_INCLUDE_ADBYBY)		+= adbyby
 dir_$(CONFIG_FIRMWARE_INCLUDE_ALIDDNS)		+= aliddns
 ifdef CONFIG_MTD_UBI

@@ -1,10 +1,10 @@
-##2019.12.26##
-* 按照目前收到的反馈，继续修复、修改SSP+
-* 新增了SSP+内网控制
-* 此次更新建议重置下(/etc/storage)
-* PS:因为此固件只有我自己修改和测试，所以难免会有一些问题没有遇到，请多多反馈给我。
+##2020.01.11##
+* 增加koolproxy
+* 修复ssp+故障切换问题
+* 修复frp重启无效问题，加了守护
+* 修复用mtd_write -r unlock mtd1重启方式,脚本无法保存的问题。
+* 修改控制台reboot命令逻辑，选择mtd_write -r unlock mtd1重启方式后，输入reboot也是用这种方式重启,方便定时重启的人使用
+* 可能还会继续有更多.........请看源码的commit
 
-##2019.12.23##
-* 1.同步最新源码
-* 2.适配PSG712
-* 3.修复adbyby自定义规则无法下载的问题
+##往期更新日志##
+*https://github.com/chongshengB/rt-n56u/blob/master/changelog-old.md

@@ -547,6 +547,12 @@ void restart_vlmcsd(void);
 #if defined(APP_NAPT66)
 void start_napt66(void);
 #endif
+#if defined(APP_KOOLPROXY)
+void stop_koolproxy(void);
+void start_koolproxy(void);
+void restart_koolproxy(void);
+void update_kp(void);
+#endif
 #if defined(APP_ADBYBY)
 void stop_adbyby(void);
 void start_adbyby(void);
@@ -557,6 +563,11 @@ void update_adb(void);
 void stop_aliddns(void);
 void start_aliddns(void);
 void restart_aliddns(void);
+#endif
+#if defined(APP_FRP)
+void stop_frp(void);
+void start_frp(void);
+void restart_frp(void);
 #endif
 #if defined(APP_DNSFORWARDER)
 void stop_dnsforwarder(void);

@@ -30,6 +30,11 @@ run_mode=`nvram get ss_run_mode`
 ss_turn=`nvram get ss_turn`
 ss_udp=`nvram get ss_udp`
 lan_con=`nvram get lan_con`
+ss_own=`nvram get ss_own`
+socks=""
+if [ $ss_own = "1" ]; then
+socks="-o"
+fi
 gen_config_file() {
 hostip=`nvram get ssp_server_x$1`
 if [ $2 = "0" ] ;then
@@ -73,6 +78,8 @@ cat <<-EOF >$config_file
 EOF
 elif [ "$stype" == "v2ray" ] ;then
 v2_file=$v2_json_file
+v2_bin="/usr/bin/v2ray"
+if [ ! -f "$v2_bin" ]; then
 curl -k -s -o /tmp/v2ray --connect-timeout 10 --retry 3 https://dev.tencent.com/u/dtid_39de1afb676d0d78/p/kp/git/raw/master/v2ray
 if [ ! -f "/tmp/v2ray" ]; then
 logger -t "SS" "v2ray二进制文件下载失败，可能是地址失效或者网络异常！"
@@ -81,14 +88,17 @@ ssp_close
 else
 logger -t "SS" "v2ray二进制文件下载成功"
 chmod -R 777 /tmp/v2ray
-v2ray_enable=1
+v2_bin="/tmp/v2ray"
 fi
+fi
+v2ray_enable=1
 #创建v2ray json文件的代码用的是hiboyhiboy的,特此感谢
 vmess_link_add=$hostip
 vmess_link_port=$(nvram get ssp_prot_x$1)
 vmess_link_id=$(nvram get v2_vid_x$1)
 vmess_link_aid=$(nvram get v2_aid_x$1)
 vmess_link_net=$(nvram get v2_net_x$1)
+vmess_link_security=$(nvram get v2_security_x$1)
 if [ $(nvram get v2_tls_x$1) = "1" ];then
 vmess_link_tls="tls"
 else
@@ -98,6 +108,7 @@ mk_vmess=$(json_int_vmess_settings)
 mk_vmess=$(echo $mk_vmess | jq --raw-output 'setpath(["vnext",0,"address"];"'$vmess_link_add'")')
 mk_vmess=$(echo $mk_vmess | jq --raw-output 'setpath(["vnext",0,"users",0,"alterId"];'$vmess_link_aid')')
 mk_vmess=$(echo $mk_vmess | jq --raw-output 'setpath(["vnext",0,"users",0,"id"];"'$vmess_link_id'")')
+mk_vmess=$(echo $mk_vmess | jq --raw-output 'setpath(["vnext",0,"users",0,"security"];"'$vmess_link_security'")')
 mk_vmess=$(echo $mk_vmess | jq --raw-output 'setpath(["vnext",0,"port"];'$vmess_link_port')')
 vmess_settings=$mk_vmess
 mk_vmess=$(json_int_vmess_streamSettings)
@@ -143,9 +154,9 @@ mk_vmess=$(json_int)
 mk_vmess=$(echo $mk_vmess| jq --raw-output 'setpath(["outbounds",0,"settings"];'"$vmess_settings"')')
 mk_vmess=$(echo $mk_vmess| jq --raw-output 'setpath(["outbounds",0,"streamSettings"];'"$vmess_streamSettings"')')
 mk_vmess=$(echo $mk_vmess| jq --raw-output 'setpath(["outbounds",0,"protocol"];"vmess")')
-if [ $ss_udp = "1" ];then
-mk_vmess=$(echo $mk_vmess| jq --raw-output 'setpath(["inbounds",0,"settings","udp"];'true')')
-fi
+#if [ $ss_udp = "1" ];then
+#mk_vmess=$(echo $mk_vmess| jq --raw-output 'setpath(["inbounds",0,"settings","udp"];'true')')
+#fi
 echo $mk_vmess| jq --raw-output '.' > $v2_file
 #创建json文件结束
 fi
@@ -284,7 +295,7 @@ sscmd="ss-redir"
 elif [ "$stype" == "ssr" ] ;then
 sscmd="ssr-redir"
 elif [ "$stype" == "v2ray" ] ;then
-sscmd="/tmp/v2ray"
+sscmd="$v2_bin"
 fi
 #if [ "$(nvram get ss_threads)" = "0" ] ;then
 #  threads=$(cat /proc/cpuinfo | grep 'processor' | wc -l)
@@ -549,8 +560,7 @@ echo '{
   "settings": {
 	"network": "tcp,udp",
 	"timeout": 30,
-	"followRedirect": true,
-	"udp": false
+	"followRedirect": true
   },
   "sniffing": {
 	"enabled": true,

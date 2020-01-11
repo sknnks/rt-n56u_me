@@ -8,9 +8,16 @@
 >- [Adbyby plus+](https://github.com/coolsnowwolf/lede) ```CONFIG_FIRMWARE_INCLUDE_ADBYBY```
 >- [Aliddns] ```CONFIG_FIRMWARE_INCLUDE_ALIDDNS```
 >- [SS plus+](https://github.com/coolsnowwolf/lede) ```CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS```
+>- [jq](https://github.com/stedolan/jq) 如jq编译出现错误，请执行sudo apt-get install gcc-multilib 
 >- [SmartDNS](https://github.com/pymumu/smartdns) ```CONFIG_FIRMWARE_INCLUDE_SMARTDNS```
 
-### 新增以下型号 ###
+### 新增适配以下型号 ###
+>- 歌华链(感谢群里Heaven适配与测试）
+>- NEWIFI-D1
+>- B70(感谢Untitled提供荒野无灯的适配文件)
+>- JCG-AC856M(感谢群里的旅途中的我适配和测试,gpio值还未完全适配，但不影响使用)
+>- JCG-AC836M(感谢群里的碧霄客修改和测试)
+>- YK-L1(L1、L1C、L1W通刷)
 >- PSG712
 
 ***
@@ -95,7 +102,7 @@
 sudo apt update
 sudo apt install unzip libtool-bin curl cmake gperf gawk flex bison nano xxd \
 cpio git python-docutils gettext automake autopoint texinfo build-essential help2man \
-pkg-config zlib1g-dev libgmp3-dev libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev
+pkg-config zlib1g-dev libgmp3-dev libmpc-dev libmpfr-dev libncurses5-dev libltdl-dev gcc-multilib
 ```
 * 克隆源码
 ```shell

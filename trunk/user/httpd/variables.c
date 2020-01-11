@@ -83,6 +83,14 @@
 			{"dhcp_staticname_x", "24", NULL, FALSE},
 			{0,0,0,0}
 		};
+		
+	struct variable variables_KoolproxyConf_KpIPList[] = {
+			{"koolproxy_mac_x", "14", NULL, FALSE},
+			{"koolproxy_ip_x", "17", NULL, FALSE},
+			{"koolproxy_name_x", "24", NULL, FALSE},
+			{"koolproxy_ip_road", "24", NULL, FALSE},
+			{0,0,0,0}
+		};
 	
 	struct variable variables_AdbybyConf_AdIPList[] = {
 			{"adbybyip_mac_x", "14", NULL, FALSE},
@@ -141,6 +149,7 @@
 			{"sdnss_ip_x", "24", NULL, FALSE},
 			{"sdnss_port_x", "24", NULL, FALSE},
 			{"sdnss_type_x", "24", NULL, FALSE},
+			{"sdnss_ipc_x", "24", NULL, FALSE},
 			{0,0,0,0}
 		};
 		
@@ -253,6 +262,7 @@
 			{"lprd_enable", "", NULL, EVM_RESTART_SPOOLER},
 			{"rawd_enable", "", NULL, EVM_RESTART_SPOOLER},
 			{"help_enable", "", NULL, FALSE},
+			{"reboot_mode", "", NULL, FALSE},
 			{"scripts.start_script.sh", "File", NULL, EVM_BLOCK_UNSAFE},
 			{"scripts.started_script.sh", "File", NULL, EVM_BLOCK_UNSAFE},
 			{"scripts.shutdown_script.sh", "File", NULL, EVM_BLOCK_UNSAFE},
@@ -903,6 +913,15 @@
 	};
 #endif
 
+#if defined(APP_FRP)
+	struct variable variables_FrpConf[] = {
+			{"frpc_enable", "", NULL, EVM_RESTART_FRP},
+			{"frps_enable", "", NULL, EVM_RESTART_FRP},
+			{"scripts.frp_script.sh", "File", NULL, EVM_RESTART_FRP},
+			{0,0,0,0}
+	};
+#endif
+
 #if defined(APP_SHADOWSOCKS)
 	struct variable variables_ShadowsocksConf[] = {
 			{"ss_enable","",NULL, EVM_RESTART_SHADOWSOCKS},
@@ -920,6 +939,7 @@
 			{"ss_key","",NULL, EVM_RESTART_SHADOWSOCKS|EVM_RESTART_SS_TUNNEL},
 			{"ss_method","",NULL, EVM_RESTART_SHADOWSOCKS|EVM_RESTART_SS_TUNNEL},
 			{"ss_udp","",NULL, EVM_RESTART_SHADOWSOCKS},
+			{"ss_own","",NULL, EVM_RESTART_SHADOWSOCKS},
 			{"ss_local_port","",NULL, EVM_RESTART_SHADOWSOCKS},
 			{"ss_mtu","",NULL, EVM_RESTART_SHADOWSOCKS},
 			{"ss_router_proxy","",NULL, EVM_RESTART_SHADOWSOCKS},
@@ -948,6 +968,31 @@
 			{"scripts.ss_lan_bip.sh", "File", NULL, EVM_RESTART_SHADOWSOCKS},
 			{"scripts.ss_wan_ip.sh", "File", NULL, EVM_RESTART_SHADOWSOCKS},
 			{"SspList", "Group", ARGV((char*)variables_SspConf_SspList, "8", "55", "ssp_staticnum_x"), EVM_RESTART_SHADOWSOCKS},
+			{0,0,0,0}
+	};
+#endif
+
+#if defined(APP_KOOLPROXY)
+    struct variable variables_KoolproxyConf[] = {
+			{"koolproxy_enable", "", NULL, EVM_RESTART_KOOLPROXY},
+			{"hosts_ad", "", NULL, EVM_RESTART_KOOLPROXY},
+			{"tv_hosts", "", NULL, EVM_RESTART_KOOLPROXY},
+			{"koolproxy_set", "", NULL, EVM_RESTART_KOOLPROXY},
+			{"koolproxy_cpu", "", NULL, EVM_RESTART_KOOLPROXY},
+			{"koolproxy_https", "", NULL, EVM_RESTART_KOOLPROXY},
+			{"koolproxy_video", "", NULL, EVM_RESTART_KOOLPROXY},
+			{"koolproxy_prot", "", NULL, EVM_RESTART_KOOLPROXY},
+			{"koolproxy_update", "", NULL, EVM_RESTART_KOOLPROXY},
+			{"kp_staticnum_x", "", NULL, EVM_RESTART_KOOLPROXY},
+			{"rules_list", "", NULL, EVM_RESTART_KOOLPROXY},
+			{"koolproxy_txt_2", "", NULL, EVM_RESTART_KOOLPROXY},
+			{"daily_txt_2", "", NULL, EVM_RESTART_KOOLPROXY},
+			{"kp_dat_2", "", NULL, EVM_RESTART_KOOLPROXY},
+			{"ss_DNS_Redirect_IP", "", NULL, EVM_RESTART_KOOLPROXY},
+			{"scripts.koolproxy_rules_list.sh", "File", NULL, EVM_RESTART_KOOLPROXY},
+			{"scripts.koolproxy_rules_script.sh", "File", NULL, EVM_RESTART_KOOLPROXY},
+			{"scripts.ad_config_script.sh", "File", NULL, EVM_RESTART_KOOLPROXY},
+			{"KpIPList", "Group", ARGV((char*)variables_KoolproxyConf_KpIPList, "8", "55", "kp_staticnum_x"), EVM_RESTART_KOOLPROXY},
 			{0,0,0,0}
 	};
 #endif
@@ -1005,8 +1050,11 @@
 			{"sdnse_as", "", NULL, EVM_RESTART_SMARTDNS},
 			{"sdnse_ipc", "", NULL, EVM_RESTART_SMARTDNS},
 			{"sdnse_cache", "", NULL, EVM_RESTART_SMARTDNS},
+			{"ss_white", "", NULL, EVM_RESTART_SMARTDNS},
+			{"ss_black", "", NULL, EVM_RESTART_SMARTDNS},
 			{"scripts.smartdns_address.conf", "File", NULL, EVM_RESTART_SMARTDNS},
 			{"scripts.smartdns_blacklist-ip.conf", "File", NULL, EVM_RESTART_SMARTDNS},
+			{"scripts.smartdns_whitelist-ip.conf", "File", NULL, EVM_RESTART_SMARTDNS},
 			{"scripts.smartdns_custom.conf", "File", NULL, EVM_RESTART_SMARTDNS},
 			{"SdnsList", "Group", ARGV((char*)variables_SmartdnsConf_SdnsList, "8", "55", "sdnss_staticnum_x"), EVM_RESTART_SMARTDNS},
 	};
@@ -1139,6 +1187,9 @@
 #if defined(APP_DNSFORWARDER)
 		{"dnsforwarderConf",		variables_dnsforwarderConf},
 #endif
+#if defined(APP_FRP)
+		{"FrpConf",		variables_FrpConf},
+#endif
 #if defined(APP_SCUT)
 		{"ScutclientConf",		variables_ScutclientConf},
 #endif
@@ -1147,6 +1198,9 @@
 #endif
 #if defined(APP_SHADOWSOCKS)
 		{"ShadowsocksConf",		variables_ShadowsocksConf},
+#endif
+#if defined(APP_KOOLPROXY)
+		{"KoolproxyConf",		variables_KoolproxyConf},
 #endif
 #if defined(APP_ADBYBY)
 		{"AdbybyConf",		variables_AdbybyConf},
@@ -1234,9 +1288,15 @@
 #if defined(APP_DNSFORWARDER)
 		{EVM_RESTART_DNSFORWARDER,	EVT_RESTART_DNSFORWARDER,	RCN_RESTART_DNSFORWARDER, 0},
 #endif
+#if defined(APP_FRP)
+		{EVM_RESTART_FRP,	EVT_RESTART_FRP,	RCN_RESTART_FRP, 0},
+#endif
 #if defined(APP_SHADOWSOCKS)
 		{EVM_RESTART_SHADOWSOCKS,	EVT_RESTART_SHADOWSOCKS,	RCN_RESTART_SHADOWSOCKS,  0},
 		{EVM_RESTART_SS_TUNNEL,		EVT_RESTART_SS_TUNNEL,		RCN_RESTART_SS_TUNNEL,	  0},
+#endif
+#if defined(APP_KOOLPROXY)
+		{EVM_RESTART_KOOLPROXY,		EVT_RESTART_KOOLPROXY,		RCN_RESTART_KOOLPROXY,	0},
 #endif
 #if defined(APP_ADBYBY)
 		{EVM_RESTART_ADBYBY,		EVT_RESTART_ADBYBY,		RCN_RESTART_ADBYBY,	0},
