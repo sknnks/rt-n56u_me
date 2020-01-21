@@ -3,13 +3,13 @@ name: Build k2p5.0-v2-frpc
 on: 
   release:
     types: [published]
-#  push:
-#    tags:
-#    - 'v*'
-  #  branches: 
-  #    - master
-  schedule:
-    - cron: 0 17 * * 4
+  push:
+    tags:
+    - 'v*'
+    branches: 
+      - master
+  #schedule:
+  #  - cron: 0 17 * * 4
 #  watch:
    # types: [started]
 
