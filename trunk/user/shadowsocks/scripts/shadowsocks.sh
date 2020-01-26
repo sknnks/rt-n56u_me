@@ -110,7 +110,7 @@ cat <<-EOF >$trojan_json_file
     "password": [
         "$(nvram get ss_key_x$1)"
     ],
-    "log_level": 1,
+    "log_level": 99,
     "ssl": {
         "verify": false,
         "verify_hostname": $tj_link_tls,
