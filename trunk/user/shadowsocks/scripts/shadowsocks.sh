@@ -85,7 +85,7 @@ EOF
 elif [ "$stype" == "trojan" ] ;then
 tj_bin="/usr/bin/trojan"
 if [ ! -f "$tj_bin" ]; then
-curl -k -s -o /tmp/trojan --connect-timeout 10 --retry 3 https://dev.tencent.com/u/dtid_39de1afb676d0d78/p/kp/git/raw/master/trojan
+curl -k -s -o /tmp/trojan --connect-timeout 20 --retry 3 https://dev.tencent.com/u/dtid_39de1afb676d0d78/p/kp/git/raw/master/trojan
 if [ ! -f "/tmp/trojan" ]; then
 logger -t "SS" "trojan二进制文件下载失败，可能是地址失效或者网络异常！"
 nvram set ss_enable=0
@@ -141,7 +141,7 @@ elif [ "$stype" == "v2ray" ] ;then
 v2_file=$v2_json_file
 v2_bin="/usr/bin/v2ray"
 if [ ! -f "$v2_bin" ]; then
-curl -k -s -o /tmp/v2ray --connect-timeout 10 --retry 3 https://dev.tencent.com/u/dtid_39de1afb676d0d78/p/kp/git/raw/master/v2ray
+curl -k -s -o /tmp/v2ray --connect-timeout 20 --retry 3 https://dev.tencent.com/u/dtid_39de1afb676d0d78/p/kp/git/raw/master/v2ray
 if [ ! -f "/tmp/v2ray" ]; then
 logger -t "SS" "v2ray二进制文件下载失败，可能是地址失效或者网络异常！"
 nvram set ss_enable=0
@@ -266,7 +266,7 @@ start_rules() {
 	elif [ "$run_mode" = "all" ]; then
 		gfwmode="-z"
 	fi
-
+########全局模式只有在指定IP走代理时正常，需要修复
 	if [ "$lan_con" = "0" ];then
 		rm -f $lan_fp_ips
 		lancon="all"
@@ -278,7 +278,7 @@ start_rules() {
 		lancons="指定IP走代理,请到规则管理页面添加需要走代理的IP。"
 		cat /etc/storage/ss_lan_bip.sh | grep -v '^!' | grep -v "^$" > $lan_fp_ips
 	fi
-
+########全局模式只有在指定IP走代理时正常，需要修复
 	/usr/bin/ss-rules \
 		-s "$server" \
 		-l "$local_port" \
