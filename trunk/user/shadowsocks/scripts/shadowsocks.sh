@@ -241,7 +241,7 @@ start_rules() {
 			server=`cat /etc/storage/ssr_ip`
 		fi
 	fi
-	
+
 	local_port=$(nvram get ssp_local_port_x$1)
 	lan_ac_ips=$lan_ac_ips
 	lan_ac_mode="b"
@@ -254,7 +254,7 @@ start_rules() {
 			w|W|b|B) ac_ips="$lan_ac_mode$lan_ac_ips";;
 		esac
 	fi
-	
+
 	#ac_ips="b"
 	gfwmode="" 
 	if [ "$run_mode" = "gfw" ]; then
@@ -266,7 +266,7 @@ start_rules() {
 	elif [ "$run_mode" = "all" ]; then
 		gfwmode="-z"
 	fi
-	
+
 	if [ "$lan_con" = "0" ];then
 		rm -f $lan_fp_ips
 		lancon="all"
@@ -378,11 +378,11 @@ start_redir() {
 		last_config_file=$CONFIG_FILE
 		pid_file="/tmp/ssr-retcp.pid"
 		for i in $(seq 1 $threads)  
-	do 
-		$sscmd -c $CONFIG_FILE $ARG_OTA -f /tmp/ssr-retcp_$i.pid >/dev/null 2>&1
-	done
-	redir_tcp=1
-	echo "$(date "+%Y-%m-%d %H:%M:%S") Shadowsocks/ShadowsocksR $threads 线程启动成功!" >> /tmp/ssrplus.log 
+		do 
+			$sscmd -c $CONFIG_FILE $ARG_OTA -f /tmp/ssr-retcp_$i.pid >/dev/null 2>&1
+		done
+		redir_tcp=1
+		echo "$(date "+%Y-%m-%d %H:%M:%S") Shadowsocks/ShadowsocksR $threads 线程启动成功!" >> /tmp/ssrplus.log 
 	elif [ "$stype" == "trojan" ] ;then
 		$sscmd --config $trojan_json_file >> /tmp/ssrplus.log 2>&1 &
 		echo "$(date "+%Y-%m-%d %H:%M:%S") $($sscmd --version 2>&1 | head -1) Started!" >> /tmp/ssrplus.log 
@@ -390,8 +390,9 @@ start_redir() {
 		$sscmd -config $v2_json_file >/dev/null 2>&1 &
 		echo "$(date "+%Y-%m-%d %H:%M:%S") $($sscmd -version | head -1) 启动成功!" >> /tmp/ssrplus.log
 	fi
-	backup_server=`nvram get backup_server`
-	if [ $backup_server != "nil" ] ;then
+
+	BACKUP_SERVER=`nvram get backup_server`
+	if [ $BACKUP_SERVER != "nil" ] ;then
 		switch_time=$(nvram get ss_turn_s)
 		switch_timeout=$(nvram get ss_turn_ss)
 		/usr/bin/ssr-switch start $switch_time $switch_timeout &
@@ -415,24 +416,24 @@ start_dns()
 		rm -rf /etc/storage/gfwlist
 		mkdir -p /etc/storage/gfwlist/
 		cat /etc/storage/ss_dom.sh | grep -v '^!' | grep -v "^$" > /tmp/ss_dom.txt
-	if [ $(nvram get pdnsd_enable) = 0 ]; then
-		dnsstr="$(nvram get tunnel_forward)"
-		dnsserver=`echo "$dnsstr"|awk -F ':'  '{print $1}'`
-		dnsport=`echo "$dnsstr"|awk -F ':'  '{print $2}'`
-		start_pdnsd $dnsserver $dnsport	
-		pdnsd_enable_flag=1
-		awk '{printf("server=/%s/127.0.0.1#5353\nipset=/%s/gfwlist\n", $1, $1 )}' /etc_ro/gfwlist_list.conf > /etc/storage/gfwlist/gfwlist_list.conf
-		awk '{printf("server=/%s/127.0.0.1#5353\nipset=/%s/gfwlist\n", $1, $1 )}' /tmp/ss_dom.txt > /etc/storage/gfwlist/m.gfwlist.conf
-	else
-		awk '{printf("ipset=/%s/gfwlist\n", $1, $1 )}' /etc_ro/gfwlist_list.conf > /etc/storage/gfwlist/gfwlist_list.conf
-		awk '{printf("ipset=/%s/gfwlist\n", $1, $1 )}' /tmp/ss_dom.txt > /etc/storage/gfwlist/m.gfwlist.conf
-	fi
-	rm -f /tmp/ss_dom.txt
-        sed -i '/gfwlist/d' /etc/storage/dnsmasq/dnsmasq.conf
-        sed -i '/dnsmasq.oversea/d' /etc/storage/dnsmasq/dnsmasq.conf
-	cat >> /etc/storage/dnsmasq/dnsmasq.conf <<-EOF
-		conf-dir=/etc/storage/gfwlist/
-	EOF
+		if [ $(nvram get pdnsd_enable) = 0 ]; then
+			dnsstr="$(nvram get tunnel_forward)"
+			dnsserver=`echo "$dnsstr"|awk -F ':'  '{print $1}'`
+			dnsport=`echo "$dnsstr"|awk -F ':'  '{print $2}'`
+			start_pdnsd $dnsserver $dnsport	
+			pdnsd_enable_flag=1
+			awk '{printf("server=/%s/127.0.0.1#5353\nipset=/%s/gfwlist\n", $1, $1 )}' /etc_ro/gfwlist_list.conf > /etc/storage/gfwlist/gfwlist_list.conf
+			awk '{printf("server=/%s/127.0.0.1#5353\nipset=/%s/gfwlist\n", $1, $1 )}' /tmp/ss_dom.txt > /etc/storage/gfwlist/m.gfwlist.conf
+		else
+			awk '{printf("ipset=/%s/gfwlist\n", $1, $1 )}' /etc_ro/gfwlist_list.conf > /etc/storage/gfwlist/gfwlist_list.conf
+			awk '{printf("ipset=/%s/gfwlist\n", $1, $1 )}' /tmp/ss_dom.txt > /etc/storage/gfwlist/m.gfwlist.conf
+		fi
+		rm -f /tmp/ss_dom.txt
+		sed -i '/gfwlist/d' /etc/storage/dnsmasq/dnsmasq.conf
+		sed -i '/dnsmasq.oversea/d' /etc/storage/dnsmasq/dnsmasq.conf
+		cat >> /etc/storage/dnsmasq/dnsmasq.conf <<-EOF
+			conf-dir=/etc/storage/gfwlist/
+		EOF
 	elif [ "$run_mode" = "oversea" ] ;then
 		ipset add oversea $dnsserver 2>/dev/null
 		mkdir -p /etc/storage/dnsmasq.oversea
