@@ -62,7 +62,7 @@ flush_r() {
 	flush_iptables nat
 	flush_iptables mangle
 	ip rule del fwmark 100 lookup 100 2>/dev/null
-	ip route del local 0.0.0.0/0 dev lo table 100 2>/dev/null
+	ip route del local default dev lo table 100 2>/dev/null
 	$IPT -D PREROUTING -j SS_SPEC_WAN_AC
 	$IPT -D PREROUTING -j SS_SPEC_WAN_FW
 	$IPT -D PREROUTING -j SS_SPEC_WAN_DG
@@ -87,7 +87,7 @@ ipset_r() {
 	ipset -! -R <<-EOF || return 1
 		create ss_spec_wan_ac hash:net
 		$(gen_iplist | sed -e "s/^/add ss_spec_wan_ac /")
-EOF
+	EOF
 	ipset -N china hash:net 2>/dev/null
 	$IPT -N SS_SPEC_WAN_AC
 	$IPT -A SS_SPEC_WAN_AC -m set --match-set ss_spec_wan_ac dst -j RETURN
@@ -137,16 +137,17 @@ fw_rule() {
 	$IPT -A SS_SPEC_WAN_FW -d 192.168.0.0/16 -j RETURN
 	$IPT -A SS_SPEC_WAN_FW -d 224.0.0.0/4 -j RETURN
 	$IPT -A SS_SPEC_WAN_FW -d 240.0.0.0/4 -j RETURN
+
   	echo $LANCON
-	if [ "$LANCON" = "all" ];then
 	ipset -N fplan hash:net 2>/dev/null
+	if [ "$LANCON" = "all" ];then
 	for ip in $LAN_FP_IP; do ipset -! add fplan $ip ; done
 	$IPT -I SS_SPEC_WAN_FW -m set --match-set fplan src -j RETURN
 	elif [ "$LANCON" = "bip" ];then
-	ipset -N fplan hash:net 2>/dev/null
 	for ip in $LAN_FP_IP; do ipset -! add fplan $ip ; done
 	lanbip="-m set --match-set fplan src"
 	fi
+
 	$IPT -A SS_SPEC_WAN_FW -p tcp $lanbip \
 		-j REDIRECT --to-ports $local_port 2>/dev/null || {
 		loger 3 "Can't redirect, please check the iptables."
@@ -175,7 +176,7 @@ tp_rule() {
 		return 0
 	fi
 	ip rule add fwmark 100 lookup 100
-	ip route add local 0.0.0.0/0 dev lo table 100
+	ip route add local default dev lo table 100
 	ipt="iptables -t mangle"
 	$ipt -N SS_SPEC_TPROXY
 	$ipt -A SS_SPEC_TPROXY -p udp --dport 53 -j RETURN
@@ -209,8 +210,8 @@ tp_rule() {
 	elif [ "$RUNMODE" = "all" ] ;then
 	$ipt -A SS_SPEC_TPROXY -p udp -j TPROXY --on-port "$LOCAL_PORT" --tproxy-mark 100
 	fi
-    $ipt -I SS_SPEC_TPROXY -p udp -m set --match-set blacklist dst \
-    -j TPROXY --on-port "$LOCAL_PORT" --tproxy-mark 100
+	$ipt -I SS_SPEC_TPROXY -p udp -m set --match-set blacklist dst \
+		-j TPROXY --on-port "$LOCAL_PORT" --tproxy-mark 100
 	$ipt -I SS_SPEC_TPROXY -p udp -m set --match-set whitelist dst -j RETURN
 
 	return $?
