@@ -280,7 +280,6 @@ fi
 -w "$wan_fw_ips" \
 -p "$lan_fp_ips" \
 -G "$lan_gm_ips" \
--G "$lan_gm_ips" \
 -k "$lancon" \
 $socks $gfwmode $ARG_UDP
 return $?
@@ -316,6 +315,7 @@ query_method=tcp_only;
 min_ttl=1m;
 max_ttl=1w;
 timeout=5;
+par_queries=1;
 }
 server {
 label= "ssr-usedns";
@@ -418,7 +418,7 @@ cat >> /etc/storage/dnsmasq/dnsmasq.conf << EOF
 conf-dir=/etc/storage/gfwlist/
 EOF
     elif [ "$run_mode" = "oversea" ] ;then
-        ipset add gfwlist $dnsserver 2>/dev/null
+        ipset add oversea $dnsserver 2>/dev/null
         mkdir -p /etc/storage/dnsmasq.oversea
         sed -i '/dnsmasq-ss/d' /etc/storage/dnsmasq/dnsmasq.conf
         sed -i '/dnsmasq.oversea/d' /etc/storage/dnsmasq/dnsmasq.conf
