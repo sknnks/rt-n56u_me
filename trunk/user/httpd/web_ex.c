@@ -2007,6 +2007,9 @@ static int shadowsocks_status_hook(int eid, webs_t wp, int argc, char **argv)
 	if (ss_status_code == 0){
 		ss_status_code = pids("v2ray");
 	}
+	if (ss_status_code == 0){
+		ss_status_code = pids("trojan");
+	}
 	websWrite(wp, "function shadowsocks_status() { return %d;}\n", ss_status_code);
 	int ss_tunnel_status_code = pids("ss-local");
 	websWrite(wp, "function shadowsocks_tunnel_status() { return %d;}\n", ss_tunnel_status_code);
@@ -2122,6 +2125,15 @@ static int smartdns_status_hook(int eid, webs_t wp, int argc, char **argv)
 }
 #endif
 
+#if defined (APP_CADDY)
+static int caddy_status_hook(int eid, webs_t wp, int argc, char **argv)
+{
+	int caddy_status_code = pids("caddy_filebrowser");
+	websWrite(wp, "function caddy_status() { return %d;}\n", caddy_status_code);
+	return 0;
+}
+#endif
+
 #if defined (APP_FRP)
 static int frpc_status_hook(int eid, webs_t wp, int argc, char **argv)
 {
@@ -2136,6 +2148,16 @@ static int frps_status_hook(int eid, webs_t wp, int argc, char **argv)
 	return 0;
 }
 #endif
+
+static int update_action_hook(int eid, webs_t wp, int argc, char **argv)
+{
+	char *up_action = websGetVar(wp, "connect_action", "");
+	
+	if (!strcmp(up_action, "bigtmp")) {
+		system("mount -t tmpfs -o remount,rw,size=50M tmpfs /tmp");
+	}
+	return 0;
+}
 
 static int
 ej_detect_internet_hook(int eid, webs_t wp, int argc, char **argv)
@@ -2326,6 +2348,11 @@ ej_firmware_caps_hook(int eid, webs_t wp, int argc, char **argv)
 #else
 	int found_app_koolproxy = 0;
 #endif
+#if defined(APP_CADDY)
+	int found_app_caddy = 1;
+#else
+	int found_app_caddy = 0;
+#endif
 #if defined(APP_ADBYBY)
 	int found_app_adbyby = 1;
 #else
@@ -2355,11 +2382,6 @@ ej_firmware_caps_hook(int eid, webs_t wp, int argc, char **argv)
 	int found_app_xupnpd = 1;
 #else
 	int found_app_xupnpd = 0;
-#endif
-#if defined (WEBUI_HIDE_VPN)
-	int support_vpn = 0;
-#else
-	int support_vpn = 1;
 #endif
 #if defined(USE_IPV6)
 	int has_ipv6 = 1;
@@ -2521,6 +2543,7 @@ ej_firmware_caps_hook(int eid, webs_t wp, int argc, char **argv)
 		"function found_app_dnsforwarder() { return %d;}\n"
 		"function found_app_shadowsocks() { return %d;}\n"
 		"function found_app_koolproxy() { return %d;}\n"
+		"function found_app_caddy() { return %d;}\n"
 		"function found_app_adbyby() { return %d;}\n"
 		"function found_app_smartdns() { return %d;}\n"
 		"function found_app_frp() { return %d;}\n"
@@ -2548,6 +2571,7 @@ ej_firmware_caps_hook(int eid, webs_t wp, int argc, char **argv)
 		found_app_dnsforwarder,
 		found_app_shadowsocks,
 		found_app_koolproxy,
+		found_app_caddy,
 		found_app_adbyby,
 		found_app_smartdns,
 		found_app_frp,
@@ -2592,8 +2616,7 @@ ej_firmware_caps_hook(int eid, webs_t wp, int argc, char **argv)
 		"function support_5g_mumimo() { return %d;}\n"
 		"function support_sfe() { return %d;}\n"
 		"function support_lan_ap_isolate() { return %d;}\n"
-		"function support_5g_160mhz() { return %d;}\n"
-		"function support_vpn() { return %d;}\n",
+		"function support_5g_160mhz() { return %d;}\n",
 		has_ipv6,
 		has_ipv6_ppe,
 		has_ipv4_ppe,
@@ -2629,8 +2652,7 @@ ej_firmware_caps_hook(int eid, webs_t wp, int argc, char **argv)
 		has_5g_mumimo,
 		has_sfe,
 		has_lan_ap_isolate,
-		has_5g_160mhz,
-		support_vpn
+		has_5g_160mhz
 	);
 
 	return 0;
@@ -2965,7 +2987,6 @@ static int ej_get_flash_time(int eid, webs_t wp, int argc, char **argv)
 	return 0;
 }
 
-#ifndef WEBUI_HIDE_VPN
 static int ej_get_vpns_client(int eid, webs_t wp, int argc, char **argv)
 {
 	FILE *fp;
@@ -2991,7 +3012,6 @@ static int ej_get_vpns_client(int eid, webs_t wp, int argc, char **argv)
 
 	return 0;
 }
-#endif
 
 struct cpu_stats {
 	unsigned long long user;    // user (application) usage
@@ -4274,6 +4294,9 @@ struct ej_handler ej_handlers[] =
 #if defined(APP_DNSFORWARDER)
 	{ "dnsforwarder_status", dnsforwarder_status_hook},
 #endif
+#if defined(APP_CADDY)
+	{ "caddy_status", caddy_status_hook},
+#endif
 #if defined (APP_ADBYBY)
 	{ "adbyby_action", adbyby_action_hook},
 	{ "adbyby_status", adbyby_status_hook},
@@ -4285,6 +4308,7 @@ struct ej_handler ej_handlers[] =
 	{ "frpc_status", frpc_status_hook},
 	{ "frps_status", frps_status_hook},
 #endif
+    { "update_action", update_action_hook},
 	{ "openssl_util_hook", openssl_util_hook},
 	{ "openvpn_srv_cert_hook", openvpn_srv_cert_hook},
 	{ "openvpn_cli_cert_hook", openvpn_cli_cert_hook},

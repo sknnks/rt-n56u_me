@@ -1,10 +1,16 @@
-##2020.01.11##
-* 增加koolproxy
-* 修复ssp+故障切换问题
-* 修复frp重启无效问题，加了守护
-* 修复用mtd_write -r unlock mtd1重启方式,脚本无法保存的问题。
-* 修改控制台reboot命令逻辑，选择mtd_write -r unlock mtd1重启方式后，输入reboot也是用这种方式重启,方便定时重启的人使用
-* 可能还会继续有更多.........请看源码的commit
+##2020.02.09##
+* 更改KP完整规则的下载地址
+* 同步hanwckf的最新源码
+* 调整固件的版本信息由自动生成日期改成固定日期
+
+##2020.01.23##
+* 应群友建议,增加无线弱信号剔除功能
+* 继续修复SSP自动切换
+* 调整修改ssp web页面的一些小问题
+* 修正ssp和smartdns页面增加服务器页面跳转的问题
+* webdav增加自定义用户名和密码
+* 升级smartdns源码
+* 调整了固件版本命名:改成日期
 
 ##往期更新日志##
 *https://github.com/chongshengB/rt-n56u/blob/master/changelog-old.md

@@ -133,6 +133,7 @@
 			{"v2_quic_key_x", "24", NULL, FALSE},
 			{"v2_quic_security_x", "24", NULL, FALSE},
 			{"v2_tls_x", "24", NULL, FALSE},
+			{"tj_tls_host_x", "24", NULL, FALSE},
 			{"switch_enable_x", "24", NULL, FALSE},
 			{0,0,0,0}
 		};
@@ -855,6 +856,8 @@
 			{"wl_guest_wpa_psk", "", NULL, EVM_RESTART_WIFI5},
 			{"wl_guest_macrule", "", NULL, EVM_RESTART_WIFI5},
 			{"wl_guest_mcs_mode", "", NULL, EVM_RESTART_WIFI5},
+			{"wl_KickStaRssiLow", "", NULL, EVM_RESTART_WIFI5},
+			{"wl_AssocReqRssiThres", "", NULL, EVM_RESTART_WIFI5},
 			{"RBRList", "Group", ARGV((char*)variables_WLANConfig11a_RBRList, "16", "32", "wl_wdsnum_x"), EVM_RESTART_WIFI5},
 #endif
 			{0,0,0,0}
@@ -918,6 +921,23 @@
 			{"frpc_enable", "", NULL, EVM_RESTART_FRP},
 			{"frps_enable", "", NULL, EVM_RESTART_FRP},
 			{"scripts.frp_script.sh", "File", NULL, EVM_RESTART_FRP},
+			{0,0,0,0}
+	};
+#endif
+
+#if defined(APP_CADDY)
+	struct variable variables_CaddyConf[] = {
+			{"caddy_enable", "", NULL, EVM_RESTART_CADDY},
+			{"caddy_file", "", NULL, EVM_RESTART_CADDY},
+			{"caddy_wan", "", NULL, EVM_RESTART_CADDY},
+			{"caddy_storage", "", NULL, EVM_RESTART_CADDY},
+			{"caddy_dir", "", NULL, EVM_RESTART_CADDY},
+			{"caddyf_wan_port", "", NULL, EVM_RESTART_CADDY},
+			{"caddyw_wan_port", "", NULL, EVM_RESTART_CADDY},
+			{"caddy_wip6", "", NULL, EVM_RESTART_CADDY},
+			{"caddy_wname", "", NULL, EVM_RESTART_CADDY},
+			{"caddy_wpassword", "", NULL, EVM_RESTART_CADDY},
+			{"scripts.caddy_script.sh", "File", NULL, EVM_RESTART_CADDY},
 			{0,0,0,0}
 	};
 #endif
@@ -1162,6 +1182,8 @@
 			{"rt_guest_wpa_psk", "", NULL, EVM_RESTART_WIFI2},
 			{"rt_guest_macrule", "", NULL, EVM_RESTART_WIFI2},
 			{"rt_guest_mcs_mode", "", NULL, EVM_RESTART_WIFI2},
+			{"rt_KickStaRssiLow", "", NULL, EVM_RESTART_WIFI2},
+			{"rt_AssocReqRssiThres", "", NULL, EVM_RESTART_WIFI2},
 			{"rt_RBRList", "Group", ARGV((char*)variables_WLANConfig11b_rt_RBRList, "16", "32", "rt_wdsnum_x"), EVM_RESTART_WIFI2},
 			{0,0,0,0}
 		};
@@ -1201,6 +1223,9 @@
 #endif
 #if defined(APP_KOOLPROXY)
 		{"KoolproxyConf",		variables_KoolproxyConf},
+#endif
+#if defined(APP_CADDY)
+		{"CaddyConf",		variables_CaddyConf},
 #endif
 #if defined(APP_ADBYBY)
 		{"AdbybyConf",		variables_AdbybyConf},
@@ -1297,6 +1322,9 @@
 #endif
 #if defined(APP_KOOLPROXY)
 		{EVM_RESTART_KOOLPROXY,		EVT_RESTART_KOOLPROXY,		RCN_RESTART_KOOLPROXY,	0},
+#endif
+#if defined(APP_CADDY)
+		{EVM_RESTART_CADDY,		EVT_RESTART_CADDY,		RCN_RESTART_CADDY,	0},
 #endif
 #if defined(APP_ADBYBY)
 		{EVM_RESTART_ADBYBY,		EVT_RESTART_ADBYBY,		RCN_RESTART_ADBYBY,	0},

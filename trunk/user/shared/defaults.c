@@ -225,6 +225,8 @@ struct nvram_pair router_defaults[] = {
 	{ "wl_HT_BAWinSize", "64" },
 	{ "wl_HT_AutoBA", "1" },
 	{ "wl_VgaClamp", "0" },
+	{ "wl_KickStaRssiLow", "0" },
+	{ "wl_AssocReqRssiThres", "0" },
 
 	// guest AP 5Ghz
 	{ "wl_guest_enable", "0" },
@@ -321,6 +323,8 @@ struct nvram_pair router_defaults[] = {
 	{ "rt_HT_BAWinSize", "64" },
 	{ "rt_HT_AutoBA", "1" },
 	{ "rt_VgaClamp", "0" },
+	{ "rt_KickStaRssiLow", "0" },
+	{ "rt_AssocReqRssiThres", "0" },
 
 	// guest AP 2.4Ghz
 	{ "rt_guest_enable", "0" },
@@ -403,9 +407,9 @@ struct nvram_pair router_defaults[] = {
 	{ "koolproxy_cpu", "0"},
 	{ "koolproxy_prot", "0"},
 	{ "rules_list", "0"},
-	{ "koolproxy_txt_0", "https://dev.tencent.com/u/dtid_39de1afb676d0d78/p/kp/git/raw/master/koolproxy.txt"},
-	{ "daily_txt_0", "https://dev.tencent.com/u/dtid_39de1afb676d0d78/p/kp/git/raw/master/daily.txt"},
-	{ "kp_dat_0", "https://dev.tencent.com/u/dtid_39de1afb676d0d78/p/kp/git/raw/master/kp.dat"},
+	{ "koolproxy_txt_0", "https://houzi-.coding.net/p/my_dream/d/my_dream/git/raw/master/koolproxy.txt"},
+	{ "daily_txt_0", "https://houzi-.coding.net/p/my_dream/d/my_dream/git/raw/master/daily.txt"},
+	{ "kp_dat_0", "https://houzi-.coding.net/p/my_dream/d/my_dream/git/raw/master/kp.dat"},
 	{ "koolproxy_txt_1", "https://gitee.com/bkye/kp/raw/master/mrules/koolproxy.txt"},
 	{ "daily_txt_1", "https://gitee.com/bkye/kp/raw/master/mrules/daily.txt"},
 	{ "kp_dat_1", "https://dev.tencent.com/u/dtid_39de1afb676d0d78/p/kp/git/raw/master/kp.dat"},
@@ -660,6 +664,18 @@ struct nvram_pair router_defaults[] = {
 	{ "v2_http2_path", "" },
 	{ "v2_tls", "0" },
 	
+	/*caddy*/
+	{ "caddy_enable", "0" },
+	{ "caddy_file", "0" },
+	{ "caddy_wan", "0" },
+	{ "caddy_storage", "-1" },
+	{ "caddy_dir", "/tmp" },
+	{ "caddyf_wan_port", "19998" },
+	{ "caddyw_wan_port", "19999" },
+	{ "caddy_wip6", "0" },
+	{ "caddy_wname", "admin" },
+	{ "caddy_wpassword", "admin" },
+	
 	/*frp*/
 	{ "frpc_enable", "0" },
 	{ "frps_enable", "0" },
@@ -694,6 +710,7 @@ struct nvram_pair router_defaults[] = {
 	{ "ss_black", "0" },
 	
 	{ "reboot_mode", "0" },
+
 
 	/* DHCP server parameters */
 	{ "dhcp_start", DEF_LAN_DHCP_BEG },	/* First assignable DHCP address */
@@ -956,6 +973,17 @@ struct nvram_pair router_defaults[] = {
 	{ "vpnc_ov_ciph", "3" },
 	{ "vpnc_ov_clzo", "2" },
 	{ "vpnc_ov_atls", "0" },
+
+	/* xTun */
+	{ "xTun_iface", "tun0" },
+	{ "xTun_cidr", "10.0.1.2/24" },
+	{ "xTun_server", "server.me" },
+	{ "xTun_port", "1082" },
+	{ "xTun_tcp", "0" },
+	{ "xTun_key", "password" },
+
+	{ "xTun_dns", "1.1.1.1" },
+	{ "xTun_black_list", "/etc/storage/xTun_black_list" },
 
 	{ 0, 0 }
 };
