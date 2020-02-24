@@ -397,6 +397,11 @@ struct nvram_pair router_defaults[] = {
 	{ "aria_pport", "16888" },
 	{ "aria_rport", "6800" },
 	{ "aria_ropen", "0" },
+	
+	/*autoreboot*/
+	{ "reboot_schedule_enable", "0" },
+	{ "reboot_schedule", "00000000000" },
+	
     /* koolproxy AD */
 	{ "koolproxy_enable", "0"},
 	{ "koolproxy_https", "0"},
@@ -613,6 +618,7 @@ struct nvram_pair router_defaults[] = {
 	{ "ss_threads", "0" },
 	{ "ss_run_mode", "gfw" },
 	{ "pdnsd_enable", "0" },
+	{ "china_dns", "223.5.5.5#53" },
 	{ "tunnel_forward", "8.8.4.4:53" },
 	{ "socks5_proxy", "nil" },
 	{ "socks5_proxy_port", "1080" },
@@ -664,6 +670,10 @@ struct nvram_pair router_defaults[] = {
 	{ "v2_http2_path", "" },
 	{ "v2_tls", "0" },
 	
+	/* AdguargHome */
+	{ "adg_enable", "0" },
+	{ "adg_redirect", "0" },
+	
 	/*caddy*/
 	{ "caddy_enable", "0" },
 	{ "caddy_file", "0" },
@@ -688,6 +698,7 @@ struct nvram_pair router_defaults[] = {
 	{ "sdns_ipv6_server", "0" },
 	{ "snds_ip_change", "0" },
 	{ "sdns_www", "0" },
+	{ "sdns_exp", "0" },
 	{ "snds_redirect", "0" },
 	{ "snds_cache", "0" },
 	{ "sdns_ttl", "300" },

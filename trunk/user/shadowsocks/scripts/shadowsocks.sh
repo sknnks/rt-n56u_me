@@ -34,6 +34,7 @@ ss_udp=`nvram get ss_udp`
 lan_con=`nvram get lan_con`
 ss_own=`nvram get ss_own`
 socks=""
+
 if [ $ss_own = "1" ]; then
 socks="-o"
 fi
@@ -382,8 +383,7 @@ elif [ "$stype" == "trojan" ] ;then
     $sscmd --config $trojan_json_file >> /tmp/ssrplus.log 2>&1 &
     echo "$(date "+%Y-%m-%d %H:%M:%S") $($sscmd --version 2>&1 | head -1) Started!" >> /tmp/ssrplus.log 
 elif [ "$stype" == "kumasocks" ] ;then
-    $sscmd -c $CONFIG_KUMASOCKS_FILE >> /tmp/ssrplus.log 2>&1 &
-    echo "$(date "+%Y-%m-%d %H:%M:%S") $($sscmd --version 2>&1 | head -1) Started!" >> /tmp/ssrplus.log 
+    $sscmd -c $CONFIG_KUMASOCKS_FILE  &
 elif [ "$stype" == "v2ray" ] ;then
     $sscmd -config $v2_json_file >/dev/null 2>&1 &
     echo "$(date "+%Y-%m-%d %H:%M:%S") $($sscmd -version | head -1) 启动成功!" >> /tmp/ssrplus.log
@@ -405,8 +405,43 @@ start_dns()
         ipset -! flush china
         ipset -! restore < /tmp/china.ipset 2>/dev/null
         rm -f /tmp/china.ipset
+		if [ $(nvram get pdnsd_enable) = 0 ]; then
+		if [ $(nvram get sdns_enable) = 1 ]; then
+		logger -st "SS" "检测到系统正在运行smartdns,将关闭smartdns,启动pdnsd!"
+		/usr/bin/smartdns.sh stop
+		nvram set sdns_enable=0
+        fi
+            dnsstr="$(nvram get tunnel_forward)"
+            dnsserver=`echo "$dnsstr"|awk -F ':'  '{print $1}'`
+            dnsport=`echo "$dnsstr"|awk -F ':'  '{print $2}'`
+            start_pdnsd $dnsserver $dnsport	
+            pdnsd_enable_flag=1
+			sed -i '/no-resolv/d' /etc/storage/dnsmasq/dnsmasq.conf
+sed -i '/server=127.0.0.1/d' /etc/storage/dnsmasq/dnsmasq.conf
+cat >> /etc/storage/dnsmasq/dnsmasq.conf << EOF
+no-resolv
+server=127.0.0.1#5353
+EOF
+			
+			mkdir -p /tmp/cdn
+			logger -t "SS" "下载cdn域名文件..."
+			wget --no-check-certificate --timeout=8 -qO - https://gitee.com/bkye/rules/raw/master/cdn.txt > /tmp/cdn.txt
+			if [ ! -f "/tmp/cdn.txt" ]; then
+logger -t "SS" "cdn域名文件下载失败，可能是地址失效或者网络异常！"
+else
+logger -t "SS" "cdn域名文件下载成功"
+
+			CDN="$(nvram get china_dns)"
+			logger -t "SS" "正在使用绕过大陆IP模式，加载CDN列表用于国内域名走国内DNS解析。需要一点时间转换....."
+            echo "#for china site CDN acclerate" >> /tmp/sscdn.conf
+			cat /tmp/cdn.txt | sed "s/^/server=&\/./g" | sed "s/$/\/&$CDN/g" | sort | awk '{if ($0!=line) print;line=$0}' >>/tmp/cdn/sscdn.conf
+			sed -i '/cdn/d' /etc/storage/dnsmasq/dnsmasq.conf
+cat >> /etc/storage/dnsmasq/dnsmasq.conf << EOF
+conf-dir=/tmp/cdn/
+EOF
+fi
+fi
     elif [ "$run_mode" = "gfw" ] ;then
-        ipset add gfwlist $dnsserver 2>/dev/null
         logger -st "SS" "开始处理gfwlist..."
         rm -rf /etc/storage/gfwlist
         mkdir -p /etc/storage/gfwlist/
@@ -423,6 +458,7 @@ start_dns()
             awk '{printf("ipset=/%s/gfwlist\n", $1, $1 )}' /etc_ro/gfwlist_list.conf > /etc/storage/gfwlist/gfwlist_list.conf
             awk '{printf("ipset=/%s/gfwlist\n", $1, $1 )}' /tmp/ss_dom.txt > /etc/storage/gfwlist/m.gfwlist.conf
         fi
+		ipset add gfwlist $dnsserver 2>/dev/null
         rm -f /tmp/ss_dom.txt
         sed -i '/gfwlist/d' /etc/storage/dnsmasq/dnsmasq.conf
         sed -i '/dnsmasq.oversea/d' /etc/storage/dnsmasq/dnsmasq.conf
@@ -519,6 +555,9 @@ killall -q -9 ssr-server
 killall -q -9 ssr-local
 killall -q -9 kumasocks
 killall -9 pdnsd
+sed -i '/no-resolv/d' /etc/storage/dnsmasq/dnsmasq.conf
+sed -i '/server=127.0.0.1#5353/d' /etc/storage/dnsmasq/dnsmasq.conf
+sed -i '/cdn/d' /etc/storage/dnsmasq/dnsmasq.conf
 sed -i '/gfwlist/d' /etc/storage/dnsmasq/dnsmasq.conf
 sed -i '/dnsmasq.oversea/d' /etc/storage/dnsmasq/dnsmasq.conf
 if [ -f "/etc/storage/dnsmasq-ss.d" ]; then
@@ -641,7 +680,7 @@ json_int () {
 echo '{
 "log": {
 "error": "/tmp/syslog.log",
-"loglevel": "warning"
+"loglevel": "info"
 },
 "inbounds": [
 {

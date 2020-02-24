@@ -48,6 +48,8 @@ int dns_conf_tcp_idle_time = 120;
 /* cache */
 int dns_conf_cachesize = DEFAULT_DNS_CACHE_SIZE;
 int dns_conf_prefetch = 0;
+int dns_conf_serve_expired = 0;
+int dns_conf_serve_expired_ttl = 0;
 
 /* upstream servers */
 struct dns_servers dns_conf_servers[DNS_MAX_SERVERS];
@@ -851,6 +853,7 @@ static int _config_bind_ip(int argc, char *argv[], DNS_BIND_TYPE type)
 		{"no-speed-check", no_argument, NULL, 'S'},  
 		{"no-cache", no_argument, NULL, 'C'},  
 		{"no-dualstack-selection", no_argument, NULL, 'D'},
+		{"force-aaaa-soa", no_argument, NULL, 'F'},
 		{NULL, no_argument, NULL, 0}
 	};
 	/* clang-format on */
@@ -914,6 +917,10 @@ static int _config_bind_ip(int argc, char *argv[], DNS_BIND_TYPE type)
 		}
 		case 'D': {
 			server_flag |= BIND_FLAG_NO_DUALSTACK_SELECTION;
+			break;
+		}
+		case 'F': {
+			server_flag |= BIND_FLAG_FORCE_AAAA_SOA;
 			break;
 		}
 		default:
@@ -1340,6 +1347,8 @@ static struct config_item _config_item[] = {
 	CONF_INT("tcp-idle-time", &dns_conf_tcp_idle_time, 0, 3600),
 	CONF_INT("cache-size", &dns_conf_cachesize, 0, CONF_INT_MAX),
 	CONF_YESNO("prefetch-domain", &dns_conf_prefetch),
+	CONF_YESNO("serve-expired", &dns_conf_serve_expired),
+	CONF_INT("serve-expired-ttl", &dns_conf_serve_expired_ttl, 0, CONF_INT_MAX),
 	CONF_YESNO("dualstack-ip-selection", &dns_conf_dualstack_ip_selection),
 	CONF_INT("dualstack-ip-selection-threshold", &dns_conf_dualstack_ip_selection_threshold, 0, 1000),
 	CONF_CUSTOM("log-level", _config_log_level, NULL),

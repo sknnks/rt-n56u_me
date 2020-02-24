@@ -929,8 +929,10 @@ init_router(void)
 		restart_crond();
 	}
 	// system ready
+	nvram_set_int("ntp_ready", 0);
 	system("/usr/bin/copyscripts.sh &");
 	system("/etc/storage/started_script.sh &");
+	system("/usr/bin/autostart.sh &");
 }
 
 /*
@@ -1313,6 +1315,12 @@ handle_notifications(void)
 		else if (strcmp(entry->d_name, RCN_RESTART_UPDATEADB) == 0)
 		{
 			update_adb();
+		}
+#endif
+#if defined(APP_ADGUARDHOME)
+		else if (strcmp(entry->d_name, RCN_RESTART_ADGUARDHOME) == 0)
+		{
+			restart_adguardhome();
 		}
 #endif
 #if defined(APP_SMARTDNS)

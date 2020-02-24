@@ -31,6 +31,7 @@ $j(document).ready(function(){
 	init_itoggle('sdns_ipv6_server');
 	init_itoggle('snds_ip_change');
 	init_itoggle('sdns_www');
+	init_itoggle('sdns_exp');
 	init_itoggle('sdnse_enable');
 	init_itoggle('sdnse_address');
 	init_itoggle('sdnse_tcp');
@@ -50,6 +51,7 @@ $j(document).ready(function(){
 		return false;
 	});
 });
+
 var m_list = [<% get_nvram_list("SmartdnsConf", "SdnsList"); %>];
 var mlist_ifield = 6;
 if(m_list.length > 0){
@@ -60,10 +62,11 @@ if(m_list.length > 0){
 }
 function initial(){
 	show_banner(2);
-	show_menu(5,17);
+	show_menu(5,16);
 	show_footer();
 	showTab(getHash());
 	showMRULESList();
+	showmenu();
 	fill_status(smartdns_status());
 }
 
@@ -150,7 +153,9 @@ function markGroupRULES(o, c, b) {
 	document.form.current_page.value = "Advanced_smartdns.asp#dns";
 	return true;
 }
-
+function showmenu(){
+showhide_div('adglink', found_app_adguardhome());
+}
 function showMRULESList(){
 	var code = '<table width="100%" cellspacing="0" cellpadding="3" class="table table-list">';
 	if(m_list.length == 0)
@@ -243,9 +248,19 @@ function showMRULESList(){
                 <div class="row-fluid">
                     <div class="span12">
                         <div class="box well grad_colour_dark_blue">
-                            <h2 class="box_head round_top"><#menu5_24#></h2>
+                            <h2 class="box_head round_top"><#menu5_24#> - <#menu5_29#></h2>
                             <div class="round_bottom">
 							<div>
+                            <ul class="nav nav-tabs" style="margin-bottom: 10px;">
+                                <li class="active">
+                                    <a href="Advanced_smartdns.asp"><#menu5_24#></a>
+                                </li>
+								 <li id="adglink" style="display:none">
+                                    <a href="Advanced_adguardhome.asp"><#menu5_28#></a>
+                                </li>
+                            </ul>
+                        </div>
+						<div>
                             <ul class="nav nav-tabs" style="margin-bottom: 10px;">
                                 <li class="active">
                                     <a id="tab_sm_cfg" href="#cfg">基本设置</a>
@@ -346,6 +361,19 @@ function showMRULESList(){
                                                 <div style="position: absolute; margin-left: -10000px;">
                                                     <input type="radio" value="1" name="sdns_www" id="sdns_www_1" <% nvram_match_x("", "sdns_www", "1", "checked"); %>><#checkbox_Yes#>
                                                     <input type="radio" value="0" name="sdns_www" id="sdns_www_0" <% nvram_match_x("", "sdns_www", "0", "checked"); %>><#checkbox_No#>
+                                                </div>
+                                            </td>
+                                        </tr>
+										<tr> <th>过期缓存服务</th>
+                                            <td>
+                                                <div class="main_itoggle">
+                                                <div id="sdns_exp_on_of">
+                                                    <input type="checkbox" id="sdns_exp_fake" <% nvram_match_x("", "sdns_exp", "1", "value=1 checked"); %><% nvram_match_x("", "sdns_exp", "0", "value=0"); %>>
+                                                </div>
+                                                </div>
+                                                <div style="position: absolute; margin-left: -10000px;">
+                                                    <input type="radio" value="1" name="sdns_exp" id="sdns_exp_1" <% nvram_match_x("", "sdns_exp", "1", "checked"); %>><#checkbox_Yes#>
+                                                    <input type="radio" value="0" name="sdns_exp" id="sdns_exp_0" <% nvram_match_x("", "sdns_exp", "0", "checked"); %>><#checkbox_No#>
                                                 </div>
                                             </td>
                                         </tr>
