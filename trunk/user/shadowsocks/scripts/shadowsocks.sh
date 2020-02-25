@@ -555,7 +555,9 @@ killall -q -9 ssr-server
 killall -q -9 ssr-local
 killall -q -9 kumasocks
 killall -9 pdnsd
+if [ $(nvram get sdns_enable) = 0 ]; then
 sed -i '/no-resolv/d' /etc/storage/dnsmasq/dnsmasq.conf
+fi
 sed -i '/server=127.0.0.1#5353/d' /etc/storage/dnsmasq/dnsmasq.conf
 sed -i '/cdn/d' /etc/storage/dnsmasq/dnsmasq.conf
 sed -i '/gfwlist/d' /etc/storage/dnsmasq/dnsmasq.conf
@@ -680,7 +682,7 @@ json_int () {
 echo '{
 "log": {
 "error": "/tmp/syslog.log",
-"loglevel": "info"
+"loglevel": "warning"
 },
 "inbounds": [
 {
