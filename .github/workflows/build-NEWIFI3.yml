@@ -1,8 +1,8 @@
 name: Build MEWIFI3
 
 on: 
- # release:
-   # types: [published]
+  release:
+    types: [published]
 #  push:
 #    tags:
 #    - 'v*'
@@ -10,8 +10,8 @@ on:
   #    - master
  # schedule:
    # - cron: 0 17 * * 4
-  watch:
-    types: [started]
+ # watch:
+   # types: [started]
 
 jobs:
   build:
