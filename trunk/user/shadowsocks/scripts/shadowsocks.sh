@@ -57,6 +57,7 @@ gen_config_file() {
 				"local_port": $(nvram get ssp_local_port),
 				"password": "$(nvram get ss_key_x$1)",
 				"timeout": 60,
+				"reuse_port": true,
 				"method": "$(nvram get ss_method_x$1)",
 				"plugin": "$(nvram get ss_plugin_x$1)"
 			}
@@ -94,6 +95,7 @@ gen_config_file() {
 				"timeout": 60,
 				"method": "$ssr_method",
 				"protocol": "$ssr_protocol",
+				"reuse_port": true,
 				"protocol_param": "$ssr_proto_param",
 				"obfs": "$ssr_obfs",
 				"obfs_param": "$ssr_obfs_param"
