@@ -481,6 +481,8 @@ start_redir() {
 		/usr/bin/ssr-switch start $switch_time $switch_timeout &
 		socks="-o"
 	fi
+	/usr/bin/smartdns.sh stop		
+	/usr/bin/smartdns.sh start
 	return $?
 }
 
