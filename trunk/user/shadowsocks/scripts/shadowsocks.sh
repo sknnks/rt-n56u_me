@@ -504,72 +504,38 @@ start_dns() {
 		ipset -! flush china
 		ipset -! restore </tmp/china.ipset 2>/dev/null
 		rm -f /tmp/china.ipset
-#################PDNSD----------->
-:<<!
+		logger -st "SS" "开始处理gfwlist..."
+		mkdir -p /etc/storage/gfwlist/
+		
 		if [ $(nvram get pdnsd_enable) = 0 ]; then
-			if [ $(nvram get sdns_enable) = 1 ]; then
-				smart_process=$(pidof smartdns)
-				if [ -n "$smart_process" ]; then
-					logger -t "SS" "关闭smartdns进程..."
-					/usr/bin/smartdns.sh stop
-				fi
-				nvram set sdns_enable=0
-			fi
 			dnsstr="$(nvram get tunnel_forward)"
 			dnsserver=$(echo "$dnsstr" | awk -F ':' '{print $1}')
 			dnsport=$(echo "$dnsstr" | awk -F ':' '{print $2}')
 			start_pdnsd $dnsserver $dnsport
 			pdnsd_enable_flag=1
-			sed -i '/no-resolv/d' /etc/storage/dnsmasq/dnsmasq.conf
-			sed -i '/server=127.0.0.1/d' /etc/storage/dnsmasq/dnsmasq.conf
-			cat >>/etc/storage/dnsmasq/dnsmasq.conf <<EOF
-no-resolv
-server=127.0.0.1#5353
-EOF
-
-			mkdir -p /tmp/cdn
-			logger -t "SS" "下载cdn域名文件..."
-			wget --no-check-certificate --timeout=8 -qO - https://gitee.com/bkye/rules/raw/master/cdn.txt >/tmp/cdn.txt
-			if [ ! -f "/tmp/cdn.txt" ]; then
-				logger -t "SS" "cdn域名文件下载失败，可能是地址失效或者网络异常！"
-			else
-				logger -t "SS" "cdn域名文件下载成功"
-
-				CDN="$(nvram get china_dns)"
-				logger -t "SS" "正在使用绕过大陆IP模式，加载CDN列表用于国内域名走国内DNS解析。需要一点时间转换....."
-				echo "#for china site CDN acclerate" >>/tmp/sscdn.conf
-				cat /tmp/cdn.txt | sed "s/^/server=&\/./g" | sed "s/$/\/&$CDN/g" | sort | awk '{if ($0!=line) print;line=$0}' >>/tmp/cdn/sscdn.conf
-				sed -i '/cdn/d' /etc/storage/dnsmasq/dnsmasq.conf
-				cat >>/etc/storage/dnsmasq/dnsmasq.conf <<EOF
-conf-dir=/tmp/cdn/
-EOF
-			fi
-!
-#<----------------################PDNSD
-		if [ $(nvram get pdnsd_enable) = 1 ]; then
+			
+		elif [ $(nvram get pdnsd_enable) = 1 ]; then
 			if [ $(nvram get ssp_dns_ip) = 2 ]; then
 				rm -f /tmp/whitelist.conf
 				rm -f /tmp/smartdnsgfw.conf
 				rm -f /tmp/smartdnschina.conf
-				awk '{printf("whitelist-ip %s\n", $1, $1 )}' /etc/storage/chinadns/chnroute.txt >>/tmp/whitelist.conf
-				cat >>/tmp/smartdnschina.conf <<EOF
+				cat >>/tmp/smartdnsgfw.conf <<EOF
 server-name smartdns
-bind :6053 -no-speed-check -no-dualstack-selection
-bind-tcp :6053 -no-speed-check -no-dualstack-selection
+bind :6053 -no-speed-check 
+bind-tcp :6053 -no-speed-check 
+bind :5353  -no-speed-check -group gfwlist  -force-aaaa-soa
+bind-tcp :5353 -no-speed-check -group gfwlist  -force-aaaa-soa
 cache-size 100
 prefetch-domain yes
 serve-expired yes
-force-AAAA-SOA yes
 log-level info
-server 223.5.5.5:53 -whitelist-ip
-server 119.29.29.29:53 -whitelist-ip
-server 1.1.1.1:53
-server 8.8.4.4:53
-server-https https://1.1.1.1/dns-query
-server-tls dns.google:53
-conf-file /tmp/whitelist.conf
+server 114.114.114.114
+server 119.29.29.29
+server-tcp 8.8.8.8 -group gfwlist -exclude-default-group
+server-tcp 1.1.1.1 -group gfwlist -exclude-default-group
+server-tcp 208.67.220.220 -group gfwlist -exclude-default-group
 EOF
-				/usr/bin/smartdns -f -c /tmp/smartdnschina.conf &>/dev/null &
+				/usr/bin/smartdns -f -c /tmp/smartdnsgfw.conf &>/dev/null &
 				sed -i '/no-resolv/d' /etc/storage/dnsmasq/dnsmasq.conf
 				sed -i '/server=127.0.0.1/d' /etc/storage/dnsmasq/dnsmasq.conf
 				cat >>/etc/storage/dnsmasq/dnsmasq.conf <<EOF
@@ -600,25 +566,24 @@ EOF
 				rm -f /tmp/smartdnschina.conf
 				cat >>/tmp/smartdnsgfw.conf <<EOF
 server-name smartdns
-bind :6053 -no-speed-check -no-dualstack-selection
-bind-tcp :6053 -no-speed-check -no-dualstack-selection
-bind :5353  -no-speed-check -group gfwlist -no-rule-addr -no-rule-nameserver -no-rule-soa -no-dualstack-selection -no-cache
-bind-tcp :5353 -no-speed-check -group gfwlist -no-rule-addr -no-rule-nameserver -no-rule-soa -no-dualstack-selection -no-cache
+bind :6053 -no-speed-check 
+bind-tcp :6053 -no-speed-check 
+bind :5353  -no-speed-check -group gfwlist  -force-aaaa-soa
+bind-tcp :5353 -no-speed-check -group gfwlist  -force-aaaa-soa
 cache-size 100
 prefetch-domain yes
 serve-expired yes
-force-AAAA-SOA yes
 log-level info
-server 223.5.5.5
+server 114.114.114.114
 server 119.29.29.29
 server-tcp 8.8.8.8 -group gfwlist -exclude-default-group
-server-tls dns.google  -group gfwlist -exclude-default-group
-server-https https://ndns.233py.com/dns-query  -group gfwlist -exclude-default-group
+server-tcp 1.1.1.1 -group gfwlist -exclude-default-group
+server-tcp 208.67.220.220 -group gfwlist -exclude-default-group
 EOF
 				/usr/bin/smartdns -f -c /tmp/smartdnsgfw.conf &>/dev/null &
 				ipset add gfwlist 8.8.8.8 2>/dev/null
-				ipset add gfwlist dns.google 2>/dev/null
-				ipset add gfwlist ndns.233py.com 2>/dev/null
+				ipset add gfwlist 1.1.1.1 2>/dev/null
+				ipset add gfwlist 208.67.220.220 2>/dev/null
 				sed -i '/no-resolv/d' /etc/storage/dnsmasq/dnsmasq.conf
 				sed -i '/server=127.0.0.1/d' /etc/storage/dnsmasq/dnsmasq.conf
 				cat >>/etc/storage/dnsmasq/dnsmasq.conf <<EOF
@@ -1067,4 +1032,3 @@ reserver)
 	#exit 0
 	;;
 esac
-
