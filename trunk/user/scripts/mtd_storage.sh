@@ -264,7 +264,9 @@ func_fill()
 
 #drop caches
 sync && echo 3 > /proc/sys/vm/drop_caches
-
+echo 4096 131072  6291456 > /proc/sys/net/ipv4/tcp_rmem
+echo 212992 > /proc/sys/net/core/rmem_default
+echo 4194304 >/proc/sys/net/core/rmem_max
 for mmc_mount in `/usr/bin/find  /dev -name 'mmcblk[0-9]*' | awk '{print $1}'`
 do
 [ ! -z "$(df -m | grep $mmc_mount )" ] && continue
