@@ -929,8 +929,10 @@ init_router(void)
 		restart_crond();
 	}
 	// system ready
+	nvram_set_int("ntp_ready", 0);
 	system("/usr/bin/copyscripts.sh &");
 	system("/etc/storage/started_script.sh &");
+	system("/usr/bin/autostart.sh &");
 }
 
 /*
@@ -1288,6 +1290,14 @@ handle_notifications(void)
 		{
 			update_gfwlist();
 		}
+		else if (strcmp(entry->d_name, RCN_RESTART_DLINK) == 0)
+		{
+			update_dlink();
+		}
+		else if (strcmp(entry->d_name, RCN_RESTART_REDLINK) == 0)
+		{
+			reset_dlink();
+		}
 #endif
 #if defined(APP_VLMCSD)
 		else if (strcmp(entry->d_name, RCN_RESTART_VLMCSD) == 0)
@@ -1313,6 +1323,12 @@ handle_notifications(void)
 		else if (strcmp(entry->d_name, RCN_RESTART_UPDATEADB) == 0)
 		{
 			update_adb();
+		}
+#endif
+#if defined(APP_ADGUARDHOME)
+		else if (strcmp(entry->d_name, RCN_RESTART_ADGUARDHOME) == 0)
+		{
+			restart_adguardhome();
 		}
 #endif
 #if defined(APP_SMARTDNS)

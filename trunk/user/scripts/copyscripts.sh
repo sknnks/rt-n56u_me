@@ -1,4 +1,10 @@
 #!/bin/sh
+if [ ! -f "/etc/storage/dlink.js" ] ; then
+cp -rf /etc_ro/dlink.js /etc/storage/
+chmod 755 "/etc/storage/dlink.js"
+fi
+mkdir -p /etc/ssl
+tar -xzf /etc_ro/certs.tgz -C /etc/ssl
 if [ ! -f "/etc/storage/koolproxy_rules_script.sh" ] ; then
 cp -rf /etc_ro/koolproxy_rules_script.sh /etc/storage/
 chmod 755 "/etc/storage/koolproxy_rules_script.sh"
@@ -51,6 +57,10 @@ if [ ! -f "/etc/storage/adbyby_adhost.sh" ] ; then
 cp -rf /etc_ro/adbyby_adhost.sh /etc/storage/
 chmod 755 "/etc/storage/adbyby_adhost.sh"
 fi
+if [ ! -f "/etc/storage/adbyby_host.sh" ] ; then
+cp -rf /etc_ro/adbyby_host.sh /etc/storage/
+chmod 755 "/etc/storage/adbyby_host.sh"
+fi
 if [ ! -f "/etc/storage/adbyby_blockip.sh" ] ; then
 cp -rf /etc_ro/adbyby_blockip.sh /etc/storage/
 chmod 755 "/etc/storage/adbyby_blockip.sh"
@@ -59,9 +69,17 @@ if [ ! -f "/etc/storage/adbyby_rules.sh" ] ; then
 cp -rf /etc_ro/adbyby_rules.sh /etc/storage/
 chmod 755 "/etc/storage/adbyby_rules.sh"
 fi
+if [ ! -f "/etc/storage/ss_dlink.sh" ] ; then
+cp -rf /etc_ro/ss_dlink.sh /etc/storage/
+chmod 755 "/etc/storage/ss_dlink.sh"
+fi
 if [ ! -f "/etc/storage/ss_dom.sh" ] ; then
 cp -rf /etc_ro/ss_dom.sh /etc/storage/
 chmod 755 "/etc/storage/ss_dom.sh"
+fi
+if [ ! -f "/etc/storage/uss_dom.sh" ] ; then
+cp -rf /etc_ro/uss_dom.sh /etc/storage/
+chmod 755 "/etc/storage/uss_dom.sh"
 fi
 if [ ! -f "/etc/storage/ss_ip.sh" ] ; then
 cp -rf /etc_ro/ss_ip.sh /etc/storage/

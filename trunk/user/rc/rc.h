@@ -538,6 +538,8 @@ void start_ss_tunnel(void);
 void restart_ss_tunnel(void);
 void update_chnroute(void);
 void update_gfwlist(void);
+void update_dlink(void);
+void reset_dlink(void);
 #endif
 #if defined(APP_VLMCSD)
 void stop_vlmcsd(void);
@@ -552,6 +554,11 @@ void stop_koolproxy(void);
 void start_koolproxy(void);
 void restart_koolproxy(void);
 void update_kp(void);
+#endif
+#if defined(APP_ADGUARDHOME)
+void stop_adguardhome(void);
+void start_adguardhome(void);
+void restart_adguardhome(void);
 #endif
 #if defined(APP_ADBYBY)
 void stop_adbyby(void);

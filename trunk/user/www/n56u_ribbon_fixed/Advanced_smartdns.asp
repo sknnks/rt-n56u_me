@@ -31,6 +31,8 @@ $j(document).ready(function(){
 	init_itoggle('sdns_ipv6_server');
 	init_itoggle('snds_ip_change');
 	init_itoggle('sdns_www');
+	init_itoggle('sdns_ipv6');
+	init_itoggle('sdns_exp');
 	init_itoggle('sdnse_enable');
 	init_itoggle('sdnse_address');
 	init_itoggle('sdnse_tcp');
@@ -50,6 +52,7 @@ $j(document).ready(function(){
 		return false;
 	});
 });
+
 var m_list = [<% get_nvram_list("SmartdnsConf", "SdnsList"); %>];
 var mlist_ifield = 6;
 if(m_list.length > 0){
@@ -60,10 +63,11 @@ if(m_list.length > 0){
 }
 function initial(){
 	show_banner(2);
-	show_menu(5,17);
+	show_menu(5,16);
 	show_footer();
 	showTab(getHash());
 	showMRULESList();
+	showmenu();
 	fill_status(smartdns_status());
 }
 
@@ -150,7 +154,9 @@ function markGroupRULES(o, c, b) {
 	document.form.current_page.value = "Advanced_smartdns.asp#dns";
 	return true;
 }
-
+function showmenu(){
+showhide_div('adglink', found_app_adguardhome());
+}
 function showMRULESList(){
 	var code = '<table width="100%" cellspacing="0" cellpadding="3" class="table table-list">';
 	if(m_list.length == 0)
@@ -172,7 +178,7 @@ function showMRULESList(){
 		code +='<tr id="rowrl' + i + '">';
 		code +='<td width="10%">&nbsp;' + adbybyrulesroad + '</td>';
 		code +='<td width="20%">&nbsp;' + m_list[i][1] + '</td>';
-		code +='<td width="25%">&nbsp;' + m_list[i][2] + '</td>';
+		code +='<td width="25%" class="spanb">' + m_list[i][2] + '</td>';
 		code +='<td width="10%">&nbsp;' + m_list[i][3] + '</td>';
 		code +='<td width="10%">&nbsp;' + m_list[i][4] + '</td>';
 		code +='<td width="15%">&nbsp;' + ipc + '</td>';
@@ -193,6 +199,11 @@ function showMRULESList(){
 .nav-tabs > li > a {
     padding-right: 6px;
     padding-left: 6px;
+}
+.spanb{
+    overflow:hidden;
+　　text-overflow:ellipsis;
+　　white-space:nowrap;
 }
 </style>
 </head>
@@ -243,9 +254,19 @@ function showMRULESList(){
                 <div class="row-fluid">
                     <div class="span12">
                         <div class="box well grad_colour_dark_blue">
-                            <h2 class="box_head round_top"><#menu5_24#></h2>
+                            <h2 class="box_head round_top"><#menu5_24#> - <#menu5_29#></h2>
                             <div class="round_bottom">
 							<div>
+                            <ul class="nav nav-tabs" style="margin-bottom: 10px;">
+                                <li class="active">
+                                    <a href="Advanced_smartdns.asp"><#menu5_24#></a>
+                                </li>
+								 <li id="adglink" style="display:none">
+                                    <a href="Advanced_adguardhome.asp"><#menu5_28#></a>
+                                </li>
+                            </ul>
+                        </div>
+						<div>
                             <ul class="nav nav-tabs" style="margin-bottom: 10px;">
                                 <li class="active">
                                     <a id="tab_sm_cfg" href="#cfg">基本设置</a>
@@ -336,6 +357,24 @@ function showMRULESList(){
                                                 </div>
                                             </td>
                                         </tr>
+										<tr> <th width="50%">双栈IP优选阈值</th>
+                                            <td>
+                                                <input type="text" maxlength="64" class="input" size="64" name="snds_ip_change_time" style="width: 50px" value="<% nvram_get_x("", "snds_ip_change_time"); %>"> 毫秒（0-100）
+                                            </td>
+                                        </tr>
+										<tr> <th>禁用IPV6解析</th>
+                                            <td>
+                                                <div class="main_itoggle">
+                                                <div id="sdns_ipv6_on_of">
+                                                    <input type="checkbox" id="sdns_ipv6_fake" <% nvram_match_x("", "sdns_ipv6", "1", "value=1 checked"); %><% nvram_match_x("", "sdns_ipv6", "0", "value=0"); %>>
+                                                </div>
+                                                </div>
+                                                <div style="position: absolute; margin-left: -10000px;">
+                                                    <input type="radio" value="1" name="sdns_ipv6" id="sdns_ipv6_1" <% nvram_match_x("", "sdns_ipv6", "1", "checked"); %>><#checkbox_Yes#>
+                                                    <input type="radio" value="0" name="sdns_ipv6" id="sdns_ipv6_0" <% nvram_match_x("", "sdns_ipv6", "0", "checked"); %>><#checkbox_No#>
+                                                </div>
+                                            </td>
+                                        </tr>
 										<tr> <th>域名预加载</th>
                                             <td>
                                                 <div class="main_itoggle">
@@ -346,6 +385,19 @@ function showMRULESList(){
                                                 <div style="position: absolute; margin-left: -10000px;">
                                                     <input type="radio" value="1" name="sdns_www" id="sdns_www_1" <% nvram_match_x("", "sdns_www", "1", "checked"); %>><#checkbox_Yes#>
                                                     <input type="radio" value="0" name="sdns_www" id="sdns_www_0" <% nvram_match_x("", "sdns_www", "0", "checked"); %>><#checkbox_No#>
+                                                </div>
+                                            </td>
+                                        </tr>
+										<tr> <th>过期缓存服务</th>
+                                            <td>
+                                                <div class="main_itoggle">
+                                                <div id="sdns_exp_on_of">
+                                                    <input type="checkbox" id="sdns_exp_fake" <% nvram_match_x("", "sdns_exp", "1", "value=1 checked"); %><% nvram_match_x("", "sdns_exp", "0", "value=0"); %>>
+                                                </div>
+                                                </div>
+                                                <div style="position: absolute; margin-left: -10000px;">
+                                                    <input type="radio" value="1" name="sdns_exp" id="sdns_exp_1" <% nvram_match_x("", "sdns_exp", "1", "checked"); %>><#checkbox_Yes#>
+                                                    <input type="radio" value="0" name="sdns_exp" id="sdns_exp_0" <% nvram_match_x("", "sdns_exp", "0", "checked"); %>><#checkbox_No#>
                                                 </div>
                                             </td>
                                         </tr>
@@ -602,6 +654,28 @@ function showMRULESList(){
 													<option value="0" <% nvram_match_x("","sdnss_ipc_x_0", "0","selected"); %>>禁用</option>
 													<option value="whitelist" <% nvram_match_x("","sdnss_ipc_x_0", "whitelist","selected"); %>>白名单</option>
 													<option value="blacklist" <% nvram_match_x("","sdnss_ipc_x_0", "blacklist","selected"); %>>黑名单</option>
+												</select>
+                                            </td>
+                                            </tr>
+											<tr><th colspan="2" style="background-color: #E3E3E3;">指定服务器组可用于单独解析gfwlist,如果不需要配合SS解析gfwlist,可以不填</th></tr>
+											 <tr>
+											 <th>服务器组(留空为不指定):</th>
+										 <td>
+                                                <input type="text" maxlength="255" class="span12" style="width: 200px" size="200" name="sdnss_named_x_0" value="<% nvram_get_x("", "sdnss_named_x_0"); %>" />
+											</td>
+											 </tr>
+											  <tr>
+											 <th>加入ipset(解析gfwlist要用):</th>
+										 <td>
+                                                <input type="text" maxlength="255" class="span12" style="width: 200px" size="200" name="sdnss_ipset_x_0" value="<% nvram_get_x("", "sdnss_ipset_x_0"); %>" />注意IP直接填,如果是域名:例如https://ndns.233py.com/dns-query 只填写ndns.233py.com就可以了.
+											</td>
+											 </tr>
+											 <tr>
+											 <th>将服务器从默认组中排除</th>
+										 <td>
+                                          	<select name="sdnss_non_x_0" class="input" style="width: 200px">
+													<option value="0" <% nvram_match_x("","sdnss_non_x_0", "0","selected"); %>>否</option>
+													<option value="1" <% nvram_match_x("","sdnss_non_x_0", "1","selected"); %>>是</option>
 												</select>
                                             </td>
                                             </tr>

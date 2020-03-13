@@ -1,16 +1,16 @@
-##2020.02.09##
-* 更改KP完整规则的下载地址
-* 同步hanwckf的最新源码
-* 调整固件的版本信息由自动生成日期改成固定日期
+##2020.03.05##
+* 修复自动编译固件过大问题
+* Dnsmasq增加禁止解析IPV6和最小TTL(取自lean lede)
 
-##2020.01.23##
-* 应群友建议,增加无线弱信号剔除功能
-* 继续修复SSP自动切换
-* 调整修改ssp web页面的一些小问题
-* 修正ssp和smartdns页面增加服务器页面跳转的问题
-* webdav增加自定义用户名和密码
-* 升级smartdns源码
-* 调整了固件版本命名:改成日期
+##2020.03.04##
+* 增加简单订阅功能
+* 替换SSP里的kmsocks,srelay为L大SSP最新使用的ipt2socks,micorsocks
+* SSP增加自动配置smartdns选项。
+* 重新用go 1.14编译了v2ray的二进制文件
+* 修复gfwlist显示0的问题
+* 内核SO_REUSEPORT，Trojan和SSR支持多线程
+* smartdns增加服务器组选项，可以配合gfwlist使用
+
 
 ##往期更新日志##
 *https://github.com/chongshengB/rt-n56u/blob/master/changelog-old.md

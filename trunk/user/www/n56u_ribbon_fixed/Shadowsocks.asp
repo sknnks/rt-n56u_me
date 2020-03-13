@@ -18,18 +18,27 @@
 <script type="text/javascript" src="/itoggle.js"></script>
 <script type="text/javascript" src="/popup.js"></script>
 <script type="text/javascript" src="/help.js"></script>
+<script type="text/javascript" src="/dlink.js"></script>
 <script>
 <% shadowsocks_status(); %>
 <% pdnsd_status(); %>
 <% rules_count(); %>
 var m_rules = [<% get_nvram_list("ShadowsocksConf", "SspList"); %>];
 var mrules_ifield = 17;
+//var drules_ifield = 17;
 if(m_rules.length > 0){
 	var m_rules_ifield = m_rules[0].length;
 	for (var i = 0; i < m_rules.length; i++) {
 		m_rules[i][mrules_ifield] = i;
 	}
 }
+/*
+if(d_rules.length > 0){
+	var d_rules_ifield = d_rules[0].length;
+	for (var i = 0; i < d_rules.length; i++) {
+		d_rules[i][drules_ifield] = i;
+	}
+}*/
 var $j = jQuery.noConflict();
 $j(document).ready(function(){
 	init_itoggle('ss_enable');
@@ -43,7 +52,9 @@ $j(document).ready(function(){
 	init_itoggle('ss_update_chnroute');
 	init_itoggle('ss_update_gfwlist');
 	init_itoggle('ss_turn');
-	$j("#tab_ss_cfg, #tab_ss_add, #tab_ss_ssl, #tab_ss_cli, #tab_ss_log").click(function(){
+	init_itoggle('socks5_enable');
+	init_itoggle('socks5_aenable');
+	$j("#tab_ss_cfg, #tab_ss_add, #tab_ss_dlink, #tab_ss_ssl, #tab_ss_cli, #tab_ss_log, #tab_ss_help").click(function(){
 		var newHash = $j(this).attr('href').toLowerCase();
 		showTab(newHash);
 		return false;
@@ -61,25 +72,28 @@ function initial(){
 	switch_ss_type();
 	showTab(getHash());
 	showMRULESList();
+	showDRULESList();
 	showssList();
-	shows5List();
-	switch_ss_mode();
+	//shows5List();
+	switch_dns();
 	var o1 = document.form.global_server;
 	var o2 = document.form.lan_con;
 	var o3 = document.form.ss_threads;
-	//var o4 = document.form.ss_run_mode;
+	var o4 = document.form.china_dns;
 	var o5 = document.form.pdnsd_enable;
-	var o6 = document.form.socks5_proxy;
+	var o6 = document.form.socks5_enable;
 	var o7 = document.form.tunnel_forward;
 	var o8 = document.form.backup_server;
 	o1.value = '<% nvram_get_x("","global_server"); %>';
 	o2.value = '<% nvram_get_x("","lan_con"); %>';
 	o3.value = '<% nvram_get_x("","ss_threads"); %>';
-	//o4.value = '<% nvram_get_x("","ss_run_mode"); %>';
+	o4.value = '<% nvram_get_x("","china_dns"); %>';
 	o5.value = '<% nvram_get_x("","pdnsd_enable"); %>';
-	o6.value = '<% nvram_get_x("","socks5_proxy"); %>';
+	o6.value = '<% nvram_get_x("","socks5_enable"); %>';
 	o7.value = '<% nvram_get_x("","tunnel_forward"); %>';
 	o8.value = '<% nvram_get_x("","backup_server"); %>';
+	showsdlinkList();
+	switch_dns();
 }
 function textarea_scripts_enabled(v){
 //inputCtrl(document.form['scripts.ss.dom.sh'], v);
@@ -110,22 +124,8 @@ if (b=="ss"){
 	showhide_div('row_v2_type', v);
 	showhide_div('row_v2_tls', v);
 	showhide_div('row_tj_tls_host', 0);
-}
-if (b=="kumasocks"){
-	var v=1;
-	showhide_div('row_ss_protocol', 0);
-	showhide_div('row_ss_protocol_para', 0);
-	showhide_div('row_ss_obfs', 0);
-	showhide_div('row_ss_obfs_para', 0);
-	showhide_div('row_ss_password', 0);
-	showhide_div('row_ss_method', 0);
-	showhide_div('row_v2_aid', 0);
-	showhide_div('row_v2_vid', 0);
-	showhide_div('row_v2_security', 0);
-	showhide_div('row_v2_net', 0);
-	showhide_div('row_v2_type', 0);
-	showhide_div('row_v2_tls', 0);
-	showhide_div('row_tj_tls_host', 0);
+	showhide_div('row_s5_username', 0);
+	showhide_div('row_s5_password', 0);
 }
 if (b=="ssr"){
 	var v=1;
@@ -142,6 +142,8 @@ if (b=="ssr"){
 	showhide_div('row_v2_type', 0);
 	showhide_div('row_v2_tls', 0);
 	showhide_div('row_tj_tls_host', 0);
+	showhide_div('row_s5_username', 0);
+	showhide_div('row_s5_password', 0);
 }
 if (b=="trojan"){
 	var v=1;
@@ -158,6 +160,8 @@ if (b=="trojan"){
 	showhide_div('row_v2_type', 0);
 	showhide_div('row_v2_tls', v);
 	showhide_div('row_tj_tls_host', v);
+	showhide_div('row_s5_username', 0);
+	showhide_div('row_s5_password', 0);
 }
 if (b=="v2ray"){
 	switch_v2_type();
@@ -174,6 +178,46 @@ if (b=="v2ray"){
 	showhide_div('row_v2_net', v);
 	showhide_div('row_v2_type', v);
 	showhide_div('row_v2_tls', v);
+	showhide_div('row_tj_tls_host', 0);
+	showhide_div('row_s5_username', 0);
+	showhide_div('row_s5_password', 0);
+}
+if (b=="kumasocks"){
+	var v=0;
+	var v=1;
+	showhide_div('row_ss_protocol', 0);
+	showhide_div('row_ss_protocol_para', 0);
+	showhide_div('row_ss_obfs', 0);
+	showhide_div('row_ss_obfs_para', 0);
+	showhide_div('row_ss_password', 0);
+	showhide_div('row_ss_method', 0);
+	showhide_div('row_v2_aid', 0);
+	showhide_div('row_v2_vid', 0);
+	showhide_div('row_v2_security', 0);
+	showhide_div('row_v2_net', 0);
+	showhide_div('row_v2_type', 0);
+	showhide_div('row_v2_tls', 0);
+	showhide_div('row_tj_tls_host', 0);
+	showhide_div('row_s5_username', 0);
+	showhide_div('row_s5_password', 0);
+}
+if (b=="socks5"){
+	var v=0;
+	var v=1;
+	showhide_div('row_ss_protocol', 0);
+	showhide_div('row_ss_protocol_para', 0);
+	showhide_div('row_ss_obfs', 0);
+	showhide_div('row_ss_obfs_para', 0);
+	showhide_div('row_ss_password', 0);
+	showhide_div('row_s5_username', 1);
+	showhide_div('row_s5_password', 1);
+	showhide_div('row_ss_method', 0);
+	showhide_div('row_v2_aid', 0);
+	showhide_div('row_v2_vid', 0);
+	showhide_div('row_v2_security', 0);
+	showhide_div('row_v2_net', 0);
+	showhide_div('row_v2_type', 0);
+	showhide_div('row_v2_tls', 0);
 	showhide_div('row_tj_tls_host', 0);
 }
 }
@@ -281,18 +325,27 @@ if (b=="quic"){
 	showhide_div('row_quic_header', k);
 }
 }
-function switch_ss_mode(){
-var b = document.form.ss_run_mode.value;
-if (b=="gfw"){
-	showhide_div('row_pdnsd_enable', 1);
+function switch_dns(){
+var b = document.form.pdnsd_enable.value;
+if (b=="0"){
+	showhide_div('row_china_dns', 1);
 	showhide_div('row_tunnel_forward', 1);
-	showhide_div('row_pdnsd_run', 1);
+	showhide_div('row_ssp_dns_ip', 0);
+	showhide_div('row_ssp_dns_port', 0);
 	
-}else{
-    showhide_div('row_pdnsd_enable', 0);
+}
+if (b=="1"){
+	showhide_div('row_china_dns', 0);
 	showhide_div('row_tunnel_forward', 0);
-	showhide_div('row_pdnsd_run', 0);
-	}
+	showhide_div('row_ssp_dns_ip', 1);
+	showhide_div('row_ssp_dns_port', 1);
+}
+if (b=="2"){
+	showhide_div('row_china_dns', 0);
+	showhide_div('row_tunnel_forward', 0);
+	showhide_div('row_ssp_dns_ip', 0);
+	showhide_div('row_ssp_dns_port', 0);
+}
 }
 function applyRule(){
 	showLoading();
@@ -335,7 +388,7 @@ function fill_ss_tunnel_status(status_code){
 		stext = "<#Running#>";
 	$("ss_tunnel_status").innerHTML = '<span class="label label-' + (status_code != 0 ? 'success' : 'warning') + '">' + stext + '</span>';
 }
-var arrHashes = ["cfg", "add", "ssl", "cli", "log"];
+var arrHashes = ["cfg", "add", "dlink", "ssl", "cli", "log", "help"];
 function showTab(curHash){
 	var obj = $('tab_ss_'+curHash.slice(1));
 	if (obj == null || obj.style.display == 'none')
@@ -374,6 +427,7 @@ function markGroupRULES(o, c, b) {
 	
 }
 function showMRULESList(){
+
 	var code = '<table width="100%" cellspacing="0" cellpadding="3" class="table table-list">';
 	if(m_rules.length == 0)
 		code +='<tr><td colspan="5" style="text-align: center;"><div class="alert alert-info"><#IPConnection_VSList_Norule#></div></td></tr>';
@@ -402,13 +456,52 @@ function showMRULESList(){
 	code +='</table>';
 	$("MRULESList_Block").innerHTML = code;
 }
+
+function showDRULESList(){
+
+	var code = '<table width="100%" cellspacing="0" cellpadding="3" class="table table-list" ><tbody id="dlist">';
+	if(d_rules.length == 0)
+		code +='<tr><td colspan="5" style="text-align: center;"><div class="alert alert-info"><#IPConnection_VSList_Norule#></div></td></tr>';
+	else{
+		for(var i = 0; i < d_rules.length; i++){
+			if(d_rules[i][0] == "v2ray"){
+				s_method=d_rules[i][6]
+			}else{
+				s_method=d_rules[i][5]
+			}
+			code +='<tr name="d_list" id="rowrl' + i + '">';
+			code +='<td width="5%">&nbsp;' + d_rules[i][0] + '</td>';
+			code +='<td width="20%">&nbsp;' + d_rules[i][1] + '</td>';
+			code +='<td width="20%"><input type="text" maxlength="6" class="input" size="15" name="ssp_name_x_0" style="width: 145px" disabled="disabled" value="' + d_rules[i][2] + '"/></td>';
+			code +='<td width="10%">&nbsp;' + d_rules[i][3] + '</td>';
+			code +='<td width="15%"><input type="text" maxlength="6" class="input" size="15" name="ssp_method_x_0" style="width: 80px" disabled="disabled" value="' + s_method + '"/></td>';
+			code +='<td width="15%">&nbsp;待开发</td>';
+			code +='<center><td width="5%" style="text-align: center;"><input type="checkbox" name="del_dlink" value="" onClick="changeBgColorrl(this,' + i + ');" id="check' + d_rules[i][mrules_ifield] + '"></td></center>';
+			code +='</tr>';
+		}
+		code += '<tr>';
+		code += '<td colspan="6">&nbsp;</td>'
+		code += '<td><button type="button" class="btn btn-danger" id="btn_del" onClick="del_dlinks();"><i class="icon icon-minus icon-white"></i></button></td>';
+		code += '</tr>'
+	}
+	code +='</tbody></table>';
+	$("DRULESList_Block").innerHTML = code;
+}
+
 function showssList(){
+    var list = document.getElementById('ss_list_2').checked;
+	if (list == true){
+	l_rules = d_rules;
+	}else{
+	l_rules = m_rules;
+	//showhide_div('row_DList_Block', 0)
+	}
 	var code2 = '<option value="nil" >停用</option>';
-	if(m_rules.length == 0)
+	if(l_rules.length == 0)
 		code2 +='<option value="non" >暂无可以用服务器</option>';
 	else{
-		for(var j = 0; j < m_rules.length; j++){
-			code2 +='<option value="'+ j +'" >['+ m_rules[j][0] + ']:'+ m_rules[j][1] + '</option>';
+		for(var j = 0; j < l_rules.length; j++){
+			code2 +='<option value="'+ j +'" >['+ l_rules[j][0] + ']:'+ l_rules[j][1] + '</option>';
 		}
 	}
 	$("ssList_Block").innerHTML = code2;
@@ -424,6 +517,49 @@ function shows5List(){
 		}
 	}
 	$("s5List_Block").innerHTML = code2;
+}
+
+function showsdlinkList(){
+    var list = document.getElementById('ss_list_2').checked;
+	if (list == true){
+	var code3 = '<table width="100%" cellpadding="4" cellspacing="0" class="table">';
+	var vsid = document.getElementById('ssList_Block').value;
+		for(var j = 0; j < d_rules.length; j++){
+		if (vsid == j){
+		if (d_rules[j][0] == "v2ray"){
+		code3 +='<tr style="display:none;"><th width="50%">服务器地址:</th><td><input type="hidden" class="input" name="d_server" style="width: 200px" value="'+  d_rules[j][2] + '"></td></tr>';
+		code3 +='<tr style="display:none;"><th width="50%">服务器端口:</th><td><input type="hidden" class="input" name="d_port" style="width: 200px" value="'+  d_rules[j][3] + '"></td></tr>';
+		code3 +='<tr style="display:none;"><th width="50%">AlterId:</th><td><input type="hidden" class="input" name="d_v2_aid" style="width: 200px" value="'+  d_rules[j][4] + '"></td></tr>';
+		code3 +='<tr style="display:none;"><th width="50%">VmessId (UUID):</th><td><input type="hidden" class="input" name="d_v2_uid" style="width: 200px" value="'+  d_rules[j][5] + '"></td></tr>';
+		code3 +='<tr style="display:none;"><th width="50%">加密:</th><td><input type="hidden" class="input" name="d_v2_security" style="width: 200px" value="'+  d_rules[j][6] + '"></td></tr>';
+		code3 +='<tr style="display:none;"><th width="50%">传输方式:</th><td><input type="hidden" class="input" name="d_v2_net" style="width: 200px" value="'+  d_rules[j][7] + '"></td></tr>';
+		if (d_rules[j][7] == "tcp"){
+		code3 +='<tr style="display:none;"><th width="50%">伪装类型:</th><td><input type="hidden" class="input" name="d_v2_type" style="width: 200px" value="'+  d_rules[j][8] + '"></td></tr>';
+		code3 +='<tr style="display:none;"><th width="50%">HOST:</th><td><input type="hidden" class="input" name="d_v2_host" style="width: 200px" value="'+  d_rules[j][9] + '"></td></tr>';
+		}else if (d_rules[j][7] == "kcp"){
+		code3 +='<tr style="display:none;"><th width="50%">伪装类型:</th><td><input type="hidden" class="input" name="d_v2_type" style="width: 200px" value="'+  d_rules[j][8] + '"></td></tr>';
+		}else if (d_rules[j][7] == "ws" || d_rules[j][7] == "h2"){
+		code3 +='<tr style="display:none;"><th width="50%">HOST:</th><td><input type="hidden" class="input" name="d_v2_host" style="width: 200px" value="'+  d_rules[j][8] + '"></td></tr>';
+		code3 +='<tr style="display:none;"><th width="50%">PATH:</th><td><input type="hidden" class="input" name="d_v2_path" style="width: 200px" value="'+  d_rules[j][9] + '"></td></tr>';
+		}
+		code3 +='<tr style="display:none;"><th width="50%">TLS:</th><td><input type="hidden" class="input" name="d_v2_tls" style="width: 200px" value="'+  d_rules[j][10] + '"></td></tr>';
+		}else if (d_rules[j][0] == "ssr"){
+		code3 +='<tr style="display:none;"><th width="50%">服务器地址:</th><td><input type="hidden" class="input" name="d_server" style="width: 200px" value="'+  d_rules[j][2] + '"></td></tr>';
+		code3 +='<tr style="display:none;"><th width="50%">服务器端口:</th><td><input type="hidden" class="input" name="d_port" style="width: 200px" value="'+  d_rules[j][3] + '"></td></tr>';
+		code3 +='<tr style="display:none;"><th width="50%">服务器密码:</th><td><input type="hidden" class="input" name="d_ss_password" style="width: 200px" value="'+  d_rules[j][4] + '"></td></tr>';
+		code3 +='<tr style="display:none;"><th width="50%">加密方式:</th><td><input type="hidden" class="input" name="d_ss_method" style="width: 200px" value="'+  d_rules[j][5] + '"></td></tr>';
+		code3 +='<tr style="display:none;"><th width="50%">协议:</th><td><input type="hidden" class="input" name="d_ss_protocol" style="width: 200px" value="'+  d_rules[j][6] + '"></td></tr>';
+		code3 +='<tr style="display:none;"><th width="50%">传输协议参数:</th><td><input type="hidden" class="input" name="d_ss_protoparam" style="width: 200px" value="'+  d_rules[j][7] + '"></td></tr>';
+		code3 +='<tr style="display:none;"><th width="50%">混淆:</th><td><input type="hidden" class="input" name="d_ss_obfs" style="width: 200px" value="'+  d_rules[j][8] + '"></td></tr>';
+		code3 +='<tr style="display:none;"><th width="50%">混淆参数:</th><td><input type="hidden" class="input" name="d_ss_obfsparam" style="width: 200px" value="'+  d_rules[j][9] + '"></td></tr>';
+		}
+		document.form.d_type.value = d_rules[j][0];
+		}
+		}
+		code3 +='</table>';
+	$("DList_Block").innerHTML = code3;
+	//showhide_div('row_DList_Block', 1)
+	}
 }
 function changeBgColor(obj, num){
 	$("row" + num).style.background=(obj.checked)?'#D9EDF7':'whiteSmoke';
@@ -486,7 +622,7 @@ function import_ssr_url(btn, urlname, sid) {
 //var ssu = ssrurl.match(/ssr:\/\/([A-Za-z0-9_-]+)/i);
 var ssu = ssrurl.split('://');
 console.log(ssu.length);
-if ((ssu[0] != "ssr" && ssu[0] != "ss" && ssu[0] != "vmess" && ssu[0] != "kumasocks"&& ssu[0] != "trojan") || ssu[1] == "") {
+if ((ssu[0] != "ssr" && ssu[0] != "ss" && ssu[0] != "vmess" && ssu[0] != "trojan") || ssu[1] == "") {
 	s.innerHTML = "<font color='red'>无效格式</font>";
 	return false;
 }
@@ -559,16 +695,16 @@ if (ssu[0] == "ssr") {
             } else {
                 url0 = ssu[1]
             }
-            var sstr = b64decsafe(url0);
+            var sstr = url0;
             document.getElementById('ssp_type_x_0').value = "trojan";
             document.getElementById('ssp_type_x_0').dispatchEvent(event);
             var team = sstr.split('@');
-            console.log(param);
-            var part1 = team[0].split(':');
-            var part2 = team[1].split(':');
-            document.getElementById('ssp_server_x_0').value = part2[0];
-            document.getElementById('ssp_prot_x_0').value = part2[1];
-            document.getElementById('ss_key').value = part1[1];
+            var password = team[0]
+			var serverPart = team[1].split(':');
+			var port = serverPart[1].split('?')[0];
+			document.getElementById('ssp_server_x_0').value = serverPart[0];
+			document.getElementById('ssp_prot_x_0').value = port;
+			document.getElementById('ss_key').value = password;
             if (param != undefined) {
                 document.getElementById('ssp_name_x_0').value = decodeURI(param);
             }
@@ -606,10 +742,42 @@ if (ssu[0] == "ssr") {
 		document.getElementById('v2_http2_host_x_0').value = ssm.host;
 		document.getElementById('v2_http2_path_x_0').value = ssm.path;
 	}
+	if (ssm.tls == "tls" ) {
+		document.getElementById('v2_tls_x_0').value = 1;
+		document.getElementById('v2_tls_x_0').checked = true;
+	}
 	s.innerHTML = "<font color='green'>导入V2ray配置信息成功</font>";
 	return false;
 }
 }
+
+function ctls(){
+document.getElementById('v2_tls_x_0').value = 1;
+if(document.getElementById('v2_tls_x_0').checked){
+document.getElementById('v2_tls_x_0').value = 1;
+}else{
+document.getElementById('v2_tls_x_0').value = 0;
+}
+
+}
+//THX 花妆男-->
+function del_dlinks() {
+	var ListNode = document.getElementById('dlist');
+	console.log(ListNode);
+	var trListNode = ListNode.getElementsByTagName('tr');
+	var checkboxList = document.getElementsByName('del_dlink');
+	for (var i = 0; i < checkboxList.length; i++) {
+		if (checkboxList[i].checked) {
+			ListNode.removeChild(trListNode[i]);
+			d_rules.splice(i, 1);
+			i--
+		}
+	}
+
+	document.getElementById("dlll").value = 'var d_rules = ' + ' \n ' + JSON.stringify(d_rules);
+
+};
+//<-----
 //]]></script>
 <style>
 .nav-tabs > li > a {
@@ -639,6 +807,7 @@ if (ssu[0] == "ssr") {
 <input type="hidden" name="action_mode" value="">
 <input type="hidden" name="action_script" value="">
 <input type="hidden" name="ssp_staticnum_x_0" value="<% nvram_get_x("SspList", "ssp_staticnum_x"); %>" readonly="1" />
+<input type="hidden" name="d_type" value="<% nvram_get_x("","d_type"); %>">
 <div class="container-fluid">
 <div class="row-fluid">
 <div class="span3">
@@ -667,6 +836,10 @@ if (ssu[0] == "ssr") {
 						</li>
 						<li>
 							<a id="tab_ss_add" href="#add">节点设置</a>
+							</li>
+							<li>
+							<a id="tab_ss_dlink" href="#dlink">订阅节点</a>
+							</li>
 							<li>
 								<a id="tab_ss_ssl" href="#ssl">高级设置</a>
 							</li>
@@ -676,12 +849,15 @@ if (ssu[0] == "ssr") {
 							<li>
 								<a id="tab_ss_log" href="#log">运行日志</a>
 							</li>
+							<li>
+								<a id="tab_ss_help" href="#help">帮助文档</a>
+							</li>
 						</ul>
 					</div>
 <div class="row-fluid">
 	<div id="tabMenu" class="submenuBlock"></div>
-	<div class="alert alert-info" style="margin: 10px;">一个兼容Shadowsocks、ShadowsocksR 、Vmess等协议的游戏加速工具。</div>
 	<div id="wnd_ss_cfg">
+	<div class="alert alert-info" style="margin: 10px;">一个兼容Shadowsocks、ShadowsocksR 、Vmess等协议的游戏加速工具。</div>
 		<table width="100%" cellpadding="4" cellspacing="0" class="table">
 			<tr> <th>当前运行服务器</th>
 				<td id="ss_check_status"></td>
@@ -710,12 +886,24 @@ if (ssu[0] == "ssr") {
 					</div>
 				</td>
 			</tr>
+			<tr> <th width="50%">请选择节点列表:</th>
+				<td>
+				自定义列表&nbsp;&nbsp;<input type="radio" value="0" name="ss_list" id="ss_list_1" onclick="showssList()" <% nvram_match_x("", "ss_list", "0", "checked"); %>>
+				订阅列表&nbsp;&nbsp;<input type="radio" value="1" name="ss_list" id="ss_list_2" onclick="showssList()" <% nvram_match_x("", "ss_list", "1", "checked"); %>>
+				</td>
+			</tr>
 			<tr> <th>主服务器</th>
 				<td>
-					<select name="global_server" id="ssList_Block" class="input" style="width: 200px;">
+					<select name="global_server" id="ssList_Block" class="input" style="width: 200px;" onchange="showsdlinkList()">
 					</select>
 				</td>
 			</tr>
+
+			<tr id="row_DList_Block" style="display:none;">
+		<td colspan="2" style="border-top: 0 none; padding: 0px;">
+			<div id="DList_Block"></div>
+		</td>
+	</tr>
 			<tr> <th>故障转移服务器</th>
 				<td>
 					<select name="backup_server" id="ssbList_Block" class="input" style="width: 200px;">
@@ -728,14 +916,16 @@ if (ssu[0] == "ssr") {
 						<option value="0" >自动（CPU线程数）</option>
 						<option value="1" >单线程</option>
 						<option value="2" >2 线程</option>
-						<option value="3" >4 线程</option>
-						<option value="4" >8 线程</option>
+						<option value="4" >4 线程</option>
+						<option value="8" >8 线程</option>
+						<option value="16" >16 线程</option>
+						<option value="24" >24 线程</option>
 					</select>
 				</td>
 			</tr>
 			<tr> <th width="50%">运行模式</th>
 				<td>
-					<select name="ss_run_mode" id="ss_run_mode" class="input" style="width: 200px;" onchange="switch_ss_mode()">   
+					<select name="ss_run_mode" id="ss_run_mode" class="input" style="width: 200px;" >   
 						<option value="gfw" <% nvram_match_x("","ss_run_mode", "gfw","selected"); %> >gfw列表模式</option>
 						<option value="router" <% nvram_match_x("","ss_run_mode", "router","selected"); %> >绕过大陆IP模式</option>
 						<option value="all" <% nvram_match_x("","ss_run_mode", "all","selected"); %> >全局模式</option>
@@ -751,15 +941,28 @@ if (ssu[0] == "ssr") {
 					</select>
 				</td>
 			</tr>
-			<tr id="row_pdnsd_enable" style="display:none;"> <th width="50%">GFW域名DNS解析方式</th>
+			<tr id="row_pdnsd_enable"> <th width="50%">DNS解析方式</th>
 				<td>
-					<select name="pdnsd_enable" class="input" style="width: 200px;">
-						<option value="0" >使用PDNSD TCP查询并缓存</option>
+					<select name="pdnsd_enable" id="pdnsd_enable" class="input" style="width: 200px;" onchange="switch_dns()">
+						<option value="0" >使用pdnsd查询</option>
 						<option value="1" >使用SmartDNS查询</option>
+						<option value="2" >使用其它服务器</option>
 					</select>
 				</td>
 			</tr>
-			<tr id="row_tunnel_forward" style="display:none;"> <th width="50%">GFW域名DNS服务器</th>
+			<tr id="row_china_dns" style="display:none;"> <th width="50%">中国DNS服务器</th>
+				<td>
+					<select name="china_dns" class="input" style="width: 200px;" >
+						<option value="223.5.5.5#53" >阿里DNS (223.5.5.5)</option>
+						<option value="114.114.114.114#53" >114 DNS (114.114.114.114)</option>
+						<option value="117.50.11.11#53" >OneDNS (117.50.11.11)</option>
+						<option value="180.76.76.76#53" >百度DNS (180.76.76.76)</option>
+						<option value="119.29.29.29#53" >DNSPOD DNS (119.29.29.29)</option>
+						<option value="1.2.4.8#53" >cnnic DNS (1.2.4.8)</option>
+					</select>
+				</td>
+			</tr>
+			<tr id="row_tunnel_forward" style="display:none;"> <th width="50%">外国DNS服务器</th>
 				<td>
 					<select name="tunnel_forward" class="input" style="width: 200px;" >
 						<option value="8.8.4.4:53" >Google Public DNS (8.8.4.4)</option>
@@ -776,6 +979,12 @@ if (ssu[0] == "ssr") {
 						<option value="114.114.114.114:53" >Oversea Mode DNS-1 (114.114.114.114)</option>
 						<option value="114.114.115.115:53" >Oversea Mode DNS-1 (114.114.115.115)</option>
 					</select>
+				</td>
+			</tr>
+			<tr id="row_ssp_dns_ip" style="display:none;"> <th width="50%">SmartDNS加载方式:</th>
+				<td>
+				自动配置<input type="radio" value="2" name="ssp_dns_ip" id="ssp_dns_ip_2" <% nvram_match_x("", "ssp_dns_ip", "2", "checked"); %>>
+				手动配置<input type="radio" value="1" name="ssp_dns_ip" id="ssp_dns_ip_1" <% nvram_match_x("", "ssp_dns_ip", "1", "checked"); %>>
 				</td>
 			</tr>
 				<tr> <th><#menu5_16_17#></th>
@@ -804,6 +1013,7 @@ if (ssu[0] == "ssr") {
 					</div>
 				</td>
 			</tr>
+
 		</table>
 		<table class="table">
 			<tr>
@@ -813,6 +1023,7 @@ if (ssu[0] == "ssr") {
 	</div>
 <div id="wnd_ss_add">
 	<table width="100%" cellpadding="4" cellspacing="0" class="table">
+	<tr> <th colspan="2" style="background-color: #E3E3E3;">添加/删除/编辑节点</th> </tr>
 		<tr> <th width="50%">导入节点信息:</th>
 			<td>
 				<input type="button" class="btn btn-primary" value="点击输入节点URL" onclick="return import_ssr_url(this, '<%=self.option%>', '<%=self.value%>')" />
@@ -823,9 +1034,10 @@ if (ssu[0] == "ssr") {
 					<select name="ssp_type_x_0" id="ssp_type_x_0" class="input" style="width: 200px;" onchange="switch_ss_type()">
 						<option value="ss" <% nvram_match_x("","ssp_type_x_0", "ss","selected"); %> >SS</option>
 						<option value="ssr" <% nvram_match_x("","ssp_type_x_0", "ssr","selected"); %> >SSR</option>
-						<option value="kumasocks" <% nvram_match_x("","ssp_type_x_0", "kumasocks","selected"); %> >kumasocks</option>
 						<option value="trojan" <% nvram_match_x("","ssp_type_x_0", "trojan","selected"); %> >Trojan</option>
 						<option value="v2ray" <% nvram_match_x("","ssp_type_x_0", "v2ray","selected"); %> >V2ray</option>
+						<option value="kumasocks" <% nvram_match_x("","ssp_type_x_0", "kumasocks","selected"); %> >kumasocks</option>
+						<option value="socks5" <% nvram_match_x("","ssp_type_x_0", "socks5","selected"); %> >socks5</option>
 					</select>
 				</td>
 			</tr>
@@ -850,6 +1062,17 @@ if (ssu[0] == "ssr") {
 					<button style="margin-left: -5px;" class="btn" type="button" onclick="passwordShowHide('ss_key')"><i class="icon-eye-close"></i></button>
 				</td>
 			</tr>	
+			<tr id="row_s5_username" style="display:none;">  <th width="50%">socks5用户名</th>
+				<td>
+					<input type="password" class="input" size="32" name="s5_username_x_0" value="<% nvram_get_x("","s5_username_x_0"); %>" />
+				</td>
+			</tr>
+			<tr id="row_s5_password" style="display:none;">  <th width="50%">socks5密码</th>
+				<td>
+					<input type="password" class="input" size="32" name="s5_password_x_0" id="s5_key" value="<% nvram_get_x("","s5_password_x_0"); %>" />
+					<button style="margin-left: -5px;" class="btn" type="button" onclick="passwordShowHide('s5_key')"><i class="icon-eye-close"></i></button>
+				</td>
+			</tr>
 			<tr id="row_v2_aid" style="display:none;"> <th width="50%">AlterId</th>
 				<td>
 					<input type="text" class="input" size="15" name="v2_aid_x_0" id="v2_aid_x_0" style="width: 200px" value="<% nvram_get_x("","v2_aid_x_0"); %>" />
@@ -988,15 +1211,8 @@ if (ssu[0] == "ssr") {
 			</tr>
 			<tr id="row_v2_tls" style="display:none;"><th>TLS</th>
 				<td>
-					<div class="main_itoggle">
-						<div id="v2_tls_x_0_on_of">
-							<input type="checkbox" id="v2_tls_x_0_fake" <% nvram_match_x("", "v2_tls_x_0", "1", "value=1 checked"); %><% nvram_match_x("", "v2_tls_x_0", "0", "value=0"); %>>
-						</div>
-					</div>
-					<div style="position: absolute; margin-left: -10000px;">
-						<input type="radio" value="1" name="v2_tls_x_0" id="v2_tls_x_0_1" <% nvram_match_x("", "v2_tls_x_0", "1", "checked"); %>><#checkbox_Yes#>
-						<input type="radio" value="0" name="v2_tls_x_0" id="v2_tls_x_0_0" <% nvram_match_x("", "v2_tls_x_0", "0", "checked"); %>><#checkbox_No#>
-					</div>
+				<input type="checkbox" name="v2_tls_x_0" id="v2_tls_x_0" onclick="ctls();" <% nvram_match_x("", "v2_tls_x_0", "1", "value=1 checked"); %><% nvram_match_x("", "v2_tls_x_0", "0", "value=0"); %>>
+
 				</td>
 			</tr>
 			<tr id="row_tj_tls_host" style="display:none;"><th>TLS Host</th>
@@ -1128,6 +1344,62 @@ if (ssu[0] == "ssr") {
 	</tr>
 </table>
 </div>
+<div id="wnd_ss_dlink" style="display:none">
+<table width="100%" cellpadding="4" cellspacing="0" class="table">
+		<tr> <th colspan="2" style="background-color: #E3E3E3;">订阅节点:添加完地址请先点击一下保存设置按钮,再点击更新订阅按钮。</th> </tr>
+		<tr>
+			<td colspan="3" >
+				<i class="icon-hand-right"></i> <a href="javascript:spoiler_toggle('script19')"><span>订阅地址(一行一个地址):</span></a>
+				<div id="script19">
+					<textarea rows="8" wrap="off" spellcheck="false" maxlength="314571" class="span12" name="scripts.ss_dlink.sh" style="font-family:'Courier New'; font-size:12px;"><% nvram_dump("scripts.ss_dlink.sh",""); %></textarea>
+				</div>
+			</td>
+		</tr>
+		<tr>
+				<td>
+					排除节点关键字：<input type="text" maxlength="6" class="input" size="15" name="d_keyword_n" style="width: 200px" placeholder="请以'|'为分隔符" value="<% nvram_get_x("","d_keyword_n"); %>">
+					匹配节点关键字：<input type="text" maxlength="6" class="input" size="15" name="d_keyword_y" style="width: 200px" placeholder="请以'|'为分隔符" value="<% nvram_get_x("","d_keyword_y"); %>">
+				</td>
+			</tr>
+	<tr>
+		<td style="border: 0 none; padding: 0px;"><center><input name="button" type="button" class="btn btn-primary" style="width: 100px" onclick="applyRule();" value="保存设置"/> 
+		<input type="button" id="btn_connect_1" class="btn btn-info" value="更新订阅" onclick="submitInternet('Update_dlink');">
+		<input type="button" id="btn_connect_1" class="btn btn-info" value="清空订阅" onclick="submitInternet('Reset_dlink');"></center></td>
+	</tr>
+</table>
+		<table width="100%" align="center" cellpadding="3" cellspacing="0" class="table">
+	<tr id="row_rules_caption">
+		<th width="10%">
+			类型 <i class="icon-circle-arrow-down"></i>
+		</th>
+		<th width="20%">
+			别名 <i class="icon-circle-arrow-down"></i>
+		</th>
+		<th width="20%"><center>
+			地址 <i class="icon-circle-arrow-down"></i></center>
+		</th>
+		<th width="15%"><center>
+			端口 <i class="icon-circle-arrow-down"></i></center>
+		</th>
+		<th width="15%"><center>
+			加密 <i class="icon-circle-arrow-down"></i></center>
+		</th>
+		<th width="15%"><center>
+			延迟 <i class="icon-circle-arrow-down"></i></center>
+		</th>
+		<th width="10%">
+			<center><i class="icon-th-list"></i></center>
+		</th>
+	</tr>
+	<tr id="row_rules_header">
+	</tr>
+	<tr id="row_rules_body">
+		<td colspan="7" style="border-top: 0 none; padding: 0px;">
+			<div id="DRULESList_Block"></div>
+		</td>
+	</tr>
+</table>
+</div>
 <div id="wnd_ss_ssl" style="display:none">
 	<table width="100%" cellpadding="4" cellspacing="0" class="table">
 		<tr> <th colspan="2" style="background-color: #E3E3E3;">节点故障自动切换设置</th> </tr>
@@ -1169,15 +1441,55 @@ if (ssu[0] == "ssr") {
 	</td>
 </tr>
 <tr> <th colspan="2" style="background-color: #E3E3E3;">SOCKS5代理</th> </tr>
-<tr> <th>服务器</th>
+<tr> <th>启用SOCKS5代理服务</th>
+<td>
+<div class="main_itoggle">
+<div id="socks5_enable_on_of">
+<input type="checkbox" id="socks5_enable_fake" <% nvram_match_x("", "socks5_enable", "1", "value=1 checked"); %><% nvram_match_x("", "socks5_enable", "0", "value=0"); %>>
+</div>
+</div>
+<div style="position: absolute; margin-left: -10000px;">
+<input type="radio" value="1" name="socks5_enable" id="socks5_enable_1" <% nvram_match_x("", "socks5_enable", "1", "checked"); %>><#checkbox_Yes#>
+<input type="radio" value="0" name="socks5_enable" id="socks5_enable_0" <% nvram_match_x("", "socks5_enable", "0", "checked"); %>><#checkbox_No#>
+</div>
+</td>
+</tr>
+<tr> <th width="50%">代理端口:</th>
 	<td>
-		<select name="socks5_proxy" id="s5List_Block" class="input" style="width: 200px;">
-		</select>
+		<input type="text" class="input" size="15" name="socks5_port" style="width: 200px" value="<% nvram_get_x("", "socks5_port"); %>">
 	</td>
 </tr>
-<tr> <th width="50%">本地端口:</th>
+<tr id="row_socks5" > <th width="50%">外网访问设置</th>
+				<td>
+					<select name="socks5_w_enable" class="input" style="width: 200px;" >
+						<option value="0" >禁用</option>
+						<option value="1" >WAN IPV4</option>
+						<option value="2" >WAN IPV6</option>
+						<option value="3" >IPV4+IPV6</option>
+					</select>
+				</td>
+			</tr>
+<tr> <th>启用 用户名/密码 认证</th>
+<td>
+<div class="main_itoggle">
+<div id="socks5_aenable_on_of">
+<input type="checkbox" id="socks5_aenable_fake" <% nvram_match_x("", "socks5_aenable", "1", "value=1 checked"); %><% nvram_match_x("", "socks5_aenable", "0", "value=0"); %>>
+</div>
+</div>
+<div style="position: absolute; margin-left: -10000px;">
+<input type="radio" value="1" name="socks5_aenable" id="socks5_aenable_1" <% nvram_match_x("", "socks5_aenable", "1", "checked"); %>><#checkbox_Yes#>
+<input type="radio" value="0" name="socks5_aenable" id="socks5_aenable_0" <% nvram_match_x("", "socks5_aenable", "0", "checked"); %>><#checkbox_No#>
+</div>
+</td>
+</tr>
+<tr> <th width="50%">用户名:</th>
 	<td>
-		<input type="text" class="input" size="15" name="socks5_proxy_port" style="width: 200px" value="<% nvram_get_x("", "socks5_proxy_port"); %>">
+		<input type="text" class="input" size="15" name="socks5_s_username" style="width: 200px" value="<% nvram_get_x("", "socks5_s_username"); %>">
+	</td>
+</tr>
+<tr> <th width="50%">密码:</th>
+	<td>
+		<input type="text" class="input" size="15" name="socks5_s_password" style="width: 200px" value="<% nvram_get_x("", "socks5_s_password"); %>">
 	</td>
 </tr>
 </table>
@@ -1270,6 +1582,23 @@ if (ssu[0] == "ssr") {
 			</td>
 		</tr>
 		<tr>
+			<td colspan="3" >
+				<i class="icon-hand-right"></i> <a href="javascript:spoiler_toggle('script15')"><span>不走SS代理的域名:</span></a>
+				<div id="script15">
+					<textarea rows="8" wrap="off" spellcheck="false" maxlength="314571" class="span12" name="scripts.uss_dom.sh" style="font-family:'Courier New'; font-size:12px;"><% nvram_dump("scripts.uss_dom.sh",""); %></textarea>
+				</div>
+			</td>
+		</tr>
+		
+		<tr style="display:none">
+			<td colspan="3" >
+				<div id="script15">
+					<textarea rows="8" warp="virtual" spellcheck="false" maxlength="314571" class="span12" id="dlll" name="scripts.dlink.js" style="font-family:'Courier New'; font-size:12px;"><% nvram_dump("scripts.dlink.js",""); %></textarea>
+				</div>
+			</td>
+		</tr>
+		
+		<tr>
 			<td colspan="2">
 				<center><input class="btn btn-primary" style="width: 219px" type="button" value="<#CTL_apply#>" onclick="applyRule()" /></center>
 			</td>
@@ -1288,6 +1617,24 @@ if (ssu[0] == "ssr") {
 				<input type="button" onClick="location.href=location.href" value="<#CTL_refresh#>" class="btn btn-primary" style="width: 200px">
 			</td>
 		</tr>
+	</table>
+</div>
+<div id="wnd_ss_help" style="display:none">
+	<table width="100%" cellpadding="4" cellspacing="0" class="table">
+		<tr> <th colspan="2" style="background-color: #E3E3E3;">PDNSD说明:</th> </tr>
+		<tr> <th width="100%">绕过大陆模式启用pdnsd会自动检测并关闭当前正在运行的smartdns,因绕过大陆模式中,pdnsd需要把DNS转发到自身，所以两者不能共存。</th></tr>
+		<tr> <th width="100%">绕过大陆模式启用pdnsd会加载CDN域名规则来分流常用网站跑国内DNS，</th></tr>
+		<tr> <th colspan="2" style="background-color: #E3E3E3;">SmartDNS说明:</th> </tr>
+		<tr> <th width="100%">自动配置:此选项将加载预设的配置文件启动smartdns,不用你手动配置,适合小白,当然配置不一定会很适合你自身.</th></tr>
+		<tr> <th width="100%">手动配置:启动SS后需要自行到smartdns页面配置相关上游,端口之类，适合老手</br>
+		gfwlist模式下建议:启用第二服务器,端口5353,服务器组gfwlist,上游服务器添加服务器组,并从默认组排除。</br>
+		绕过模式下建议:国内DNS加载白名单。
+		</th></tr>
+
+		<tr> <th colspan="2" style="background-color: #E3E3E3;">Socks5代理说明:</th> </tr>
+		<tr> <th width="100%">WAN IPV4:允许外网IPV4访问socks5</th></tr>
+		<tr> <th width="100%">WAN IPV6:允许外网IPV6访问socks5</th></tr>
+		<tr> <th width="100%">IPV4+IPV6:运行外网IPV4+IPV6访问socks5</th></tr>
 	</table>
 </div>
 </div>

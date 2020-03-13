@@ -15,7 +15,7 @@ PROG_PATH="/tmp/adbyby"
 DATA_PATH="$PROG_PATH/data"
 WAN_FILE="/etc/storage/dnsmasq-adbyby.d/03-adbyby-ipset.conf"
 wan_mode=`nvram get adbyby_set`
-abp_mode=`nvram get adbyby_adb_update`
+#abp_mode=`nvram get adbyby_adb_update`
 nvram set adbybyip_mac_x_0=""
 nvram set adbybyip_ip_x_0=""
 nvram set adbybyip_name_x_0=""
@@ -30,15 +30,16 @@ adbyby_start()
 	tar -xzvf "/etc_ro/adbyby.tar.gz" -C "/tmp"
 	logger -t "adbyby" "成功解压至：$PROG_PATH"
 	fi
-	if [ $abp_mode -eq 1 ]; then
-	/tmp/adbyby/adblock.sh &
-	fi
+	#if [ $abp_mode -eq 1 ]; then
+	#/tmp/adbyby/adblock.sh &
+	#fi
 	#/tmp/adbyby/adupdate.sh &
 	add_rules
 	$PROG_PATH/adbyby &>/dev/null &
 	add_dns
 	iptables-save | grep ADBYBY >/dev/null || \
 	add_rule
+	hosts_ads
 	/sbin/restart_dhcpd
 	add_cron
 	logger -t "adbyby" "Adbyby启动完成。"
@@ -65,7 +66,7 @@ add_rules()
 	rm -f /tmp/adbyby/data/*.bak
 
 	touch /tmp/local-md5.json && md5sum /tmp/adbyby/data/lazy.txt /tmp/adbyby/data/video.txt > /tmp/local-md5.json
-	touch /tmp/md5.json && curl -k -s -o /tmp/md5.json --connect-timeout 5 --retry 3 https://coding.net/u/adbyby/p/xwhyc-rules/git/raw/master/md5.json
+	touch /tmp/md5.json && curl -k -s -o /tmp/md5.json --connect-timeout 5 --retry 3 https://adbyby.coding.net/p/xwhyc-rules/d/xwhyc-rules/git/raw/master/md5.json
 
 	lazy_local=$(grep 'lazy' /tmp/local-md5.json | awk -F' ' '{print $1}')
 	video_local=$(grep 'video' /tmp/local-md5.json | awk -F' ' '{print $1}')  
@@ -75,8 +76,8 @@ add_rules()
 	if [ "$lazy_online"x != "$lazy_local"x -o "$video_online"x != "$video_local"x ]; then
 	echo "MD5 not match! Need update!"
 	logger -t "adbyby" "发现更新的规则,下载规则！"
-	touch /tmp/lazy.txt && curl -k -s -o /tmp/lazy.txt --connect-timeout 5 --retry 3 https://coding.net/u/adbyby/p/xwhyc-rules/git/raw/master/lazy.txt
-	touch /tmp/video.txt && curl -k -s -o /tmp/video.txt --connect-timeout 5 --retry 3 https://coding.net/u/adbyby/p/xwhyc-rules/git/raw/master/video.txt
+	touch /tmp/lazy.txt && curl -k -s -o /tmp/lazy.txt --connect-timeout 5 --retry 3 https://adbyby.coding.net/p/xwhyc-rules/d/xwhyc-rules/git/raw/master/lazy.txt
+	touch /tmp/video.txt && curl -k -s -o /tmp/video.txt --connect-timeout 5 --retry 3 https://adbyby.coding.net/p/xwhyc-rules/d/xwhyc-rules/git/raw/master/video.txt
 	touch /tmp/local-md5.json && md5sum /tmp/lazy.txt /tmp/video.txt > /tmp/local-md5.json
 	lazy_local=$(grep 'lazy' /tmp/local-md5.json | awk -F' ' '{print $1}')
 	video_local=$(grep 'video' /tmp/local-md5.json | awk -F' ' '{print $1}')
@@ -213,6 +214,7 @@ add_dns()
 {
 	mkdir -p /etc/storage/dnsmasq-adbyby.d
 	mkdir -p /tmp/dnsmasq.d
+	anti_ad
 	awk '!/^$/&&!/^#/{printf("ipset=/%s/'"adbyby_esc"'\n",$0)}' $PROG_PATH/adesc.conf > /etc/storage/dnsmasq-adbyby.d/06-dnsmasq.esc
 	awk '!/^$/&&!/^#/{printf("address=/%s/'"0.0.0.0"'\n",$0)}' $PROG_PATH/adblack.conf > /etc/storage/dnsmasq-adbyby.d/07-dnsmasq.black
 	sed -i '/dnsmasq-adbyby/d' /etc/storage/dnsmasq/dnsmasq.conf
@@ -224,66 +226,20 @@ EOF
 	fi
 	if ls /etc/storage/dnsmasq-adbyby.d/* >/dev/null 2>&1; then
 	mkdir -p /tmp/dnsmasq.d
-	if [ $abp_mode -eq 1 ]; then
-	cp $PROG_PATH/dnsmasq.adblock /etc/storage/dnsmasq-adbyby.d/04-dnsmasq.adblock
-	sed -i '/youku.com/d' $PROG_PATH/dnsmasq.ads
-	cp $PROG_PATH/dnsmasq.ads /etc/storage/dnsmasq-adbyby.d/05-dnsmasq.ads
-	fi
+	#if [ $abp_mode -eq 1 ]; then
+	#cp $PROG_PATH/dnsmasq.adblock /etc/storage/dnsmasq-adbyby.d/04-dnsmasq.adblock
+	#sed -i '/youku.com/d' $PROG_PATH/dnsmasq.ads
+	#cp $PROG_PATH/dnsmasq.ads /etc/storage/dnsmasq-adbyby.d/05-dnsmasq.ads
+	#fi
 	fi
 	#sed -i '/mesu.apple.com/d' /etc/dnsmasq.conf && [ $block_ios -eq 1 ] && echo 'address=/mesu.apple.com/0.0.0.0' >> /etc/dnsmasq.conf
 	#处理hosts文件
-	rm -rf /etc/storage/dnsmasq/dns;cd /etc
-	mkdir -p /etc/storage/dnsmasq/dns/conf
-	hosts_ad=`nvram get hosts_ad`
-	tv_hosts=`nvram get tv_hosts`
-	nvram set adbyby_hostsad=0
-	nvram set adbyby_tvbox=0
-	if [ "$adbyby_enable"="1" ] ; then
-	if [ "$hosts_ad" = "1" ] ; then
-	sed -i '/hosts/d' /etc/storage/dnsmasq/dnsmasq.conf
-	cat >> /etc/storage/dnsmasq/dnsmasq.conf <<-EOF
-		addn-hosts=/etc/storage/dnsmasq/dns/hosts
-	EOF
-	cd /etc/storage/dnsmasq/dns
-	curl -k -s -o hosts --connect-timeout 10 --retry 3 https://cdn.jsdelivr.net/gh/vokins/yhosts/hosts
-	if [ ! -f "hosts" ]; then
-	logger -t "dnsmasq" "host文件下载失败，可能是地址失效或者网络异常！"
-	sed -i '/hosts/d' /etc/storage/dnsmasq/dnsmasq.conf
-	else
-	logger -t "dnsmasq" "host文件下载完成。"
-	nvram set adbyby_hostsad=`grep -v '^!' /etc/storage/dnsmasq/dns/hosts | wc -l`
-	fi
-	else
-	sed -i '/hosts/d' /etc/storage/dnsmasq/dnsmasq.conf
-	fi
-	if [ "$tv_hosts" = "1" ]; then
-	sed -i '/tvhosts/d' /etc/storage/dnsmasq/dnsmasq.conf
-	cat >> /etc/storage/dnsmasq/dnsmasq.conf <<-EOF
-		addn-hosts=/etc/storage/dnsmasq/dns/tvhosts
-	EOF
-	cd /etc/storage/dnsmasq/dns
-	curl -k -s -o tvhosts --connect-timeout 5 --retry 3 https://dev.tencent.com/u/shaoxia1991/p/yhosts/git/raw/master/data/tvbox.txt
-	if [ ! -f "tvhosts" ]; then
-	logger -t "dnsmasq" "tvbox规则文件下载失败，可能是地址失效或者网络异常！"
-	sed -i '/tvhosts/d' /etc/storage/dnsmasq/dnsmasq.conf
-	else
-	logger -t "dnsmasq" "tvbox规则文件下载完成。"
-	nvram set adbyby_tvbox=`grep -v '^!' /etc/storage/dnsmasq/dns/tvhosts | wc -l`
-	fi
-	else
-	sed -i '/tvhosts/d' /etc/storage/dnsmasq/dnsmasq.conf
-	fi
-	#/sbin/restart_dhcpd
-	else
-	sed -i '/hosts/d' /etc/storage/dnsmasq/dnsmasq.conf
-	#/sbin/restart_dhcpd
-	fi
 }
 
 del_dns()
 {
 	sed -i '/dnsmasq-adbyby/d' /etc/storage/dnsmasq/dnsmasq.conf
-	sed -i '/tvhosts/d' /etc/storage/dnsmasq/dnsmasq.conf
+	#sed -i '/tvhosts/d' /etc/storage/dnsmasq/dnsmasq.conf
 	sed -i '/hosts/d' /etc/storage/dnsmasq/dnsmasq.conf
 	rm -f /tmp/dnsmasq.d/dnsmasq-adbyby.conf
 	rm -f /etc/storage/dnsmasq-adbyby.d/*
@@ -347,22 +303,65 @@ adbyby_uprules()
 	tar -xzvf "/etc_ro/adbyby.tar.gz" -C "/tmp"
 	logger -t "adbyby" "成功解压至：$PROG_PATH"
 	fi
-	if [ $abp_mode -eq 1 ]; then
-	/tmp/adbyby/adblock.sh &
-	fi
+	#if [ $abp_mode -eq 1 ]; then
+	#/tmp/adbyby/adblock.sh &
+	#fi
 	#/tmp/adbyby/adupdate.sh &
 	add_rules
 	$PROG_PATH/adbyby &>/dev/null &
 	add_dns
 	iptables-save | grep ADBYBY >/dev/null || \
 	add_rule
+	hosts_ads
 	/sbin/restart_dhcpd
 	#add_cron
 }
 
-updateadb()
-{
-	/tmp/adbyby/adblock.sh &
+#updateadb()
+#{
+#	/tmp/adbyby/adblock.sh &
+#}
+anti_ad(){
+anti_ad=`nvram get anti_ad`
+anti_ad_link=`nvram get anti_ad_link`
+nvram set anti_ad_count=0
+if [ "$anti_ad" = "1" ]; then
+wget --no-check-certificate -O /etc/storage/dnsmasq-adbyby.d/anti-ad-for-dnsmasq.conf $anti_ad_link
+if [ ! -f "/etc/storage/dnsmasq-adbyby.d/anti-ad-for-dnsmasq.conf" ]; then
+	logger -t "adbyby" "anti_AD下载失败！"
+else
+	logger -t "adbyby" "anti_AD下载成功,处理中..."
+nvram set anti_ad_count=`grep -v '^#' /etc/storage/dnsmasq-adbyby.d/anti-ad-for-dnsmasq.conf | wc -l`
+fi
+fi
+}
+
+hosts_ads(){
+adbyby_hosts=`nvram get hosts_ad`
+nvram set adbyby_hostsad=0
+if [ "$adbyby_hosts" = "1" ]; then
+rm -rf $PROG_PATH/hosts
+grep -v '^#' /etc/storage/adbyby_host.sh | grep -v "^$" > $PROG_PATH/hostlist.txt
+for ip in `cat $PROG_PATH/hostlist.txt`
+do
+logger -t "adbyby" "正在下载: $ip"
+wget --no-check-certificate -O /tmp/host.txt $ip
+if [ ! -f "/tmp/host.txt" ]; then
+	logger -t "adbyby" "$ip 下载失败！"
+else
+	logger -t "adbyby" "hosts下载成功,处理中..."
+grep -v '^#' /tmp/host.txt | grep -v "^$" >> $PROG_PATH/hosts
+fi
+done
+rm -f /tmp/host.txt
+logger -t "adbyby" "正在对hosts文件进行去重处理."
+sort $PROG_PATH/hosts | uniq
+nvram set adbyby_hostsad=`grep -v '^!' $PROG_PATH/hosts | wc -l`
+sed -i '/hosts/d' /etc/storage/dnsmasq/dnsmasq.conf
+cat >> /etc/storage/dnsmasq/dnsmasq.conf <<-EOF
+	addn-hosts=$PROG_PATH/hosts
+EOF
+fi
 }
 
 
@@ -531,14 +530,14 @@ E)
 	addscripts
 	;;
 F)
-	hosts_ad
+	hosts_ads
 	;;
 G)
 	adbyby_uprules
 	;;
-updateadb)
-	updateadb
-	;;
+#updateadb)
+#	updateadb
+#	;;
 *)
 	echo "check"
 	;;
