@@ -1,15 +1,15 @@
 name: Build MT7621-mi3gr
 
 on: 
-  release:
-    types: [published]
-#  push:
+  #release:
+  #  types: [published]
+  push:
 #    tags:
 #    - 'v*'
-  #  branches: 
-  #    - master
-  schedule:
-    - cron: 0 17 * * 4
+    branches: 
+      - master
+  #schedule:
+  #  - cron: 0 17 * * 4
 #  watch:
    # types: [started]
 
