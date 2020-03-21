@@ -106,7 +106,7 @@ jobs:
         echo "CONFIG_FIRMWARE_INCLUDE_KUMASOCKS=n" >> .config
         echo "CONFIG_FIRMWARE_INCLUDE_ADGUARDHOME=n" >> .config
         echo "CONFIG_FIRMWARE_INCLUDE_IPT2SOCKS=n" >> .config
-        echo "CONFIG_FIRMWARE_INCLUDE_MICROSOCKS=n >> .config
+        echo "CONFIG_FIRMWARE_INCLUDE_MICROSOCKS=n" >> .config
         echo "CONFIG_FIRMWARE_INCLUDE_SRELAY=n" >> .config
         ####################################################################################
         #if [ "$m" = "PSG1208" ] || [ "$m" = "PSG1218" ] || [ "$m" = "PSG712" ]; then
@@ -130,3 +130,4 @@ jobs:
         tag: AtuoBuild
         overwrite: true
         file_glob: true
+
