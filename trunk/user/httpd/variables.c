@@ -99,6 +99,13 @@
 			{"adbybyip_ip_road_x", "24", NULL, FALSE},
 			{0,0,0,0}
 		};
+	struct variable variables_WyyConf_WIPList[] = {
+			{"wyy_mac_x", "14", NULL, FALSE},
+			{"wyy_ip_x", "17", NULL, FALSE},
+			{"wyy_name_x", "24", NULL, FALSE},
+			{"wyy_ip_road_x", "24", NULL, FALSE},
+			{0,0,0,0}
+		};
 	struct variable variables_SspConf_SspList[] = {
 			{"ssp_type_x", "24", NULL, FALSE},
 			{"ssp_name_x", "24", NULL, FALSE},
@@ -951,6 +958,20 @@
 	};
 #endif
 
+#if defined(APP_WYY)
+	struct variable variables_WyyConf[] = {
+			{"wyy_enable", "", NULL, EVM_RESTART_WYY},
+			{"wyy_apptype", "", NULL, EVM_RESTART_WYY},
+			{"wyy_cloudserver", "", NULL, EVM_RESTART_WYY},
+			{"wyy_musicapptype", "", NULL, EVM_RESTART_WYY},
+			{"wyy_coustom_server", "", NULL, EVM_RESTART_WYY},
+			{"wyy_coustom_music", "", NULL, EVM_RESTART_WYY},
+			{"wyy_staticnum_x", "", NULL, EVM_RESTART_WYY},
+			{"WIPList", "Group", ARGV((char*)variables_WyyConf_WIPList, "8", "55", "wyy_staticnum_x"), EVM_RESTART_WYY},
+			{0,0,0,0}
+	};
+#endif
+
 #if defined(APP_SHADOWSOCKS)
 	struct variable variables_ShadowsocksConf[] = {
 			{"ss_enable","",NULL, EVM_RESTART_SHADOWSOCKS},
@@ -1016,6 +1037,7 @@
 			{"socks5_s_password","",NULL, EVM_RESTART_SHADOWSOCKS},
 			{"ss_turn","",NULL, EVM_RESTART_SHADOWSOCKS},
 			{"lan_con","",NULL, EVM_RESTART_SHADOWSOCKS},
+			{"ss_chnroute_url","",NULL, FALSE},
 	        {"ss_watchcat", "",NULL, FALSE},
 	        {"ss_turn_s","",NULL, EVM_RESTART_SHADOWSOCKS},
 	        {"ss_turn_ss","",NULL, EVM_RESTART_SHADOWSOCKS},
@@ -1032,7 +1054,6 @@
 			{"scripts.ss_lan_bip.sh", "File", NULL, EVM_RESTART_SHADOWSOCKS},
 			{"scripts.ss_wan_ip.sh", "File", NULL, EVM_RESTART_SHADOWSOCKS},
 			{"scripts.ss_dlink.sh", "File", NULL, FALSE},
-			{"scripts.dlink.js", "File", NULL, FALSE},
 			{"SspList", "Group", ARGV((char*)variables_SspConf_SspList, "8", "55", "ssp_staticnum_x"), EVM_RESTART_SHADOWSOCKS},
 			{0,0,0,0}
 	};
@@ -1290,6 +1311,9 @@
 #if defined(APP_CADDY)
 		{"CaddyConf",		variables_CaddyConf},
 #endif
+#if defined(APP_WYY)
+		{"WyyConf",		variables_WyyConf},
+#endif
 #if defined(APP_ADBYBY)
 		{"AdbybyConf",		variables_AdbybyConf},
 #endif
@@ -1391,6 +1415,9 @@
 #endif
 #if defined(APP_CADDY)
 		{EVM_RESTART_CADDY,		EVT_RESTART_CADDY,		RCN_RESTART_CADDY,	0},
+#endif
+#if defined(APP_WYY)
+		{EVM_RESTART_WYY,		EVT_RESTART_WYY,		RCN_RESTART_WYY,	0},
 #endif
 #if defined(APP_ADBYBY)
 		{EVM_RESTART_ADBYBY,		EVT_RESTART_ADBYBY,		RCN_RESTART_ADBYBY,	0},

@@ -637,6 +637,7 @@ struct nvram_pair router_defaults[] = {
 	{ "ss_turn_s", "600" },
 	{ "ss_turn_ss", "5" },
 	{ "lan_con", "0" },
+	{ "ss_chnroute_url", "https://ispip.clang.cn/all_cn.txt"},
 	{ "ss_adblock_url", "https://gitee.com/privacy-protection-tools/anti-ad/raw/master/anti-ad-for-dnsmasq.conf"},
 	{ "ss_schedule_enable", "0" },
 	{ "ss_schedule", "00000000000" },
@@ -763,6 +764,16 @@ struct nvram_pair router_defaults[] = {
 	{ "ss_black", "0" },
 	
 	{ "reboot_mode", "0" },
+
+	/*UnblockNeteaseMusic*/
+	{ "wyy_enable", "0" },
+	{ "wyy_apptype", "cloud" },
+	{ "wyy_cloudserver", "cdn-shanghai.service.project-openwrt.eu.org:30000:30001" },
+	{ "wyy_musicapptype", "kuwo" },
+	{ "wyy_coustom_server", "" },
+	{ "wyy_coustom_music", "" },
+	{ "wyy_staticnum_x", "0" },
+
 
 
 	/* DHCP server parameters */
