@@ -101,7 +101,12 @@ nvram_commit_safe(void)
 void
 sys_reboot(void)
 {
+#ifdef MTD_FLASH_32M_REBOOT_BUG
+	doSystem("/sbin/mtd_storage.sh %s", "save");
+	system("/bin/mtd_write -r unlock mtd1");
+#else
 	kill(1, SIGTERM);
+#endif
 }
 
 char *
@@ -2295,6 +2300,15 @@ static int caddy_status_hook(int eid, webs_t wp, int argc, char **argv)
 }
 #endif
 
+#if defined (APP_ZEROTIER)
+static int zerotier_status_hook(int eid, webs_t wp, int argc, char **argv)
+{
+	int zerotier_status_code = pids("zerotier-one");
+	websWrite(wp, "function zerotier_status() { return %d;}\n", zerotier_status_code);
+	return 0;
+}
+#endif
+
 #if defined (APP_FRP)
 static int frpc_status_hook(int eid, webs_t wp, int argc, char **argv)
 {
@@ -2519,6 +2533,16 @@ ej_firmware_caps_hook(int eid, webs_t wp, int argc, char **argv)
 #else
 	int found_app_caddy = 0;
 #endif
+#if defined(APP_WYY)
+	int found_app_wyy = 1;
+#else
+	int found_app_wyy = 0;
+#endif
+#if defined(APP_ZEROTIER)
+	int found_app_zerotier = 1;
+#else
+	int found_app_zerotier = 0;
+#endif
 #if defined(APP_ADBYBY)
 	int found_app_adbyby = 1;
 #else
@@ -2720,6 +2744,8 @@ ej_firmware_caps_hook(int eid, webs_t wp, int argc, char **argv)
 		"function found_app_adbyby() { return %d;}\n"
 		"function found_app_smartdns() { return %d;}\n"
 		"function found_app_frp() { return %d;}\n"
+		"function found_app_wyy() { return %d;}\n"
+		"function found_app_zerotier() { return %d;}\n"
 		"function found_app_aliddns() { return %d;}\n"
 		"function found_app_xupnpd() { return %d;}\n"
 		"function found_app_mentohust() { return %d;}\n",
@@ -2749,6 +2775,8 @@ ej_firmware_caps_hook(int eid, webs_t wp, int argc, char **argv)
 		found_app_adbyby,
 		found_app_smartdns,
 		found_app_frp,
+		found_app_wyy,
+		found_app_zerotier,
 		found_app_aliddns,
 		found_app_xupnpd,
 		found_app_mentohust
@@ -3505,16 +3533,7 @@ apply_cgi(const char *url, webs_t wp)
 	}
 	else if (!strcmp(value, " Reboot "))
 	{
-	    int reboot_mode = nvram_get_int("reboot_mode");
-	    if ( reboot_mode == 0)
-	{
 	    sys_reboot();
-	}
-	else if ( reboot_mode == 1)
-	{
-		doSystem("/sbin/mtd_storage.sh %s", "save");
-		system("mtd_write -r unlock mtd1");
-	}
 		return 0;
 	}
 	else if (!strcmp(value, " Shutdown "))

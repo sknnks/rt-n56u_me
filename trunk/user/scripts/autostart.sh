@@ -59,6 +59,16 @@ logger -t "自动启动" "正在启动科学上网"
 fi
 
 if [ $(nvram get adg_enable) = 1 ] ; then
-logger -t "自动启动" "正在adguardhome"
+logger -t "自动启动" "正在启动adguardhome"
 /usr/bin/adguardhome.sh start
+fi
+
+if [ $(nvram get wyy_enable) = 1 ] ; then
+logger -t "自动启动" "正在启动音乐解锁"
+/usr/bin/unblockmusic.sh start
+fi
+
+if [ $(nvram get zerotier_enable) = 1 ] ; then
+logger -t "自动启动" "正在启动zerotier"
+/usr/bin/zerotier.sh start
 fi

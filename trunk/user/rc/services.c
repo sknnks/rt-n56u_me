@@ -445,6 +445,40 @@ void restart_adguardhome(void){
 
 #endif
 
+#if defined(APP_WYY)
+void stop_wyy(void){
+	eval("/usr/bin/unblockmusic.sh","stop");
+}
+
+void start_wyy(void){
+	int wyy_enable = nvram_get_int("wyy_enable");
+	if ( wyy_enable == 1)
+		eval("/usr/bin/unblockmusic.sh","start");
+}
+
+void restart_wyy(void){
+	stop_wyy();
+	start_wyy();
+}
+#endif
+
+#if defined(APP_ZEROTIER)
+void stop_zerotier(void){
+	eval("/usr/bin/zerotier.sh","stop");
+}
+
+void start_zerotier(void){
+	int zerotier_enable = nvram_get_int("zerotier_enable");
+	if ( zerotier_enable == 1)
+		eval("/usr/bin/zerotier.sh","start");
+}
+
+void restart_zerotier(void){
+	stop_zerotier();
+	start_zerotier();
+}
+#endif
+
 #if defined(APP_ADBYBY)
 void stop_adbyby(void){
 	eval("/usr/bin/adbyby.sh","stop");
@@ -820,6 +854,12 @@ stop_services(int stopall)
 #endif
 #if defined(APP_ADBYBY)
 	stop_adbyby();
+#endif
+#if defined(APP_WYY)
+	stop_wyy();
+#endif
+#if defined(APP_ZEROTIER)
+	stop_zerotier();
 #endif
 #if defined(APP_ALIDDNS)
 	stop_aliddns();

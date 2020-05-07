@@ -208,6 +208,12 @@ endif
 ifneq ($(CONFIG_FIRMWARE_INCLUDE_CADDY),y)
 	rm -f $(INSTALLDIR)/www/Advanced_caddy.asp
 endif
+ifneq ($(CONFIG_FIRMWARE_INCLUDE_WYY),y)
+	rm -f $(INSTALLDIR)/www/Advanced_wyy.asp
+endif
+ifneq ($(CONFIG_FIRMWARE_INCLUDE_ZEROTIER),y)
+	rm -f $(INSTALLDIR)/www/Advanced_zerotier.asp
+endif
 ifeq ($(CONFIG_FIRMWARE_INCLUDE_FRPC)_$(CONFIG_FIRMWARE_INCLUDE_FRPS), n_n)
 	rm -f $(INSTALLDIR)/www/Advanced_frp.asp
 endif
