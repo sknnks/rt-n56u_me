@@ -30,10 +30,8 @@
 		<% shadowsocks_status(); %>
 		<% pdnsd_status(); %>
 		<% rules_count(); %>
-
 		node_global_max = 0;
 		editing_ss_id = 0;
-
 		var $j = jQuery.noConflict();
 		$j(document).ready(function () {
 			init_itoggle('ss_enable');
@@ -72,7 +70,6 @@
 				aping_dlink();
 			});
 		});
-
 		function initial() {
 			show_banner(2);
 			show_menu(13, 13, 0);
@@ -90,7 +87,6 @@
 			var o5 = document.form.pdnsd_enable;
 			var o6 = document.form.socks5_enable;
 			var o7 = document.form.tunnel_forward;
-
 			o2.value = '<% nvram_get_x("","lan_con"); %>';
 			o3.value = '<% nvram_get_x("","ss_threads"); %>';
 			o4.value = '<% nvram_get_x("","china_dns"); %>';
@@ -110,30 +106,24 @@
 				document.form.ss_time_x_min.value = getrebootTimeRange(document.form.ss_schedule.value, 1);
 				document.getElementById('ss_schedule_enable_tr').style.display = "";
 				change_on();
-
 			} else {
 				document.getElementById('ss_schedule_enable_tr').style.display = "none";
 				document.getElementById('ss_schedule_date_tr').style.display = "none";
 				document.getElementById('ss_schedule_time_tr').style.display = "none";
 			}
 		}
-
 		function textarea_scripts_enabled(v) {
 			//inputCtrl(document.form['scripts.ss.dom.sh'], v);
 			//inputCtrl(document.form['scripts.ss.ip.sh'], v);
 		}
-
 		function change_on() {
 			var v = document.form.ss_schedule_enable_x.value;
 			showhide_div('ss_schedule_date_tr', v);
 			showhide_div('ss_schedule_time_tr', v);
 			if (v == 1)
 				check_Timefield_checkbox();
-
 		}
-
 		function validForm() {
-
 			if (ss_schedule_support) {
 				if (!document.form.ss_date_x_Sun.checked && !document.form.ss_date_x_Mon.checked &&
 					!document.form.ss_date_x_Tue.checked && !document.form.ss_date_x_Wed.checked &&
@@ -144,10 +134,8 @@
 					return false;
 				}
 			}
-
 			return true;
 		}
-
 		function switch_ss_type() {
 			showhide_div('row_quic_header', 0);
 			showhide_div('row_quic_key', 0);
@@ -219,7 +207,6 @@
 				//
 			}
 		}
-
 		function switch_v2_type() {
 			showhide_div('row_quic_header', 0);
 			showhide_div('row_quic_key', 0);
@@ -241,7 +228,6 @@
 			showhide_div('row_v2_webs_path', 0);
 			showhide_div('v2_kcp_guise', 0);
 			showhide_div('v2_tcp_guise', 0);
-
 			var b = document.form.v2_transport.value;
 			if (b == "tcp") {
 				showhide_div('v2_tcp_guise', 1);
@@ -270,7 +256,6 @@
 				showhide_div('row_quic_header', 1);
 			}
 		}
-
 		function switch_dns() {
 			var b = document.form.pdnsd_enable.value;
 			if (b == "0") {
@@ -278,7 +263,6 @@
 				showhide_div('row_tunnel_forward', 1);
 				showhide_div('row_ssp_dns_ip', 0);
 				showhide_div('row_ssp_dns_port', 0);
-
 			} else if (b == "1") {
 				showhide_div('row_china_dns', 0);
 				showhide_div('row_tunnel_forward', 0);
@@ -291,7 +275,6 @@
 				showhide_div('row_ssp_dns_port', 0);
 			}
 		}
-
 		function applyRule() {
 			if (validForm()) {
 				if (ss_schedule_support) {
@@ -304,7 +287,6 @@
 			document.form.next_page.value = "";
 			document.form.submit();
 		}
-
 		function submitInternet(v) {
 			showLoading();
 			$j.ajax({
@@ -322,12 +304,10 @@
 				}
 			});
 		}
-
 		function change_ss_watchcat_display() {
 			var v = document.form.ss_router_proxy[0].checked;
 			showhide_div('ss_wathcat_option', v);
 		}
-
 		function fill_ss_status(status_code) {
 			var stext = "Unknown";
 			if (status_code == 0)
@@ -338,7 +318,6 @@
 				stext + '</span>';
 		}
 		var arrHashes = ["cfg", "add", "dlink", "ssl", "cli", "log", "help"];
-
 		function showTab(curHash) {
 			var obj = $('tab_ss_' + curHash.slice(1));
 			if (obj == null || obj.style.display == 'none')
@@ -354,7 +333,6 @@
 			}
 			window.location.hash = curHash;
 		}
-
 		function getHash() {
 			var curHash = window.location.hash.toLowerCase();
 			for (var i = 0; i < arrHashes.length; i++) {
@@ -363,7 +341,6 @@
 			}
 			return ('#' + arrHashes[0]);
 		}
-
 		function markGroupRULES(o, c, b) {
 			document.form.group_id.value = "SspList";
 			if (b == " Add ") {
@@ -376,9 +353,7 @@
 			document.form.action_mode.value = b;
 			document.form.current_page.value = "Shadowsocks.asp#add";
 			return true;
-
 		}
-
 		function showMRULESList() {
 			$j.ajax({
 				url: '/dbconf?p=ss&v=<% uptime(); %>',
@@ -397,7 +372,6 @@
 						// 添加 
 						nodeList.options.add(new Option(text, key.replace(keyStr, ''))); // 通过 replacce把不要的字符去掉
 						unodeList.options.add(new Option(text, key.replace(keyStr, ''))); // 通过 replacce把不要的字符去掉
-
 						$j('#nodeList>option').sort(function (a, b) {
 							var aText = $j(a).val() * 1;
 							var bText = $j(b).val() * 1;
@@ -421,7 +395,6 @@
 						document.form.udp_relay_server.value = '<% nvram_get_x("","udp_relay_server"); %>';
 						//}
 					}
-
 					//订阅节点表格
 					var myss = new Array();
 					var i = 0;
@@ -508,11 +481,9 @@
 							formatter: actionFormatter
 						}]
 					});
-
 				}
 			})
 		}
-
 		function cellStylesales(value, row, index) {
 			var ping = row.ping
 			if (typeof (ping) == "undefined") {
@@ -540,11 +511,9 @@
 				};
 			}
 		}
-
 		function actionFormatter2(value, row, index) {
 			var ping = row.ping
 			var result = "";
-
 			if (typeof (ping) == "undefined") {
 				result += "-";
 			} else if (ping != "failed") {
@@ -554,7 +523,6 @@
 			}
 			return result;
 		}
-
 		function actionFormatter(value, row, index) {
 			return [
 				'<a class="edit_ss" href="javascript:void(0)" title="编辑">编辑</a>',
@@ -562,7 +530,6 @@
 				'<a class="del_ss" href="javascript:void(0)" title="删除">删除</a>'
 			].join(' | ');
 		}
-
 		window.operateEvents = {
 			'click .edit_ss': function (e, value, row, index) {
 				editing_ss_id = row.ids;
@@ -580,7 +547,6 @@
 				}
 			}
 		}
-
 		function initSSParams() {
 			//ss
 			document.getElementById('ssp_type').value = 'ss';
@@ -588,7 +554,6 @@
 			document.getElementById('ssp_server').value = '';
 			document.getElementById('ssp_prot').value = '';
 			document.getElementById("ss_password").value = '';
-
 			//ssr
 			document.getElementById("ss_method").value = 'none';
 			document.getElementById("ss_plugin").value = '';
@@ -598,7 +563,6 @@
 			document.getElementById("ss_method").value = 'none';
 			document.getElementById("ss_obfs").value = 'plain';
 			document.getElementById("ss_obfs_param").value = '';
-
 			//v2
 			document.getElementById("ssp_insecure").value = 0;
 			document.getElementById("ssp_insecure").checked = false;				
@@ -640,20 +604,17 @@
 			// document.getElementById("ssp_tls_host").value = '';
 			switch_ss_type();
 		}
-
 		//编辑节点
 		function showSSEditor(ss) {
 			function getProperty(obj, prop, defVal) {
 				return obj && obj.hasOwnProperty(prop) ? obj[prop] : defVal;
 			}
-
 			var type = getProperty(ss, 'type', 'ss');
 			document.getElementById('ssp_type').value = type;
 			document.getElementById('ssp_name').value = getProperty(ss, 'alias', '');
 			document.getElementById('ssp_server').value = getProperty(ss, 'server', '');
 			document.getElementById('ssp_prot').value = getProperty(ss, 'server_port', '');
 			document.getElementById("ss_password").value = getProperty(ss, 'password', '');
-
 			if (type == 'ss') {
 				document.getElementById("ss_method").value = getProperty(ss, 'encrypt_method_ss', 'none'),
 				document.getElementById("ss_plugin").value = getProperty(ss, 'plugin', ''),
@@ -711,14 +672,12 @@
 			switch_ss_type();
 			$j("#vpnc_settings").fadeIn(200);
 		}
-
 		//单项删除
 		function del(id) {
 			var p = "ssconf_basic";
 			var ns = {};
 			ns[p + "_json_" + id] = "deleting";
 			showLoading();
-
 			$j.ajax({
 				url: "/applydb.cgi?userm1=del&p=ss",
 				type: 'POST',
@@ -733,14 +692,12 @@
 				}
 			});
 		}
-
 		//批量删除
 		function del_dlink() {
 			var row = $j("#table99").bootstrapTable('getSelections');
 			var p = "ssconf_basic";
 			var ns = {};
 			for (var key in row) {
-
 				ns[p + "_json_" + row[key].ids] = "deleting";
 			}
 			//console.log(ns)
@@ -759,7 +716,6 @@
 				}
 			});
 		}
-
 		//ping节点
 		function ping_dlink() {
 			var row = $j("#table99").bootstrapTable('getSelections');
@@ -787,7 +743,6 @@
 				}
 			});
 		}
-
 		//ping全部节点
 		function aping_dlink() {
 			var ns = {};
@@ -811,7 +766,6 @@
 				}
 			});
 		}
-
 		function paramsMatter(value, row, index) {
 			var span = document.createElement("span");
 			span.setAttribute("title", value);
@@ -829,28 +783,23 @@
 				}
 			}
 		}
-
 		//-----------导入链接开始
 		function padright(str, cnt, pad) {
 			return str + Array(cnt + 1).join(pad);
 		}
-
 		function b64EncodeUnicode(str) {
 			return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
 				return String.fromCharCode('0x' + p1);
 			}));
 		}
-
 		function b64encutf8safe(str) {
 			return b64EncodeUnicode(str).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, '');
 		}
-
 		function b64DecodeUnicode(str) {
 			return decodeURIComponent(Array.prototype.map.call(atob(str), function (c) {
 				return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
 			}).join(''));
 		}
-
 		function b64decutf8safe(str) {
 			var l;
 			str = str.replace(/-/g, "+").replace(/_/g, "/");
@@ -860,11 +809,9 @@
 				str = padright(str, l, "=");
 			return b64DecodeUnicode(str);
 		}
-
 		function b64encsafe(str) {
 			return btoa(str).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, '')
 		}
-
 		function b64decsafe(str) {
 			var l;
 			str = str.replace(/-/g, "+").replace(/_/g, "/");
@@ -874,14 +821,12 @@
 				str = padright(str, l, "=");
 			return atob(str);
 		}
-
 		function dictvalue(d, key) {
 			var v = d[key];
 			if (typeof (v) == 'undefined' || v == '')
 				return '';
 			return b64decsafe(v);
 		}
-
 		function import_ssr_url(btn, urlname, sid) {
 			var s = document.getElementById(urlname + '-status');
 			if (!s)
@@ -1037,7 +982,6 @@
 				document.getElementById('v2_tls').value = 0;
 			}
 		}
-
 		function cmux() {
 			document.getElementById('v2_mux').value = 1;
 			if (document.getElementById('v2_mux').checked) {
@@ -1046,7 +990,6 @@
 				document.getElementById('v2_mux').value = 0;
 			}
 		}
-
 		function cais() {
 			document.getElementById('ssp_insecure').value = 1;
 			if (document.getElementById('ssp_insecure').checked) {
@@ -1056,7 +999,6 @@
 			}
 		}
 		//-----------TLS开关
-
 		function check_Timefield_checkbox() {
 			if (document.form.ss_date_x_Sun.checked == true ||
 				document.form.ss_date_x_Mon.checked == true ||
@@ -1075,18 +1017,15 @@
 				document.getElementById('ss_schedule_time_tr').style.display = "";
 			}
 		}
-
 		function getrebootTimeRange(str, pos) {
 			if (pos == 0)
 				return str.substring(7, 9);
 			else if (pos == 1)
 				return str.substring(9, 11);
 		}
-
 		function setrebootTimeRange(rd, rh, rm) {
 			return (rd.value + rh.value + rm.value);
 		}
-
 		function updateDateTime() {
 			if (document.form.ss_schedule_enable_x[0].checked) {
 				document.form.ss_schedule_enable.value = "1";
@@ -1123,10 +1062,8 @@
 				nodeData.appendChild(tr);
 			}
 		}
-
 		function add_ss() {
 			showhide_div('vpnc_settings', 0);
-
 			var type = document.getElementById("ssp_type").value;
 			if (type == "ss") {
 				var DataObj = {
@@ -1214,7 +1151,6 @@
 				}
 			}
 			var post_dbus = JSON.stringify(DataObj)
-
 			var ids;
 			if (editing_ss_id == 0) {  
 				node_global_max += 1;
@@ -1222,10 +1158,8 @@
 			} else {
 				ids = editing_ss_id;
 			}
-
 			var ns = {};
 			ns["ssconf_basic_json_" + ids] = post_dbus;
-
 			push_data(ns);
 			console.log(DataObj)
 		}
@@ -1244,13 +1178,11 @@
 				}
 			});
 		}
-
 		function showsdlinkList() {
 			var key = "ssconf_basic_json_" + document.getElementById("nodeList").value;
 			var result = JSON.parse(db_ss[key]);
 			document.getElementById("d_type").value = result.type;
 		}
-
 		function showsudlinkList() {
 			var key = "ssconf_basic_json_" + document.getElementById("u_nodeList").value;
 			var result = JSON.parse(db_ss[key]);
@@ -1262,7 +1194,6 @@
 			padding-right: 6px;
 			padding-left: 6px;
 		}
-
 		.contentM_qis {
 			position: absolute;
 			-webkit-border-radius: 5px;
@@ -2091,6 +2022,11 @@
 													</tr>
 												</table>
 												<table width="100%" cellpadding="4" cellspacing="0" class="table">
+	                                                                                       <tr><th>关键字过滤（请以/为分隔符）</th>
+				<td>
+				<input type="input" name="ss_keyword" id="ss_keyword" value="<% nvram_get_x("", "ss_keyword"); %>" >
+				</td>
+			</tr>
 
 													<tr id="ss_schedule_enable_tr" width="50%">
 
