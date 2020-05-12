@@ -848,7 +848,6 @@
 			{"wl_VgaClamp", "", NULL, EVM_RESTART_WIFI5},
 #endif
 #if defined (USE_WID_5G) && USE_WID_5G==7615
-			{"wl_band_steering", "", NULL, EVM_RESTART_WIFI5},
 			{"wl_mumimo", "", NULL, EVM_RESTART_WIFI5},
 #endif
 			{"wl_country_code", "", NULL, EVM_RESTART_WIFI5},
@@ -884,7 +883,7 @@
 #endif
 			{0,0,0,0}
 		};
-		
+
 #if defined (APP_SCUT)
 	struct variable variables_ScutclientConf[] = {
 			{"scutclient_enable", "",NULL, EVM_RESTART_SCUT},
@@ -1058,6 +1057,7 @@
 	        {"ss_watchcat", "",NULL, FALSE},
 	        {"ss_turn_s","",NULL, EVM_RESTART_SHADOWSOCKS},
 	        {"ss_turn_ss","",NULL, EVM_RESTART_SHADOWSOCKS},
+			{"ss_keyword","",NULL, FALSE},
 			{"ss_update_chnroute","",NULL, EVM_RESTART_SHADOWSOCKS},
 			{"ss_update_gfwlist","",NULL, EVM_RESTART_SHADOWSOCKS},
 			{"ss-tunnel_enable","",NULL, EVM_RESTART_SS_TUNNEL},
