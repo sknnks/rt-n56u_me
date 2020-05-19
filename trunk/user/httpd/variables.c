@@ -106,6 +106,12 @@
 			{"wyy_ip_road_x", "24", NULL, FALSE},
 			{0,0,0,0}
 		};
+	struct variable variables_ZeroConf_ZeroList[] = {
+			{"zero_enable_x", "24", NULL, FALSE},
+			{"zero_ip_x", "24", NULL, FALSE},
+			{"zero_route_x", "24", NULL, FALSE},
+			{0,0,0,0}
+		};
 	struct variable variables_SspConf_SspList[] = {
 			{"ssp_type_x", "24", NULL, FALSE},
 			{"ssp_name_x", "24", NULL, FALSE},
@@ -842,7 +848,6 @@
 			{"wl_VgaClamp", "", NULL, EVM_RESTART_WIFI5},
 #endif
 #if defined (USE_WID_5G) && USE_WID_5G==7615
-			{"wl_band_steering", "", NULL, EVM_RESTART_WIFI5},
 			{"wl_mumimo", "", NULL, EVM_RESTART_WIFI5},
 #endif
 			{"wl_country_code", "", NULL, EVM_RESTART_WIFI5},
@@ -878,7 +883,7 @@
 #endif
 			{0,0,0,0}
 		};
-		
+
 #if defined (APP_SCUT)
 	struct variable variables_ScutclientConf[] = {
 			{"scutclient_enable", "",NULL, EVM_RESTART_SCUT},
@@ -972,6 +977,17 @@
 	};
 #endif
 
+#if defined(APP_ZEROTIER)
+	struct variable variables_ZeroConf[] = {
+			{"zerotier_enable", "", NULL, EVM_RESTART_ZEROTIER},
+			{"zerotier_id", "", NULL, EVM_RESTART_ZEROTIER},
+			{"zerotier_nat", "", NULL, EVM_RESTART_ZEROTIER},
+			{"zero_staticnum_x", "", NULL, EVM_RESTART_ZEROTIER},
+			{"ZeroList", "Group", ARGV((char*)variables_ZeroConf_ZeroList, "8", "55", "zero_staticnum_x"), EVM_RESTART_ZEROTIER},
+			{0,0,0,0}
+	};
+#endif
+
 #if defined(APP_SHADOWSOCKS)
 	struct variable variables_ShadowsocksConf[] = {
 			{"ss_enable","",NULL, EVM_RESTART_SHADOWSOCKS},
@@ -1041,6 +1057,7 @@
 	        {"ss_watchcat", "",NULL, FALSE},
 	        {"ss_turn_s","",NULL, EVM_RESTART_SHADOWSOCKS},
 	        {"ss_turn_ss","",NULL, EVM_RESTART_SHADOWSOCKS},
+			{"ss_keyword","",NULL, FALSE},
 			{"ss_update_chnroute","",NULL, EVM_RESTART_SHADOWSOCKS},
 			{"ss_update_gfwlist","",NULL, EVM_RESTART_SHADOWSOCKS},
 			{"ss-tunnel_enable","",NULL, EVM_RESTART_SS_TUNNEL},
@@ -1314,6 +1331,9 @@
 #if defined(APP_WYY)
 		{"WyyConf",		variables_WyyConf},
 #endif
+#if defined(APP_ZEROTIER)
+		{"ZeroConf",		variables_ZeroConf},
+#endif
 #if defined(APP_ADBYBY)
 		{"AdbybyConf",		variables_AdbybyConf},
 #endif
@@ -1418,6 +1438,9 @@
 #endif
 #if defined(APP_WYY)
 		{EVM_RESTART_WYY,		EVT_RESTART_WYY,		RCN_RESTART_WYY,	0},
+#endif
+#if defined(APP_ZEROTIER)
+		{EVM_RESTART_ZEROTIER,		EVT_RESTART_ZEROTIER,		RCN_RESTART_ZEROTIER,	0},
 #endif
 #if defined(APP_ADBYBY)
 		{EVM_RESTART_ADBYBY,		EVT_RESTART_ADBYBY,		RCN_RESTART_ADBYBY,	0},

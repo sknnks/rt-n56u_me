@@ -1311,6 +1311,12 @@ handle_notifications(void)
 			restart_wyy();
 		}
 #endif
+#if defined(APP_ZEROTIER)
+		else if (strcmp(entry->d_name, RCN_RESTART_ZEROTIER) == 0)
+		{
+			restart_zerotier();
+		}
+#endif
 #if defined(APP_KOOLPROXY)
 		else if (strcmp(entry->d_name, RCN_RESTART_KOOLPROXY) == 0)
 		{
@@ -1698,16 +1704,7 @@ main(int argc, char **argv)
 	}
 
 	if (!strcmp(base, "reboot")) {
-		int reboot_mode = nvram_get_int("reboot_mode");
-	    if ( reboot_mode == 0)
-	{
 	    return sys_exit();
-	}
-	else if ( reboot_mode == 1)
-	{
-		doSystem("/sbin/mtd_storage.sh %s", "save");
-		system("mtd_write -r unlock mtd1");
-	}
 	}
 
 	if (!strcmp(base, "shutdown") || !strcmp(base, "halt")) {
