@@ -153,7 +153,7 @@ fi
 }
 
 start_adg(){
-    mkdir -p /tmp/AdGuardHome
+    mkdir -p /media/AiDisk_a1/AdGuardHome
 	mkdir -p /etc/storage/AdGuardHome
 	if [ ! -f "/media/AiDisk_a1/AdGuardHome/AdGuardHome" ]; then
 	dl_adg
@@ -166,7 +166,7 @@ start_adg(){
 
 }
 stop_adg(){
-#rm -rf /tmp/AdGuardHome
+#rm -rf /media/AiDisk_a1/AdGuardHome
 killall -9 AdGuardHome
 del_dns
 clear_iptable
