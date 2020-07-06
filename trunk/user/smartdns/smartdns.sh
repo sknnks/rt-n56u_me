@@ -9,16 +9,16 @@ WHITELIST_IP_CONF="$SMARTDNS_CONF_DIR/smartdns_whitelist-ip.conf"
 CUSTOM_CONF="$SMARTDNS_CONF_DIR/smartdns_custom.conf"
 smartdns_file="/usr/bin/smartdns"
 sdns_enable=`nvram get sdns_enable`
-snds_name=`nvram get snds_name`
+sdns_name=`nvram get sdns_name`
 sdns_port=`nvram get sdns_port`
 sdns_tcp_server=`nvram get sdns_tcp_server`
 sdns_ipv6_server=`nvram get sdns_ipv6_server`
-snds_ip_change=`nvram get snds_ip_change`
-snds_ipv6=`nvram get snds_ipv6`
+sdns_ip_change=`nvram get sdns_ip_change`
+sdns_ipv6=`nvram get sdns_ipv6`
 sdns_www=`nvram get sdns_www`
 sdns_exp=`nvram get sdns_exp`
-snds_redirect=`nvram get snds_redirect`
-snds_cache=`nvram get snds_cache`
+sdns_redirect=`nvram get sdns_redirect`
+sdns_cache=`nvram get sdns_cache`
 sdns_ttl=`nvram get sdns_ttl`
 sdns_ttl_min=`nvram get sdns_ttl_min`
 sdns_ttl_max=`nvram get sdns_ttl_max`
@@ -62,7 +62,7 @@ get_tz()
 gensmartconf(){
 rm -f $SMARTDNS_CONF
 touch $SMARTDNS_CONF
-echo "server-name $snds_name" >> $SMARTDNS_CONF
+echo "server-name $sdns_name" >> $SMARTDNS_CONF
 	if [ "$sdns_ipv6_server" = "1" ]; then
 		echo "bind" "[::]:$sdns_port" >> $SMARTDNS_CONF
 	else
@@ -76,11 +76,11 @@ echo "server-name $snds_name" >> $SMARTDNS_CONF
 		fi
 	fi
 gensdnssecond
-echo "cache-size $snds_cache" >> $SMARTDNS_CONF
-if [ $snds_ip_change -eq 1 ];then
+echo "cache-size $sdns_cache" >> $SMARTDNS_CONF
+if [ $sdns_ip_change -eq 1 ];then
 echo "dualstack-ip-selection yes" >> $SMARTDNS_CONF
-echo "dualstack-ip-selection-threshold $(nvram get snds_ip_change_time)" >> $SMARTDNS_CONF
-elif [ $snds_ipv6 -eq 1 ];then
+echo "dualstack-ip-selection-threshold $(nvram get sdns_ip_change_time)" >> $SMARTDNS_CONF
+elif [ $sdns_ipv6 -eq 1 ];then
 echo "force-AAAA-SOA yes" >> $SMARTDNS_CONF
 fi
 if [ $sdns_www -eq 1 ];then
@@ -304,9 +304,9 @@ if [ "$sdns_coredump" = "1" ]; then
 	#fi
 $smartdns_file -f -c $SMARTDNS_CONF $args &>/dev/null &
 logger -t "SmartDNS" "SmartDNS启动成功"
-if [ $snds_redirect = "2" ]; then
+if [ $sdns_redirect = "2" ]; then
 		set_iptable $sdns_ipv6_server $sdns_tcp_server
-	elif [ $snds_redirect = "1" ]; then
+	elif [ $sdns_redirect = "1" ]; then
 		change_dns
 	fi
 
@@ -347,9 +347,9 @@ fi
 ipset -X smartdns 2>/dev/null
 del_dns
 clear_iptable $sdns_port $sdns_ipv6_server
-if [ "$snds_redirect" = "2" ]; then
+if [ "$sdns_redirect" = "2" ]; then
 		clear_iptable $sdns_port $sdns_ipv6_server
-	elif [ "$snds_redirect" = "1" ]; then
+	elif [ "$sdns_redirect" = "1" ]; then
 		del_dns
 	fi
 logger -t "SmartDNS" "SmartDNS已关闭"
