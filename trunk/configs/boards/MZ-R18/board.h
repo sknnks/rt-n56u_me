@@ -1,7 +1,7 @@
 /* MEIZU R18 */
 
-#define BOARD_PID		"MEIZU-R18"
-#define BOARD_NAME		"MEIZU-R18"
+#define BOARD_PID		"MZ-R18"
+#define BOARD_NAME		"MZ-R18"
 #define BOARD_DESC		"MEIZU R18 Wireless Router"
 #define BOARD_VENDOR_NAME	"Meizu Technology"
 #define BOARD_VENDOR_URL	"https://www.meizu.com/"
