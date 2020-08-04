@@ -1,4 +1,4 @@
-name: Build MT7628
+name: Build MT7628 MI-NANO
 
 on: 
   release:
