@@ -1,4 +1,4 @@
-name: Build RM2100 R2100
+name: Build PSG1218 B70 MI-NANO K2P K2P-USB-5.0
 
 on: 
   release:
