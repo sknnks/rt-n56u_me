@@ -1,5 +1,6 @@
 #!/bin/sh
 #2019/08/30 by bkye
+#2020-08-06
 adbyby_enable=`nvram get adbyby_enable`
 adbyby_ip_x=`nvram get adbyby_ip_x`
 adbyby_rules_x=`nvram get adbyby_rules_x`
@@ -50,11 +51,12 @@ adbyby_close()
 	del_rule
 	del_cron
 	del_dns
+     del_host_ads
 	killall -q adbyby
 	if [ $mem_mode -eq 1 ]; then
 	echo "stop mem mode"
 	fi
-	kill -9 $(ps | grep admem.sh | grep -v grep | awk '{print $1}') >/dev/null 2>&1 
+	kill -9 $(ps | grep admem.sh | grep -v grep | awk '{print $1}') >/dev/null 2>&1
 	/sbin/restart_dhcpd
 	logger -t "adbyby" "Adbyby已关闭。"
 
@@ -62,20 +64,20 @@ adbyby_close()
 
 add_rules()
 {
-	logger -t "adbyby" "正在检查规则是否需要更新!"
+    logger -t "adbyby" "正在检查 <静态规则> & <视频规则> 是否需要更新!"
 	rm -f /tmp/adbyby/data/*.bak
 
 	touch /tmp/local-md5.json && md5sum /tmp/adbyby/data/lazy.txt /tmp/adbyby/data/video.txt > /tmp/local-md5.json
 	touch /tmp/md5.json && curl -k -s -o /tmp/md5.json --connect-timeout 5 --retry 3 https://adbyby.coding.net/p/xwhyc-rules/d/xwhyc-rules/git/raw/master/md5.json
 
 	lazy_local=$(grep 'lazy' /tmp/local-md5.json | awk -F' ' '{print $1}')
-	video_local=$(grep 'video' /tmp/local-md5.json | awk -F' ' '{print $1}')  
+	video_local=$(grep 'video' /tmp/local-md5.json | awk -F' ' '{print $1}')
 	lazy_online=$(sed  's/":"/\n/g' /tmp/md5.json  |  sed  's/","/\n/g' | sed -n '2p')
 	video_online=$(sed  's/":"/\n/g' /tmp/md5.json  |  sed  's/","/\n/g' | sed -n '4p')
 
 	if [ "$lazy_online"x != "$lazy_local"x -o "$video_online"x != "$video_local"x ]; then
 	echo "MD5 not match! Need update!"
-	logger -t "adbyby" "发现更新的规则,下载规则！"
+    logger -t "adbyby" "线上规则已更新,下载规则到本地"
 	touch /tmp/lazy.txt && curl -k -s -o /tmp/lazy.txt --connect-timeout 5 --retry 3 https://adbyby.coding.net/p/xwhyc-rules/d/xwhyc-rules/git/raw/master/lazy.txt
 	touch /tmp/video.txt && curl -k -s -o /tmp/video.txt --connect-timeout 5 --retry 3 https://adbyby.coding.net/p/xwhyc-rules/d/xwhyc-rules/git/raw/master/video.txt
 	touch /tmp/local-md5.json && md5sum /tmp/lazy.txt /tmp/video.txt > /tmp/local-md5.json
@@ -89,22 +91,23 @@ add_rules()
 	fi
 	else
 	echo "MD5 match! No need to update!"
-	logger -t "adbyby" "没有更新的规则,本次无需更新！"
+    logger -t "adbyby" "线上规则未更新,本次无需更新！"
 	fi
 
 	rm -f /tmp/lazy.txt /tmp/video.txt /tmp/local-md5.json /tmp/md5.json
-	logger -t "adbyby" "Adbyby规则更新完成"
+#    logger -t "adbyby" "<静态规则> & <视频规则>更新完成"
 	nvram set adbyby_ltime=`head -1 /tmp/adbyby/data/lazy.txt | awk -F' ' '{print $3,$4}'`
 	nvram set adbyby_vtime=`head -1 /tmp/adbyby/data/video.txt | awk -F' ' '{print $3,$4}'`
 	#nvram set adbyby_rules=`grep -v '^!' /tmp/adbyby/data/rules.txt | wc -l`
 
 	#nvram set adbyby_utime=`cat /tmp/adbyby.updated 2>/dev/null`
+    logger -t "adbyby" "开始处理 黑/白名单、自定义规则等..."
 	grep -v '^!' /etc/storage/adbyby_rules.sh | grep -v "^$" > $PROG_PATH/rules.txt
 	grep -v '^!' /etc/storage/adbyby_blockip.sh | grep -v "^$" > $PROG_PATH/blockip.conf
 	grep -v '^!' /etc/storage/adbyby_adblack.sh | grep -v "^$" > $PROG_PATH/adblack.conf
 	grep -v '^!' /etc/storage/adbyby_adesc.sh | grep -v "^$" > $PROG_PATH/adesc.conf
 	grep -v '^!' /etc/storage/adbyby_adhost.sh | grep -v "^$" > $PROG_PATH/adhost.conf
-	logger -t "adbyby" "正在处理规则..."
+    logger -t "adbyby" "规则处理完成"
 	rm -f $DATA_PATH/user.bin
 	rm -f $DATA_PATH/user.txt
 	rulesnum=`nvram get adbybyrules_staticnum_x`
@@ -215,8 +218,18 @@ add_dns()
 	mkdir -p /etc/storage/dnsmasq-adbyby.d
 	mkdir -p /tmp/dnsmasq.d
 	anti_ad
+	block_ios=`nvram get block_ios`
+	block_douyin=`nvram get block_douyin`
 	awk '!/^$/&&!/^#/{printf("ipset=/%s/'"adbyby_esc"'\n",$0)}' $PROG_PATH/adesc.conf > /etc/storage/dnsmasq-adbyby.d/06-dnsmasq.esc
 	awk '!/^$/&&!/^#/{printf("address=/%s/'"0.0.0.0"'\n",$0)}' $PROG_PATH/adblack.conf > /etc/storage/dnsmasq-adbyby.d/07-dnsmasq.black
+	[ $block_ios -eq 1 ] && echo 'address=/mesu.apple.com/0.0.0.0' >> /etc/storage/dnsmasq-adbyby.d/07-dnsmasq.black
+	if [ $block_douyin -eq 1 ]; then
+  cat <<-EOF >/etc/storage/dnsmasq-adbyby.d/08-dnsmasq.douyin
+address=/api.amemv.com/0.0.0.0
+address=/.snssdk.com/0.0.0.0
+address=/.douyin.com/0.0.0.0
+		EOF
+	fi
 	sed -i '/dnsmasq-adbyby/d' /etc/storage/dnsmasq/dnsmasq.conf
 	cat >> /etc/storage/dnsmasq/dnsmasq.conf << EOF
 conf-dir=/etc/storage/dnsmasq-adbyby.d
@@ -240,7 +253,7 @@ del_dns()
 {
 	sed -i '/dnsmasq-adbyby/d' /etc/storage/dnsmasq/dnsmasq.conf
 	#sed -i '/tvhosts/d' /etc/storage/dnsmasq/dnsmasq.conf
-	sed -i '/hosts/d' /etc/storage/dnsmasq/dnsmasq.conf
+	#sed -i '/adbyby\/hosts/d' /etc/storage/dnsmasq/dnsmasq.conf
 	rm -f /tmp/dnsmasq.d/dnsmasq-adbyby.conf
 	rm -f /etc/storage/dnsmasq-adbyby.d/*
 	rm -f /tmp/adbyby_host.conf
@@ -326,13 +339,20 @@ anti_ad=`nvram get anti_ad`
 anti_ad_link=`nvram get anti_ad_link`
 nvram set anti_ad_count=0
 if [ "$anti_ad" = "1" ]; then
-curl -k -s -o /etc/storage/dnsmasq-adbyby.d/anti-ad-for-dnsmasq.conf --connect-timeout 5 --retry 3 $anti_ad_link
-if [ ! -f "/etc/storage/dnsmasq-adbyby.d/anti-ad-for-dnsmasq.conf" ]; then
-	logger -t "adbyby" "anti_AD下载失败！"
-else
-	logger -t "adbyby" "anti_AD下载成功,处理中..."
-nvram set anti_ad_count=`grep -v '^#' /etc/storage/dnsmasq-adbyby.d/anti-ad-for-dnsmasq.conf | wc -l`
-fi
+    curl -k -s -o /etc/storage/dnsmasq-adbyby.d/anti-ad-for-dnsmasq.conf --connect-timeout 5 --retry 3 $anti_ad_link
+    if [ -s "/etc/storage/dnsmasq-adbyby.d/anti-ad-for-dnsmasq.conf" ]; then
+        if [ `grep -c "404 Not Found" /etc/storage/dnsmasq-adbyby.d/anti-ad-for-dnsmasq.conf` -eq '0' ]; then
+            logger -t "adbyby" "anti_AD下载成功,处理中..."
+            nvram set anti_ad_count=`grep -v '^#' /etc/storage/dnsmasq-adbyby.d/anti-ad-for-dnsmasq.conf | wc -l`
+        else
+            logger -t "adbyby" "anti_AD下载地址404,请检查anti_AD下载地址是否有效/域名解析是否被劫持到错误IP"
+            nvram set anti_ad_count="地址失效"
+            rm -f /etc/storage/dnsmasq-adbyby.d/anti-ad-for-dnsmasq.conf
+        fi
+    else
+        logger -t "adbyby" "anti_AD下载失败！不能访问互联网 或 anti_AD下载地址域名被host等屏蔽/域名解析失败"
+        nvram set anti_ad_count="不能访问"
+    fi
 fi
 }
 
@@ -345,26 +365,43 @@ grep -v '^#' /etc/storage/adbyby_host.sh | grep -v "^$" > $PROG_PATH/hostlist.tx
 for ip in `cat $PROG_PATH/hostlist.txt`
 do
 logger -t "adbyby" "正在下载: $ip"
-curl -k -s -o /tmp/host.txt --connect-timeout 5 --retry 3 $ip
-if [ ! -f "/tmp/host.txt" ]; then
+curl -k -s -L -o /tmp/host.txt --connect-timeout 15 --retry 3 $ip
+if [ ! -s "/tmp/host.txt" ]; then
 	logger -t "adbyby" "$ip 下载失败！"
+     rm -f /tmp/host.txt
 else
 	logger -t "adbyby" "hosts下载成功,处理中..."
-grep -v '^#' /tmp/host.txt | grep -v "^$" >> $PROG_PATH/hosts
+	grep -v '^#' /tmp/host.txt | grep -v "^$" >> $PROG_PATH/hosts
+     rm -f /tmp/host.txt
 fi
 done
-rm -f /tmp/host.txt
+logger -t "adbyby" "删除hosts注释和本地规则."
+	sed -i '/#/d' $PROG_PATH/hosts
+	sed -i '/@/d' $PROG_PATH/hosts
+	sed -i '/::1/d' $PROG_PATH/hosts
+	sed -i '/localhost/d' $PROG_PATH/hosts
+	sed -i '/Not Found/d' $PROG_PATH/hosts
+sleep 1
+logger -t "adbyby" "统一hosts规则格式."
+	sed -i "s/  / /g" $PROG_PATH/hosts
+	sed -i "s/	/ /g" $PROG_PATH/hosts
+	sed -i "s/0.0.0.0/127.0.0.1/g" $PROG_PATH/hosts
+sleep 1
 logger -t "adbyby" "正在对hosts文件进行去重处理."
-sort $PROG_PATH/hosts | uniq
+	sort $PROG_PATH/hosts | uniq
+sleep 1
 nvram set adbyby_hostsad=`grep -v '^!' $PROG_PATH/hosts | wc -l`
-sed -i '/hosts/d' /etc/storage/dnsmasq/dnsmasq.conf
+sed -i '/adbyby\/hosts/d' /etc/storage/dnsmasq/dnsmasq.conf
 cat >> /etc/storage/dnsmasq/dnsmasq.conf <<-EOF
 	addn-hosts=$PROG_PATH/hosts
 EOF
 fi
 }
-
-
+del_host_ads()
+{
+	sed -i '/adbyby\/hosts/d' /etc/storage/dnsmasq/dnsmasq.conf
+	rm -f $PROG_PATH/hosts
+}
 addscripts()
 {
 
