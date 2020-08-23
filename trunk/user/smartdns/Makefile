@@ -1,31 +1,26 @@
-SRC_NAME = smartdns-Release31
+BIN_NAME=smartdns
+SRC_NAME=$(BIN_NAME).sh
+BIN_URL=https://github.com/SuzukiHonoka/smartdns_for_mipsel/releases/latest/download/smartdns
+SRC_URL=https://raw.githubusercontent.com/SuzukiHonoka/Smartdns_Padavan/master/smartdns.sh
+BIN_PATH=/usr/bin
+
 THISDIR = $(shell pwd)
 
-all: extract_test config_test
-	$(MAKE) -C $(SRC_NAME)
+all: bin_download src_download
 
-extract_test:
-	( if [ ! -d $(SRC_NAME) ]; then \
-		tar zxf $(SRC_NAME).tar.gz ; \
+bin_download:
+	( if [ ! -f $(BIN_NAME) ]; then \
+		wget $(BIN_URL); \
 	fi )
 
-config_test:
-	( if [ -f ./config_done ]; then \
-		echo "the same configuration"; \
-	else \
-		touch config_done; \
+src_download:
+	( if [ ! -f $(SRC_NAME) ]; then \
+		wget $(SRC_URL); \
 	fi )
 
 clean:
-	if [ -f $(SRC_NAME)/Makefile ] ; then \
-		$(MAKE) -C $(SRC_NAME) clean ; \
-	fi ; \
-	rm -f config_done
+	rm $(THISDIR)/$(BIN_NAME) && rm $(THISDIR)/$(SRC_NAME)
 
 romfs:
-	$(ROMFSINST) -p +x $(THISDIR)/$(SRC_NAME)/src/smartdns /usr/bin/smartdns
-	$(ROMFSINST) -p +x $(THISDIR)/smartdns.sh /usr/bin/smartdns.sh
-	$(ROMFSINST) /etc_ro/smartdns_address.conf
-	$(ROMFSINST) /etc_ro/smartdns_blacklist-ip.conf
-	$(ROMFSINST) /etc_ro/smartdns_custom.conf
-	$(ROMFSINST) /etc_ro/smartdns_whitelist-ip.conf
+	$(ROMFSINST) -p +x $(THISDIR)/$(BIN_NAME) $(BIN_PATH)/$(BIN_NAME)
+	$(ROMFSINST) -p +x $(THISDIR)/$(SRC_NAME) $(BIN_PATH)/$(SRC_NAME)
