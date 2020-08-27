@@ -130,7 +130,6 @@ clients: []
 log_file: ""
 verbose: false
 schema_version: 3
-
 EEE
 	chmod 755 "$adg_file"
 fi

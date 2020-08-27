@@ -1,24 +1,24 @@
 /* NEWIFI3(d2) */
 
-#define BOARD_PID		"NEWIFI3"
-#define BOARD_NAME		"NEWIFI3"
-#define BOARD_DESC		"NEWIFI3 Wireless Router"
-#define BOARD_VENDOR_NAME	"Diting Technology"
-#define BOARD_VENDOR_URL	"http://www.newifi.com/"
-#define BOARD_MODEL_URL		"http://www.newifi.com/"
+#define BOARD_PID		"ZTE-E8820"
+#define BOARD_NAME		"ZTE-E8820"
+#define BOARD_DESC		"ZTE-E8820 Wireless Router"
+#define BOARD_VENDOR_NAME	"ZTE Technology"
+#define BOARD_VENDOR_URL	"http://www.ztehome.com.cn/"
+#define BOARD_MODEL_URL		"http://www.ztehome.com.cn/"
 #define BOARD_BOOT_TIME		30
 #define BOARD_FLASH_TIME	120
 #undef BOARD_GPIO_BTN_FN1
-#define BOARD_GPIO_BTN_RESET	3
-#define BOARD_GPIO_BTN_WPS	7
+#define BOARD_GPIO_BTN_RESET	18
+#define BOARD_GPIO_BTN_WPS	24
 #undef  BOARD_GPIO_LED_ALL
-#undef  BOARD_GPIO_LED_WIFI
-#define  BOARD_GPIO_LED_SW2G	14
-#define  BOARD_GPIO_LED_SW5G	16
-#define  BOARD_GPIO_LED_POWER	15
+#define BOARD_GPIO_LED_WIFI  29
+#undef  BOARD_GPIO_LED_SW2G
+#undef  BOARD_GPIO_LED_SW5G
+#define  BOARD_GPIO_LED_POWER	 31
 #undef  BOARD_GPIO_LED_LAN
-#define BOARD_GPIO_LED_WAN	13
-#define BOARD_GPIO_LED_USB	10
+#undef BOARD_GPIO_LED_WAN	
+#undef BOARD_GPIO_LED_USB	
 #undef BOARD_GPIO_LED_ROUTER
 #undef  BOARD_GPIO_PWR_USB
 #define BOARD_HAS_5G_11AC	1
