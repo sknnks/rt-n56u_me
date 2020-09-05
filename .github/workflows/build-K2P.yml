@@ -9,10 +9,10 @@ on:
     - 'v*'
   #  branches: 
   #    - master
-  schedule:
-    - cron: 0 17 * * 4
-#  watch:
-#    types: [started]
+#  schedule:
+#    - cron: 0 17 * * 4
+  watch:
+    types: [started]
 
 jobs:
   build:
