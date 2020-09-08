@@ -73,9 +73,9 @@ dns:
   protection_enabled: true
   filtering_enabled: true
   blocking_mode: nxdomain
-  blocked_response_ttl: 10
+  blocked_response_ttl: 60
   querylog_enabled: true
-  ratelimit: 20
+  ratelimit: 0
   ratelimit_whitelist: []
   refuse_any: true
   bootstrap_dns:
