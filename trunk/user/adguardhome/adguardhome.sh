@@ -25,7 +25,7 @@ set_iptable()
 	for IP in $IPS
 	do
 		iptables -t nat -A PREROUTING -p tcp -d $IP --dport 53 -j REDIRECT --to-ports 5335 >/dev/null 2>&1
-		iptables -t nat -A PREROUTING -p udp -d $IP --dport 53 -j REDIRECT --to-ports 5335>/dev/null 2>&1
+		iptables -t nat -A PREROUTING -p udp -d $IP --dport 53 -j REDIRECT --to-ports 5335 >/dev/null 2>&1
 	done
 
 	IPS="`ifconfig | grep "inet6 addr" | grep -v " fe80::" | grep -v " ::1" | grep "Global" | awk '{print $3}'`"
@@ -65,53 +65,110 @@ bind_host: 0.0.0.0
 bind_port: 3030
 auth_name: admin
 auth_pass: admin
+http_proxy: ""
 language: zh-cn
 rlimit_nofile: 0
+debug_pprof: false
+web_session_ttl: 720
 dns:
   bind_host: 0.0.0.0
   port: 5335
-  protection_enabled: true
-  filtering_enabled: true
-  blocking_mode: nxdomain
-  blocked_response_ttl: 60
+  statistics_interval: 1
   querylog_enabled: true
+  querylog_file_enabled: true
+  querylog_interval: 1
+  querylog_size_memory: 1000
+  anonymize_client_ip: false
+  protection_enabled: true
+  blocking_mode: nxdomain
+  blocking_ipv4: ""
+  blocking_ipv6: ""
+  blocked_response_ttl: 60
+  parental_block_host: family-block.dns.adguard.com
+  safebrowsing_block_host: standard-block.dns.adguard.com
   ratelimit: 0
   ratelimit_whitelist: []
   refuse_any: true
-  bootstrap_dns:
+  upstream_dns:
   - 127.0.0.1:6053
-  all_servers: true
+  - 127.0.0.1:6054
+  - 127.0.0.1:6055
+  - 127.0.0.1:6056
+  - 127.0.0.1:6057
+  bootstrap_dns:
+  - 61.153.177.196
+  - 61.153.177.197
+  - 1.1.1.1
+  - 8.8.4.4
+  all_servers: false
+  fastest_addr: false
   allowed_clients: []
   disallowed_clients: []
   blocked_hosts: []
-  parental_sensitivity: 0
+  cache_size: 4194304
+  cache_ttl_min: 0
+  cache_ttl_max: 0
+  bogus_nxdomain: []
+  aaaa_disabled: true
+  enable_dnssec: false
+  edns_client_subnet: false
+  filtering_enabled: true
+  filters_update_interval: 168
   parental_enabled: false
   safesearch_enabled: false
   safebrowsing_enabled: false
-  resolveraddress: ""
-  upstream_dns:
-  - 61.153.177.196
-  - 61.153.177.197
-  - 223.5.5.5
-  - 180.76.76.76
-  - 119.29.29.29
-  - 1.2.4.8
-  - 114.114.114.114
-  - 8.8.4.4
+  safebrowsing_cache_size: 1048576
+  safesearch_cache_size: 1048576
+  parental_cache_size: 1048576
+  cache_time: 30
+  rewrites: []
+  blocked_services: []
 tls:
   enabled: false
   server_name: ""
   force_https: false
   port_https: 443
   port_dns_over_tls: 853
+  allow_unencrypted_doh: false
+  strict_sni_check: false
   certificate_chain: ""
   private_key: ""
+  certificate_path: ""
+  private_key_path: ""
 filters:
 - enabled: true
   url: https://anti-ad.net/easylist.txt
   name: anti-ad
-  id: 1
-user_rules: []
+  id: 1599542245
+- enabled: true
+  url: https://raw.githubusercontent.com/xinggsf/Adblock-Plus-Rule/master/ABP-FX.txt
+  name: AdblockPlus
+  id: 1599542246
+- enabled: true
+  url: https://easylist-downloads.adblockplus.org/easylistchina.txt
+  name: EasyList China
+  id: 1599542247
+- enabled: true
+  url: https://easylist.to/easylist/easylist.txt
+  name: EasyList
+  id: 1599542248
+- enabled: true
+  url: https://cdn.jsdelivr.net/gh/banbendalao/ADgk@latest/ADgk.txt
+  name: ADgk
+  id: 1600677102
+whitelist_filters: []
+user_rules:
+- '@@||snssdk.com^$important'
+- '@@||dm.toutiao.com^$important'
+- '||www.huawei.com^$important'
+- '||www.iqiyi.com^$important'
+- '@@||pstatp.com^$important'
+- '||www.sohu.com^$important'
+- '||www.qq.com^$important'
+- '@@||pcvideoaliyun.titan.mgtv.com^$important'
+- '@@||douyucdn.cn^$important'
+- '||jg.janurary15.com^$important'
+- ""
 dhcp:
   enabled: false
   interface_name: ""
@@ -122,9 +179,14 @@ dhcp:
   lease_duration: 86400
   icmp_timeout_msec: 1000
 clients: []
+log_compress: false
+log_localtime: false
+log_max_backups: 0
+log_max_size: 100
+log_max_age: 3
 log_file: ""
 verbose: false
-schema_version: 3
+schema_version: 6
 
 EEE
 	chmod 755 "$adg_file"
