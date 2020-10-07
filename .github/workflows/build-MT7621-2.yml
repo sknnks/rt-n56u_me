@@ -106,10 +106,9 @@ jobs:
         tag: AtuoBuild
         overwrite: true
         file_glob: true
-    - uses: ncipollo/release-action@v1
+    - name : Upload packages
+      uses: actions/upload-artifact@master
+      if: always()
       with:
-       bodyFile: "changelog.md"
-       tag: AtuoBuild
-       allowUpdates: true
-       name: Padavan-firmware
-       token: ${{ secrets.R_TOKEN }}
+        name: Padavan-packages
+        path: /opt/images
