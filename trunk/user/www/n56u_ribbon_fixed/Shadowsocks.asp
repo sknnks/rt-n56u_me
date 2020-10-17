@@ -1559,11 +1559,13 @@ setTimeout('document.getElementById("btn_ctime").style.display="none";',1000);
 																<option value="223.5.5.5#53">阿里DNS (223.5.5.5)</option>
 																<option value="114.114.114.114#53">114 DNS
 																	(114.114.114.114)</option>
-																<option value="117.50.11.11#53">OneDNS (117.50.11.11)</option>
-																<option value="180.76.76.76#53">百度DNS (180.76.76.76)</option>
-																<option value="119.29.29.29#53">DNSPOD DNS(119.29.29.29)</option>
+																<option value="117.50.11.11#53">OneDNS (117.50.11.11)
+																</option>
+																<option value="180.76.76.76#53">百度DNS (180.76.76.76)
+																</option>
+																<option value="119.29.29.29#53">DNSPOD DNS
+																	(119.29.29.29)</option>
 																<option value="1.2.4.8#53">cnnic DNS (1.2.4.8)</option>
-                                                                <option value="127.0.0.1#6053">SmartDNS(127.0.0.1:6053)</option>
 															</select>
 														</td>
 													</tr>
