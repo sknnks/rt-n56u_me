@@ -30,9 +30,9 @@
 #define SYS_USER_NOBODY		"nobody"
 #define SYS_GROUP_NOGROUP	"nogroup"
 
-#define DEF_LAN_ADDR		"192.168.2.1"
-#define DEF_LAN_DHCP_BEG	"192.168.2.100"
-#define DEF_LAN_DHCP_END	"192.168.2.244"
+#define DEF_LAN_ADDR		"192.168.123.1"
+#define DEF_LAN_DHCP_BEG	"192.168.123.100"
+#define DEF_LAN_DHCP_END	"192.168.123.244"
 #define DEF_LAN_MASK		"255.255.255.0"
 
 #define DEF_WLAN_2G_CC		"CN"
@@ -45,7 +45,7 @@
 #define DEF_WLAN_5G_PSK		"1234567890"
 
 #define DEF_ROOT_PASSWORD	"admin"
-#define DEF_SMB_WORKGROUP	"WORKGROUP"
+#define DEF_SMB_WORKGROUP	"E8820S"
 #define DEF_TIMEZONE		"CST-8"
 #define DEF_NTP_SERVER0		"ntp1.aliyun.com"
 #define DEF_NTP_SERVER1		"2001:470:0:50::2"
