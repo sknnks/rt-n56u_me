@@ -1,4 +1,4 @@
-SRC_NAME = dnsmasq-2.81
+SRC_NAME = dnsmasq-2.82
 THISDIR = $(shell pwd)
 
 COPTS := -DHAVE_BROKEN_RTC -DNO_INOTIFY -DNO_AUTH -DNO_LOOP
@@ -13,7 +13,7 @@ COPTS += -DNO_IPSET
 endif
 
 all: extract_test
-	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME) COPTS="$(COPTS)"
+	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME) CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" COPTS="$(COPTS)"
 
 extract_test:
 	( if [ ! -d $(SRC_NAME) ]; then \
