@@ -59,6 +59,7 @@ get_tz()
 	fi	
 	SET_TZ=$tz
 }
+
 gensmartconf(){
 rm -f $SMARTDNS_CONF
 touch $SMARTDNS_CONF
