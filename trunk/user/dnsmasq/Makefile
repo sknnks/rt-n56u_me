@@ -13,7 +13,7 @@ COPTS += -DNO_IPSET
 endif
 
 all: extract_test
-	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME) CFLAGS="$(CFLAGS)" LDFLAGS="$(LDFLAGS)" COPTS="$(COPTS)"
+	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME) COPTS="$(COPTS)"
 
 extract_test:
 	( if [ ! -d $(SRC_NAME) ]; then \
