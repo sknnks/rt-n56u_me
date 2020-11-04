@@ -27,7 +27,7 @@ clean:
 	rm -f dnsmasq
 
 romfs:
-	cp $(SRC_NAME)/src/dnsmasq
+	cp $(SRC_NAME)/src/dnsmasq .
 	$(STRIP) dnsmasq
 	$(ROMFSINST) /usr/sbin/dnsmasq
 	$(ROMFSINST) -p +x $(THISDIR)/dnsmasq.sh /usr/bin/dnsmasq.sh
