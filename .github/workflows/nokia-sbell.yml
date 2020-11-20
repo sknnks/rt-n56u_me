@@ -1,4 +1,4 @@
-name: Build MT7621-2
+name: Build nokia-sbell
 
 on: 
   release:
@@ -35,7 +35,7 @@ jobs:
         mkdir -p /opt/images/
     - name: Build Firmware
       env:
-        TNAME: "bell-a-040w-q"
+        TNAME: "BELL-A-040W-Q"
       run: |
         cwd=`pwd`
         CONFIG_TOOLCHAIN_DIR=${cwd//\//\\\/}\\/toolchain-mipsel
