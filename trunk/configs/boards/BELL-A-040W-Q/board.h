@@ -1,4 +1,4 @@
-/* MSG1500 */
+/* BELL-A-040W-Q */
 
 #define BOARD_PID		"BELL-A-040W-Q"
 #define BOARD_NAME		"BELL-A-040W-Q"
@@ -8,9 +8,9 @@
 #define BOARD_MODEL_URL		"http://www.nokia-sbell.com/"
 #define BOARD_BOOT_TIME		30
 #define BOARD_FLASH_TIME	120
-#undef BOARD_GPIO_BTN_FN1
-#define BOARD_GPIO_BTN_RESET 18
-#undef BOARD_GPIO_BTN_WPS
+#undef BOARD_GPIO_BTN_FN1   7
+#define BOARD_GPIO_BTN_RESET 15
+#define BOARD_GPIO_BTN_WPS   18
 #undef  BOARD_GPIO_LED_ALL
 #undef  BOARD_GPIO_LED_WIFI
 #define  BOARD_GPIO_LED_SW2G   4
