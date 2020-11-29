@@ -1,13 +1,13 @@
-name: Build MT7621-2
+name: Build K2P-5.0_USB
 
 on: 
   release:
     types: [published]
-  push:
-    tags:
-    - 'v*'
-    branches: 
-      - master
+#  push:
+#    tags:
+#    - 'v*'
+  #  branches: 
+  #    - master
 #  schedule:
 #    - cron: 0 17 * * 4
 #  watch:
