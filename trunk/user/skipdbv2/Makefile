@@ -1,4 +1,4 @@
-﻿SRC_NAME = skipdbv2
+SRC_NAME = skipdbv2
 THISDIR = $(shell pwd)
 
 all: config_test
