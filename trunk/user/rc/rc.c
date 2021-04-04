@@ -1007,7 +1007,7 @@ void
 handle_notifications(void)
 {
 	int i, stop_handle = 0;
-	char notify_name[256];
+	char notify_name[300];
 
 	DIR *directory = opendir(DIR_RC_NOTIFY);
 	if (!directory)
@@ -1704,7 +1704,7 @@ main(int argc, char **argv)
 	}
 
 	if (!strcmp(base, "reboot")) {
-	    return sys_exit();
+		return sys_exit();
 	}
 
 	if (!strcmp(base, "shutdown") || !strcmp(base, "halt")) {

@@ -135,20 +135,20 @@ dir_y						+= xl2tpd
 dir_$(CONFIG_FIRMWARE_INCLUDE_RPL2TP)		+= rp-l2tp
 dir_y						+= lldt
 dir_y						+= scripts
-dir_$(CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS)						+= skipdbv2
-dir_$(CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS)						+= chinadns-ng
-dir_$(CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS)						+= lua51
-dir_$(CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS)                       +=microsocks
-dir_$(CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS)            +=ipt2socks
-dir_$(CONFIG_FIRMWARE_INCLUDE_ADGUARDHOME)      	+= adguardhome
-dir_$(CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS)	        += dns2tcp
+dir_$(CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS)	+= skipdbv2
+dir_$(CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS)	+= chinadns-ng
+dir_$(CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS)	+= lua51
+dir_$(CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS)      +=microsocks
+dir_$(CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS)      +=ipt2socks
+dir_$(CONFIG_FIRMWARE_INCLUDE_ADGUARDHOME)      += adguardhome
+dir_$(CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS)	+= dns2tcp
 ifeq ($(CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS),y)
 dir_$(CONFIG_FIRMWARE_INCLUDE_V2RAY)	        += v2ray
 dir_$(CONFIG_FIRMWARE_INCLUDE_TROJAN)	        += trojan
 endif
-dir_$(CONFIG_FIRMWARE_INCLUDE_SSOBFS)                      += simple-obfs
-dir_$(CONFIG_FIRMWARE_INCLUDE_ZEROTIER)	                       += zerotier
-dir_$(CONFIG_FIRMWARE_INCLUDE_WYY)						+= unblockmusic
+dir_$(CONFIG_FIRMWARE_INCLUDE_SSOBFS)           += simple-obfs
+dir_$(CONFIG_FIRMWARE_INCLUDE_ZEROTIER)	        += zerotier
+dir_$(CONFIG_FIRMWARE_INCLUDE_WYY)		+= unblockmusic
 dir_$(OPENSSH_ENABLED)				+= openssh
 dir_$(DROPBEAR_ENABLED)				+= dropbear
 dir_$(CONFIG_FIRMWARE_INCLUDE_HTOP)		+= htop
@@ -158,14 +158,14 @@ dir_$(CONFIG_FIRMWARE_INCLUDE_SSWAN)		+= strongswan
 dir_$(CONFIG_FIRMWARE_INCLUDE_XUPNPD)		+= xupnpd
 dir_$(CONFIG_FIRMWARE_INCLUDE_TCPDUMP)		+= tcpdump
 dir_$(CONFIG_FIRMWARE_INCLUDE_MTR)		+= mtr
-dir_$(CONFIG_FIRMWARE_INCLUDE_SOCAT)	+= socat
-dir_$(CONFIG_FIRMWARE_INCLUDE_SRELAY)	+= srelay
-dir_$(CONFIG_FIRMWARE_INCLUDE_TUNSAFE) += tunsafe
+dir_$(CONFIG_FIRMWARE_INCLUDE_SOCAT)		+= socat
+dir_$(CONFIG_FIRMWARE_INCLUDE_SRELAY)		+= srelay
+dir_$(CONFIG_FIRMWARE_INCLUDE_TUNSAFE) 		+= tunsafe
 ifeq ($(CONFIG_FIRMWARE_INCLUDE_SMBD36),y)
-dir_$(SAMBA_ENABLED)				+= samba36
+dir_$(SAMBA_ENABLED)					+= samba36
 dir_y							+= wsdd2
 else
-dir_$(SAMBA_ENABLED)				+= samba3
+dir_$(SAMBA_ENABLED)					+= samba3
 endif
 dir_$(CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS)	+= chnroute
 dir_$(CONFIG_FIRMWARE_INCLUDE_TTYD)		+= ttyd
@@ -182,11 +182,14 @@ dir_$(CONFIG_FIRMWARE_INCLUDE_IPERF3)			+= iperf3
 dir_$(CONFIG_FIRMWARE_INCLUDE_MINIEAP)			+= minieap
 dir_$(CONFIG_FIRMWARE_INCLUDE_NJIT_CLIENT)		+= njit-client
 dir_$(CONFIG_FIRMWARE_INCLUDE_MENTOHUST)		+= mentohust
-dir_$(CONFIG_FIRMWARE_INCLUDE_SMARTDNS)		+= smartdns
-dir_$(CONFIG_FIRMWARE_INCLUDE_CADDY)		+= caddy
+dir_$(CONFIG_FIRMWARE_INCLUDE_SMARTDNS)			+= smartdns
+dir_$(CONFIG_FIRMWARE_INCLUDE_CADDY)			+= caddy
 dir_$(CONFIG_FIRMWARE_INCLUDE_xTUN) 			+= xTun
-dir_$(CONFIG_FIRMWARE_INCLUDE_WING) 			+= wing
-dir_$(CONFIG_FIRMWARE_INCLUDE_WING) 			+= ipt2socks
+ifeq ($(CONFIG_FIRMWARE_INCLUDE_WING),y)
+dir_y 			+= wing
+dir_y 			+= ipt2socks
+endif
+dir_$(TROJAN_ENABLE) 			+= trojan
 dir_$(CONFIG_FIRMWARE_INCLUDE_REDSOCKS)			+= redsocks
 
 ifdef CONFIG_BLK_DEV_SD
