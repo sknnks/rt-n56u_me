@@ -544,7 +544,7 @@ void server(int lpnumber)
 	struct sockaddr_storage client;
 	struct addrinfo hints, *res, *ressave;
 	char pidfilename[sizeof(PIDFILE)];
-	char service[10];       // 9100 (65535 max)
+	char service[10];	// 9100 (65535 max)
 	FILE *f;
 	const int bufsiz = 65536;
 
