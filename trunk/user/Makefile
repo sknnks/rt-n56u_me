@@ -162,35 +162,34 @@ dir_$(CONFIG_FIRMWARE_INCLUDE_SOCAT)		+= socat
 dir_$(CONFIG_FIRMWARE_INCLUDE_SRELAY)		+= srelay
 dir_$(CONFIG_FIRMWARE_INCLUDE_TUNSAFE) 		+= tunsafe
 ifeq ($(CONFIG_FIRMWARE_INCLUDE_SMBD36),y)
-dir_$(SAMBA_ENABLED)					+= samba36
-dir_y							+= wsdd2
+dir_$(SAMBA_ENABLED)				+= samba36
+dir_y						+= wsdd2
 else
-dir_$(SAMBA_ENABLED)					+= samba3
+dir_$(SAMBA_ENABLED)				+= samba3
 endif
 dir_$(CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS)	+= chnroute
 dir_$(CONFIG_FIRMWARE_INCLUDE_TTYD)		+= ttyd
 dir_$(FRP_ENABLE)				+= frp
 dir_$(SOFTETHERVPN_ENABLE)			+= softethervpn
-dir_$(CONFIG_FIRMWARE_INCLUDE_SCUTCLIENT)         += scutclient
-dir_$(CONFIG_FIRMWARE_INCLUDE_VLMCSD)			+= vlmcsd
-dir_$(CONFIG_FIRMWARE_INCLUDE_DNSFORWARDER)		+= dns-forwarder
-dir_$(SHADOWSOCKS_ENABLE)				+= shadowsocks
-dir_$(CONFIG_FIRMWARE_INCLUDE_LRZSZ)			+= lrzsz
-dir_$(CONFIG_FIRMWARE_INCLUDE_GDUT_DRCOM)		+= gdut-drcom
-dir_$(CONFIG_FIRMWARE_INCLUDE_DOGCOM)			+= dogcom
-dir_$(CONFIG_FIRMWARE_INCLUDE_IPERF3)			+= iperf3
-dir_$(CONFIG_FIRMWARE_INCLUDE_MINIEAP)			+= minieap
-dir_$(CONFIG_FIRMWARE_INCLUDE_NJIT_CLIENT)		+= njit-client
-dir_$(CONFIG_FIRMWARE_INCLUDE_MENTOHUST)		+= mentohust
-dir_$(CONFIG_FIRMWARE_INCLUDE_SMARTDNS)			+= smartdns
-dir_$(CONFIG_FIRMWARE_INCLUDE_CADDY)			+= caddy
-dir_$(CONFIG_FIRMWARE_INCLUDE_xTUN) 			+= xTun
+dir_$(CONFIG_FIRMWARE_INCLUDE_SCUTCLIENT)       += scutclient
+dir_$(CONFIG_FIRMWARE_INCLUDE_VLMCSD)		+= vlmcsd
+dir_$(CONFIG_FIRMWARE_INCLUDE_DNSFORWARDER)	+= dns-forwarder
+dir_$(SHADOWSOCKS_ENABLE)			+= shadowsocks
+dir_$(CONFIG_FIRMWARE_INCLUDE_LRZSZ)		+= lrzsz
+dir_$(CONFIG_FIRMWARE_INCLUDE_GDUT_DRCOM)	+= gdut-drcom
+dir_$(CONFIG_FIRMWARE_INCLUDE_DOGCOM)		+= dogcom
+dir_$(CONFIG_FIRMWARE_INCLUDE_IPERF3)		+= iperf3
+dir_$(CONFIG_FIRMWARE_INCLUDE_MINIEAP)		+= minieap
+dir_$(CONFIG_FIRMWARE_INCLUDE_NJIT_CLIENT)	+= njit-client
+dir_$(CONFIG_FIRMWARE_INCLUDE_MENTOHUST)	+= mentohust
+dir_$(CONFIG_FIRMWARE_INCLUDE_SMARTDNS)		+= smartdns
+dir_$(CONFIG_FIRMWARE_INCLUDE_CADDY)		+= caddy
+dir_$(CONFIG_FIRMWARE_INCLUDE_xTUN) 		+= xTun
 ifeq ($(CONFIG_FIRMWARE_INCLUDE_WING),y)
 dir_y 			+= wing
 dir_y 			+= ipt2socks
 endif
-dir_$(TROJAN_ENABLE) 			+= trojan
-dir_$(CONFIG_FIRMWARE_INCLUDE_REDSOCKS)			+= redsocks
+dir_$(CONFIG_FIRMWARE_INCLUDE_REDSOCKS)		+= redsocks
 
 ifdef CONFIG_BLK_DEV_SD
 dir_$(CONFIG_FIRMWARE_INCLUDE_HDPARM)		+= hdparm
@@ -223,7 +222,7 @@ dir_$(CONFIG_FIRMWARE_INCLUDE_TRANSMISSION)	+= transmission
 dir_$(ARIA2_ENABLED)		+= aria2
 endif
 
-dir_$(CONFIG_FIRMWARE_INCLUDE_KOOLPROXY)		+= koolproxy
+dir_$(CONFIG_FIRMWARE_INCLUDE_KOOLPROXY)	+= koolproxy
 dir_$(CONFIG_FIRMWARE_INCLUDE_ADBYBY)		+= adbyby
 dir_$(CONFIG_FIRMWARE_INCLUDE_ALIDDNS)		+= aliddns
 ifdef CONFIG_MTD_UBI
