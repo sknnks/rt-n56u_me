@@ -14,7 +14,7 @@
 	<link rel="stylesheet" type="text/css" href="/bootstrap/css/bootstrap-table.min.css">
 	<link rel="stylesheet" type="text/css" href="/bootstrap/css/main.css">
 	<link rel="stylesheet" type="text/css" href="/bootstrap/css/engage.itoggle.css">
-	<script type="text/javascript" src="/jquery.js?random=<% uptime(); %>"></script>
+	<script type="text/javascript" src="/jquery.js"></script>
 	<script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/bootstrap/js/bootstrap-table.min.js"></script>
 	<script type="text/javascript" src="/bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
