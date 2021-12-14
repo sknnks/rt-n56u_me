@@ -1,5 +1,4 @@
 name: Build NEWIFI-D1
-
 on: 
   release:
     types: [published]
