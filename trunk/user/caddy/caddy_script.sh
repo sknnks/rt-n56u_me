@@ -44,5 +44,6 @@ rm -f /tmp/cf
 caddybin="/usr/bin/caddy_filebrowser"
 if [ ! -f "$caddybin" ]; then
 caddybin="$caddy_dir/caddy/caddy_filebrowser"
+chmod 0755 $caddybin
 fi
 $caddybin -conf $caddyfile &
