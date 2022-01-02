@@ -1,5 +1,4 @@
 #!/bin/sh
-#chongshengB 2020
 caddy_enable=`nvram get caddy_enable`
 caddy_wan=`nvram get caddy_wan`
 caddy_file=`nvram get caddy_file`
