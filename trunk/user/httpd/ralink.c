@@ -646,14 +646,6 @@ char* GetPhyMode(int Mode)
 		return "HT_GF";
 	case MODE_VHT:
 		return "VHT";
-	case MODE_HE:
-	case MODE_HE_SU:
-	case MODE_HE_24G:
-	case MODE_HE_5G:
-	case MODE_HE_EXT_SU:
-	case MODE_HE_TRIG:
-	case MODE_HE_MU:
-		return "HE";
 	default:
 		return "N/A";
 	}
@@ -706,8 +698,8 @@ MCSMappingRateTable[] =
 	60, 120, 180, 240, 360, 480, 540, 600,
 
 	/* 11ac 20 Mhz 800ns GI */
-	6,  13, 19, 26,  39,  52,  58,  65,  78,  87,     /*1ss mcs 0~8*/
-	13, 26, 39, 52,  78,  104, 117, 130, 156, 173,     /*2ss mcs 0~8*/
+	6,  13, 19, 26,  39,  52,  58,  65,  78,  87,    /*1ss mcs 0~8*/
+	13, 26, 39, 52,  78,  104, 117, 130, 156, 173,   /*2ss mcs 0~8*/
 	19, 39, 58, 78,  117, 156, 175, 195, 234, 260,   /*3ss mcs 0~9*/
 	26, 52, 78, 104, 156, 208, 234, 260, 312, 0,     /*4ss mcs 0~8*/
 
@@ -730,8 +722,8 @@ MCSMappingRateTable[] =
 	234, 468, 702, 936, 1404, 1872, 2106, 2340, 2808, 3120, /*4ss mcs 0~9*/
 
 	/* 11ac 20 Mhz 400ns GI */
-	7,	14,	21,	28,  43,  57,   65,	 72,  86,  96,    /*1ss mcs 0~8*/
-	14,	28,	43,	57,	 86,  115,  130, 144, 173, 192,    /*2ss mcs 0~8*/
+	7,	14,	21,	28,  43,  57,   65,	 72,  86,  96,   /*1ss mcs 0~8*/
+	14,	28,	43,	57,	 86,  115,  130, 144, 173, 192,  /*2ss mcs 0~8*/
 	21,	43,	65,	86,	 130, 173,  195, 216, 260, 288,  /*3ss mcs 0~9*/
 	28,	57,	86,	115, 173, 231,  260, 288, 346, 0,    /*4ss mcs 0~8*/
 
@@ -754,103 +746,31 @@ MCSMappingRateTable[] =
 	260, 520, 780, 1040, 1560, 2080, 2340, 2600, 3120, 3466, /*4ss mcs 0~9*/
 };
 
-#define MAX_NUM_HE_BANDWIDTHS 4
-#define MAX_NUM_HE_SPATIAL_STREAMS 4
-#define MAX_NUM_HE_MCS_ENTRIES 12
-static const int he_mcs_phyrate_mapping_table[MAX_NUM_HE_BANDWIDTHS][MAX_NUM_HE_SPATIAL_STREAMS][MAX_NUM_HE_MCS_ENTRIES] = 
-{
-	{ /* 20 Mhz*/
-		{  8, 17,  25,  34,  51,  68,  77,  86, 103, 114, 129, 143 },		/* 1 SS */
-		{ 17, 34,  51,  68, 103, 137, 154, 172, 206, 229, 258, 286 },		/* 2 SS */
-		{ 25, 51,  77, 103, 154, 206, 232, 258, 309, 344, 387, 430 },		/* 3 SS */
-		{ 34, 68, 103, 137, 206, 275, 309, 344, 412, 458, 516, 573 }		/* 4 SS */
-	},
-	{ /* 40 Mhz*/
-		{ 17,  34,  51,  68, 103, 137, 154, 172, 206, 229,  258, 286 },
-		{ 34,  68, 103, 137, 206, 275, 309, 344, 412, 458,  516, 573 },
-		{ 51, 103, 154, 206, 309, 412, 464, 516, 619, 688,  774, 860 },
-		{ 68, 137, 206, 275, 412, 550, 619, 688, 825, 917, 1032, 1147 }
-	},
-	{ /* 80 Mhz*/
-		{  36,  72, 108, 144, 216,  288,  324,  360,  432,  480,  540, 600 },
-		{  72, 144, 216, 288, 432,  576,  648,  720,  864,  960, 1080, 1201 },
-		{ 108, 216, 324, 432, 648,  864,  972, 1080, 1297, 1441, 1621, 1801 },
-		{ 144, 288, 432, 576, 864, 1152, 1297, 1141, 1729, 1921, 2161, 2401 }
-	},
-	{ /* 160 Mhz*/
-		{ 72,  144, 216,  288,  432,  576,  648,  720,  864,  960, 1080, 1201 },
-		{ 144, 288, 432,  576,  864, 1152, 1297, 1441, 1729, 1921, 2161, 2401 },
-		{ 216, 432, 648,  864, 1297, 1729, 1945, 2161, 2594, 2882, 3242, 3602 },
-		{ 288, 576, 864, 1152, 1729, 2305, 2594, 2882, 3458, 3843, 4323, 4803 },
-	}
-};
-
-static int getLegacyOFDMMCSIndex(unsigned char MCS)
-{
-	int mcs_index = MCS;
-	if (MCS == 0xb)
-		mcs_index = 0;
-	else if (MCS == 0xf)
-		mcs_index = 1;
-	else if (MCS == 0xa)
-		mcs_index = 2;
-	else if (MCS == 0xe)
-		mcs_index = 3;
-	else if (MCS == 0x9)
-		mcs_index = 4;
-	else if (MCS == 0xd)
-		mcs_index = 5;
-	else if (MCS == 0x8)
-		mcs_index = 6;
-	else if (MCS == 0xc)
-		mcs_index = 7;
-
-	return mcs_index;
-}
-
 static int
 getRate(MACHTTRANSMIT_SETTING HTSetting)
 {
 	int rate_count = sizeof(MCSMappingRateTable)/sizeof(int);
 	int rate_index = 0;
-	int mcs_1ss = 0;
-	int num_ss_vht = 0;
-	int bw = 0;
+	int num_ss_vht = 1;
 
-	if (HTSetting.field.MODE >= MODE_HE) {
-		mcs_1ss = (unsigned char)HTSetting.field.MCS & 0xf;
-		num_ss_vht = ((unsigned char)HTSetting.field.MCS >> 4) + 1;
-		bw = (unsigned char)HTSetting.field.BW;
-
-		if (bw > MAX_NUM_HE_BANDWIDTHS)
-			bw = MAX_NUM_HE_BANDWIDTHS - 1;
-
-		if (mcs_1ss > MAX_NUM_HE_MCS_ENTRIES)
-			mcs_1ss = MAX_NUM_HE_MCS_ENTRIES - 1;
-		
-		if (num_ss_vht > MAX_NUM_HE_SPATIAL_STREAMS)
-			num_ss_vht = MAX_NUM_HE_SPATIAL_STREAMS;
-
-		return he_mcs_phyrate_mapping_table[bw][num_ss_vht-1][mcs_1ss];
-	}
-	
 	if (HTSetting.field.MODE >= MODE_VHT) {
-		mcs_1ss = (unsigned char)HTSetting.field.MCS & 0xf;
-		num_ss_vht = ((unsigned char)HTSetting.field.MCS >> 4) + 1;
-
+		int mcs_1ss = (int)HTSetting.field.MCS;
+		
+		if (mcs_1ss > 9) {
+			num_ss_vht = (mcs_1ss / 16) + 1;
+			mcs_1ss %= 16;
+		}
 		if (HTSetting.field.BW == BW_20)
-			rate_index = 140 + ((unsigned char)HTSetting.field.ShortGI * 160) + ((num_ss_vht - 1) * 10) + mcs_1ss;
+			rate_index = 108 + ((unsigned char)HTSetting.field.ShortGI * 29) + mcs_1ss;
 		else if (HTSetting.field.BW == BW_40)
-			rate_index = 180 + ((unsigned char)HTSetting.field.ShortGI * 160) + ((num_ss_vht - 1) * 10) + mcs_1ss;
+			rate_index = 117 + ((unsigned char)HTSetting.field.ShortGI * 29) + mcs_1ss;
 		else if (HTSetting.field.BW == BW_80)
-			rate_index = 220 + ((unsigned char)HTSetting.field.ShortGI * 160) + ((num_ss_vht - 1) * 10) + mcs_1ss;
-		else if (HTSetting.field.BW == BW_160)
-			rate_index = 260 + ((unsigned char)HTSetting.field.ShortGI * 160) + ((num_ss_vht - 1) * 10) + mcs_1ss;
+			rate_index = 127 + ((unsigned char)HTSetting.field.ShortGI * 29) + mcs_1ss;
 	}
 	else if (HTSetting.field.MODE >= MODE_HTMIX)
-		rate_index = 12 + ((unsigned char)HTSetting.field.BW * 32) + ((unsigned char)HTSetting.field.ShortGI * 64) + ((unsigned char)HTSetting.field.MCS);
+		rate_index = 12 + ((unsigned char)HTSetting.field.BW * 24) + ((unsigned char)HTSetting.field.ShortGI * 48) + ((unsigned char)HTSetting.field.MCS);
 	else if (HTSetting.field.MODE == MODE_OFDM)
-		rate_index = getLegacyOFDMMCSIndex((unsigned char)(HTSetting.field.MCS)) + 4;
+		rate_index = (unsigned char)(HTSetting.field.MCS) + 4;
 	else if (HTSetting.field.MODE == MODE_CCK)
 		rate_index = (unsigned char)(HTSetting.field.MCS);
 
@@ -860,8 +780,7 @@ getRate(MACHTTRANSMIT_SETTING HTSetting)
 	if (rate_index >= rate_count)
 		rate_index = rate_count-1;
 
-	return (MCSMappingRateTable[rate_index]);
-
+	return (MCSMappingRateTable[rate_index] * num_ss_vht * 5)/10;
 }
 
 int
@@ -893,7 +812,7 @@ get_apcli_wds_entry(const char *ifname, RT_802_11_MAC_ENTRY *pme)
 	wrq.u.data.flags = 0;
 
 	if (wl_ioctl(ifname, RTPRIV_IOCTL_GET_MAC_TABLE_STRUCT, &wrq) >= 0 &&
-	    wrq.u.data.length == sizeof(RT_802_11_MAC_ENTRY)) {
+	    wrq.u.data.length == sizeof(RT_802_11_MAC_ENTRY)) { //bug with mt7615 driver
 		return 1;
 	}
 
@@ -917,11 +836,7 @@ is_mac_in_sta_list(const unsigned char* p_mac)
 		RT_802_11_MAC_TABLE *mp = (RT_802_11_MAC_TABLE *)wrq.u.data.pointer;
 		for (i = 0; i < mp->Num; i++) {
 			if (memcmp(mp->Entry[i].Addr, p_mac, ETHER_ADDR_LEN) == 0)
-#if defined (BOARD_MT7915_DBDC)
-				return (mp->Entry[i].ApIdx == 2) ? 3 : 4;
-#else
 				return (mp->Entry[i].ApIdx == 0) ? 3 : 4;
-#endif
 		}
 	}
 #endif
@@ -1041,7 +956,7 @@ print_sta_list(webs_t wp, RT_802_11_MAC_TABLE *mp, int num_ss_rx, int ap_idx)
 
 	ret = 0;
 
-#if defined (BOARD_MT7615_DBDC) || (BOARD_MT7915_DBDC)
+#if defined (BOARD_MT7615_DBDC)
 	ret += websWrite(wp, "\nAP %s Stations List\n", (ap_idx == 0 || ap_idx == 2) ? "Main" : "Guest");
 #else
 	ret += websWrite(wp, "\nAP %s Stations List\n", (ap_idx == 0) ? "Main" : "Guest");
@@ -1185,7 +1100,7 @@ print_mac_table_inic(webs_t wp, const char *wif_name, int num_ss_rx, int is_gues
 static int
 print_wmode(webs_t wp, unsigned int wmode, unsigned int phy_mode)
 {
-	char buf[32] = {0};
+	char buf[16] = {0};
 	int ret = 0;
 
 	if (wmode) {
@@ -1202,8 +1117,6 @@ print_wmode(webs_t wp, unsigned int wmode, unsigned int phy_mode)
 			p += sprintf(p, "/n");
 		if (wmode & WMODE_AC)
 			p += sprintf(p, "/ac");
-		if ((wmode & WMODE_AX_24G) || (wmode & WMODE_AX_5G) || (wmode & WMODE_AX_6G))
-			p += sprintf(p, "/ax");
 		if (p != buf)
 			ret += websWrite(wp, "WPHY Mode\t: 11%s\n", buf+1);
 	} else {
@@ -1243,24 +1156,6 @@ print_wmode(webs_t wp, unsigned int wmode, unsigned int phy_mode)
 		case PHY_11AGN_MIXED:
 			strcpy(buf, "a/g/n");
 			break;
-		case PHY_11AX_24G:
-			strcpy(buf, "b/g/n/ax");
-			break;
-		case PHY_11AX_5G:
-			strcpy(buf, "a/n/ac/ax");
-			break;
-		case PHY_11AX_6G:
-			strcpy(buf, "ax");
-			break;
-		case PHY_11AX_24G_6G:
-			strcpy(buf, "g/n/ax");
-			break;
-		case PHY_11AX_5G_6G:
-			strcpy(buf, "a/n/ac/ax");
-			break;
-		case PHY_11AX_24G_5G_6G:
-			strcpy(buf, "a/b/g/n/ac/ax");
-			break;
 		}
 		if (buf[0])
 			ret += websWrite(wp, "WPHY Mode\t: 11%s\n", buf);
@@ -1290,13 +1185,6 @@ print_mac_table(webs_t wp, const char *wif_name, int num_ss_rx, int is_guest_on)
 		apidx = 2;
 		apidx_guest = 3;
 	}
-#elif defined (BOARD_MT7915_DBDC)
-	int apidx = 2;
-	int apidx_guest = 3;
-	if (!strcmp(wif_name, IFNAME_2G_MAIN)) {
-		apidx = 0;
-		apidx_guest = 1;
-	}
 #endif
 	bzero(mac_table_data, sizeof(mac_table_data));
 	wrq.u.data.pointer = mac_table_data;
@@ -1305,13 +1193,13 @@ print_mac_table(webs_t wp, const char *wif_name, int num_ss_rx, int is_guest_on)
 
 	if (wl_ioctl(wif_name, RTPRIV_IOCTL_GET_MAC_TABLE_STRUCT, &wrq) >= 0) {
 		mp = (RT_802_11_MAC_TABLE*)wrq.u.data.pointer;
-#if defined (BOARD_MT7615_DBDC) || defined (BOARD_MT7915_DBDC)
+#if defined (BOARD_MT7615_DBDC)
 		ret += print_sta_list(wp, mp, num_ss_rx, apidx); 
 #else
 		ret += print_sta_list(wp, mp, num_ss_rx, 0); 
 #endif
 		if (is_guest_on)
-#if defined (BOARD_MT7615_DBDC) || defined (BOARD_MT7915_DBDC)
+#if defined (BOARD_MT7615_DBDC)
 			ret += print_sta_list(wp, mp, num_ss_rx, apidx_guest);
 #else
 			ret += print_sta_list(wp, mp, num_ss_rx, 1);
@@ -1644,7 +1532,7 @@ ej_wl_auth_list(int eid, webs_t wp, int argc, char **argv)
 }
 
 
-#define SSURV_LINE_LEN		(4+33+20+23+9+12+7+3)		// Channel+SSID+Bssid+Security+Signal+WiressMode+ExtCh+NetworkType
+#define SSURV_LINE_LEN		(4+33+20+23+9+9+7+3)		// Channel+SSID+Bssid+Security+Signal+WiressMode+ExtCh+NetworkType
 #define SSURV_LINE_LEN_WPS	(4+33+20+23+9+7+7+3+4+5)	// Channel+SSID+Bssid+Security+Signal+WiressMode+ExtCh+NetworkType+WPS+PIN
 
 #if BOARD_HAS_5G_RADIO

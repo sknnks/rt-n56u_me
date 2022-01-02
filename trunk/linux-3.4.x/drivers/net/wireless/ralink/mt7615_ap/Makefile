@@ -16,7 +16,6 @@ ifeq ($(CONFIG_MTK_EMI_7622),y)
 EXTRA_CFLAGS += -DCONFIG_ARCH_MT7622
 endif
 
-
 EXTRA_CFLAGS += -DWIFI_SYS_FW_V1
 EXTRA_CFLAGS += -DWIFI_SYS_FW_V2
 ########################################################
