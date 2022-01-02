@@ -24,7 +24,7 @@ caddy_start ()
 					caddy_close
 				else
 					logger -t "caddy" "caddy_filebrowser二进制文件下载成功"
-					chmod -R 777 $caddy_dir/caddy/caddy_filebrowser
+					chmod 0755 "$caddy_dir/caddy/caddy_filebrowser"
 				fi
 			fi
 		fi
