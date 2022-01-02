@@ -237,9 +237,9 @@ func_fill()
 	# create gfwlist
 	#if [ ! -d "$dir_gfwlist" ] ; then
 	#	if [ -f "$gfwlist_conf_file" ]; then	
-#			mkdir -p "$dir_gfwlist" && tar jxf "$gfwlist_conf_file" -C "$dir_gfwlist"
+	#		mkdir -p "$dir_gfwlist" && tar jxf "$gfwlist_conf_file" -C "$dir_gfwlist"
 	#	fi
-#	fi
+	#fi
 
 	# create start script
 	if [ ! -f "$script_start" ] ; then

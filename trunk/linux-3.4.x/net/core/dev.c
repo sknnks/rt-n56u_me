@@ -2252,6 +2252,7 @@ int dev_hard_start_xmit(struct sk_buff *skb, struct net_device *dev,
 #ifdef CONFIG_SHORTCUT_FE
 		}
 #endif
+
 		features = netif_skb_features(skb);
 
 		if (vlan_tx_tag_present(skb) &&
@@ -3876,7 +3877,10 @@ static gro_result_t napi_skb_finish(gro_result_t ret, struct sk_buff *skb)
 		break;
 
 	case GRO_MERGED_FREE:
-		consume_skb(skb);
+		if (NAPI_GRO_CB(skb)->free == NAPI_GRO_FREE_STOLEN_HEAD)
+			kmem_cache_free(skbuff_head_cache, skb);
+		else
+			__kfree_skb(skb);
 		break;
 
 	case GRO_HELD:
