@@ -5,7 +5,7 @@ if [ -z "$1" ] || [ "$EUID" != 0 ]; then
 	echo "For Windows Subsystem for Linux(WSL), use 'fakeroot-tcp' instead of 'fakeroot', or run with sudo"
 	exit 1
 fi
-
+if [ -z "$2" ];then
 if [ ! -f configs/templates/$1.config ] ; then
 	echo "configs/templates/$1.config not found!"
 	exit 1
@@ -267,7 +267,7 @@ if [ -n "$CONFIG_MT7615_AP" ] ; then
 	if [ "$CONFIG_FIRMWARE_WIFI_DRIVER" = "5.0.4.0" ] || \
 		[ "$CONFIG_FIRMWARE_WIFI2_DRIVER" = "5.0.4.0" ] || \
 		[ "$CONFIG_FIRMWARE_WIFI5_DRIVER" = "5.0.4.0" ]; then
-		dir_wifi_ver="5.0.3.0"
+		dir_wifi_ver="5.0.4.0"
 	elif [ "$CONFIG_FIRMWARE_WIFI_DRIVER" = "5.0.5.1" ] || \
 		[ "$CONFIG_FIRMWARE_WIFI2_DRIVER" = "5.0.5.1" ] || \
 		[ "$CONFIG_FIRMWARE_WIFI5_DRIVER" = "5.0.5.1" ]; then
