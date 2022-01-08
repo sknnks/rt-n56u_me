@@ -77,21 +77,18 @@ echo "server-name $snds_name" >> $SMARTDNS_CONF
 	fi
 gensdnssecond
 echo "cache-size $snds_cache" >> $SMARTDNS_CONF
-if [ $snds_ip_change -eq 1 ];then
+if [ $sdns_ipv6 -eq 1 ]; then
+echo "force-AAAA-SOA yes" >> $SMARTDNS_CONF
+elif [ $snds_ip_change -eq 1 ]; then
 echo "dualstack-ip-selection yes" >> $SMARTDNS_CONF
 echo "dualstack-ip-selection-threshold $(nvram get snds_ip_change_time)" >> $SMARTDNS_CONF
 fi
-if [ $sdns_ipv6 -eq 1 ];then
-echo "force-AAAA-SOA yes" >> $SMARTDNS_CONF
-else
-echo "force-AAAA-SOA no" >> $SMARTDNS_CONF
-fi
-if [ $sdns_www -eq 1 ];then
+if [ $sdns_www -eq 1 ]; then
 echo "prefetch-domain yes" >> $SMARTDNS_CONF
 else
 echo "prefetch-domain no" >> $SMARTDNS_CONF
 fi
-if [ $sdns_exp -eq 1 ];then
+if [ $sdns_exp -eq 1 ]; then
 echo "serve-expired yes" >> $SMARTDNS_CONF
 else
 echo "serve-expired no" >> $SMARTDNS_CONF
@@ -152,7 +149,7 @@ fi
 if [ $sdnss_ipset != "" ]; then
 #ipset add gfwlist $sdnss_ipset 2>/dev/null
 CheckIPAddr $sdnss_ipset
-if [ "$?" == "1" ];then
+if [ "$?" == "1" ]; then
 echo "ipset /$sdnss_ipset/smartdns" >> $SMARTDNS_CONF
 else
 ipset add smartdns $sdnss_ipset 2>/dev/null
@@ -342,7 +339,7 @@ stop_smartdns(){
 rm -f /tmp/whitelist.conf
 rm -f /tmp/blacklist.conf
 smartdns_process=`pidof smartdns`
-if [ -n "$smartdns_process" ];then 
+if [ -n "$smartdns_process" ]; then 
 	logger -t "SmartDNS" "关闭smartdns进程..."
 	killall smartdns >/dev/null 2>&1
 	kill -9 "$smartdns_process" >/dev/null 2>&1
