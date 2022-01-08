@@ -344,6 +344,19 @@ function showMRULESList(){
                                                 </div>
                                             </td>
                                         </tr>
+										<tr> <th>禁用IPV6解析</th>
+                                            <td>
+                                                <div class="main_itoggle">
+                                                <div id="sdns_ipv6_on_of">
+                                                    <input type="checkbox" id="sdns_ipv6_fake" <% nvram_match_x("", "sdns_ipv6", "1", "value=1 checked"); %><% nvram_match_x("", "sdns_ipv6", "0", "value=0"); %>>
+                                                </div>
+                                                </div>
+                                                <div style="position: absolute; margin-left: -10000px;">
+                                                    <input type="radio" value="1" name="sdns_ipv6" id="sdns_ipv6_1" <% nvram_match_x("", "sdns_ipv6", "1", "checked"); %>><#checkbox_Yes#>
+                                                    <input type="radio" value="0" name="sdns_ipv6" id="sdns_ipv6_0" <% nvram_match_x("", "sdns_ipv6", "0", "checked"); %>><#checkbox_No#>
+                                                </div>
+                                            </td>
+                                        </tr>
 										<tr> <th>双栈IP优选</th>
                                             <td>
                                                 <div class="main_itoggle">
@@ -360,19 +373,6 @@ function showMRULESList(){
 										<tr> <th width="50%">双栈IP优选阈值</th>
                                             <td>
                                                 <input type="text" maxlength="64" class="input" size="64" name="snds_ip_change_time" style="width: 50px" value="<% nvram_get_x("", "snds_ip_change_time"); %>"> 毫秒（0-100）
-                                            </td>
-                                        </tr>
-										<tr> <th>禁用IPV6解析</th>
-                                            <td>
-                                                <div class="main_itoggle">
-                                                <div id="sdns_ipv6_on_of">
-                                                    <input type="checkbox" id="sdns_ipv6_fake" <% nvram_match_x("", "sdns_ipv6", "1", "value=1 checked"); %><% nvram_match_x("", "sdns_ipv6", "0", "value=0"); %>>
-                                                </div>
-                                                </div>
-                                                <div style="position: absolute; margin-left: -10000px;">
-                                                    <input type="radio" value="1" name="sdns_ipv6" id="sdns_ipv6_1" <% nvram_match_x("", "sdns_ipv6", "1", "checked"); %>><#checkbox_Yes#>
-                                                    <input type="radio" value="0" name="sdns_ipv6" id="sdns_ipv6_0" <% nvram_match_x("", "sdns_ipv6", "0", "checked"); %>><#checkbox_No#>
-                                                </div>
                                             </td>
                                         </tr>
 										<tr> <th>域名预加载</th>
