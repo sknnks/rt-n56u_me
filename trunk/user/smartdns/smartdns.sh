@@ -80,8 +80,11 @@ echo "cache-size $snds_cache" >> $SMARTDNS_CONF
 if [ $snds_ip_change -eq 1 ];then
 echo "dualstack-ip-selection yes" >> $SMARTDNS_CONF
 echo "dualstack-ip-selection-threshold $(nvram get snds_ip_change_time)" >> $SMARTDNS_CONF
-elif [ $sdns_ipv6 -eq 1 ];then
+fi
+if [ $sdns_ipv6 -eq 1 ];then
 echo "force-AAAA-SOA yes" >> $SMARTDNS_CONF
+else
+echo "force-AAAA-SOA no" >> $SMARTDNS_CONF
 fi
 if [ $sdns_www -eq 1 ];then
 echo "prefetch-domain yes" >> $SMARTDNS_CONF
