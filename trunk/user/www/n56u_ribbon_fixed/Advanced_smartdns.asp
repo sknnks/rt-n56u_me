@@ -372,7 +372,7 @@ function showMRULESList(){
                                         </tr>
 										<tr> <th width="50%">双栈IP优选阈值</th>
                                             <td>
-                                                <input type="text" maxlength="64" class="input" size="64" name="snds_ip_change_time" style="width: 50px" value="<% nvram_get_x("", "snds_ip_change_time"); %>"> 毫秒（0-100）
+                                                <input type="text" maxlength="64" class="input" size="64" name="snds_ip_change_time" style="width: 50px" value="<% nvram_get_x("", "snds_ip_change_time"); %>"> 毫秒（0-1000）
                                             </td>
                                         </tr>
 										<tr> <th>域名预加载</th>
