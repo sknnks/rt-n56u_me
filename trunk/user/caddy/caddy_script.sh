@@ -1,11 +1,7 @@
 #!/bin/sh
 caddy_storage=`nvram get caddy_storage`
 caddy_dir=`nvram get caddy_dir`
-caddy_file=`nvram get caddy_file`
 caddyf_wan_port=`nvram get caddyf_wan_port`
-caddyw_wan_port=`nvram get caddyw_wan_port`
-caddy_wname=`nvram get caddy_wname`
-caddy_wpassword=`nvram get caddy_wpassword`
 caddyfile="$caddy_dir/caddy/caddyfile"
 rm -f $caddyfile
 
