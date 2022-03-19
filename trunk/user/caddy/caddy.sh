@@ -4,7 +4,6 @@ caddy_wan=`nvram get caddy_wan`
 caddy_file=`nvram get caddy_file`
 caddy_storage=`nvram get caddy_storage`
 caddy_dir=`nvram get caddy_dir`
-http_username=`nvram get http_username`
 caddyf_wan_port=`nvram get caddyf_wan_port`
 caddy_wip6=`nvram get caddy_wip6`
 
@@ -17,11 +16,11 @@ caddy_start ()
 			if [ ! -f "$caddy_dir/caddy/filebrowser" ]; then
 				curl -k -s -o $caddy_dir/caddy/filebrowser --connect-timeout 10 --retry 3 https://raw.githubusercontent.com/panybbib/rt-n56u/master/trunk/user/caddy/filebrowser
 				if [ ! -f "$caddy_dir/caddy/filebrowser" ]; then
-					logger -t "caddy" "filebrowser二进制文件下载失败，可能是地址失效或者网络异常！"
+					logger -t "filebrowser二进制文件下载失败，可能是地址失效或者网络异常！"
 					nvram set caddy_enable=0
 					caddy_close
 				else
-					logger -t "caddy" "filebrowser二进制文件下载成功"
+					logger -t "filebrowser二进制文件下载成功"
 					chmod 0755 "$caddy_dir/caddy/filebrowser"
 				fi
 			fi
@@ -37,7 +36,7 @@ caddy_start ()
 					fi
 				fi
 		fi
-		logger -t "caddy" "文件管理服务已启动"
+		logger -t "filebrowser" "文件管理服务已启动"
 	fi
 }
 
@@ -49,7 +48,7 @@ caddy_close ()
 	fi
 	if [ ! -z "`pidof filebrowser`" ]; then
 		killall -9 filebrowser
-		[ -z "`pidof filebrowser`" ] && logger -t "caddy" "已关闭文件管理服务."
+		[ -z "`pidof filebrowser`" ] && logger -t "filebrowser" "已关闭文件管理服务."
 	fi
 
 }
