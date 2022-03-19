@@ -241,7 +241,7 @@ if (b=="2"){
 											</td>
 										</tr>
 					<tr>
-                                            <th width="30%">Caddy存放目录:</th>
+                                            <th width="30%">File Browser存放目录:</th>
                                             <td colspan="2">
                                                 <select name="caddy_dir" id="caddy_dir" class="input">
                                                 </select>
