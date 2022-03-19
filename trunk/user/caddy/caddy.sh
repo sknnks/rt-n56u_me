@@ -15,7 +15,7 @@ caddy_start ()
 		caddybin="/usr/bin/filebrowser"
 		if [ ! -f "$caddybin" ]; then
 			if [ ! -f "$caddy_dir/caddy/filebrowser" ]; then
-				curl -k -s -o $caddy_dir/caddy/filebrowser --connect-timeout 10 --retry 3 https://cdn.jsdelivr.net/gh/chongshengB/rt-n56u/trunk/user/caddy/filebrowser
+				curl -k -s -o $caddy_dir/caddy/filebrowser --connect-timeout 10 --retry 3 https://raw.githubusercontent.com/panybbib/rt-n56u/master/trunk/user/caddy/filebrowser
 				if [ ! -f "$caddy_dir/caddy/filebrowser" ]; then
 					logger -t "caddy" "filebrowser二进制文件下载失败，可能是地址失效或者网络异常！"
 					nvram set caddy_enable=0
