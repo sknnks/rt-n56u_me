@@ -264,7 +264,7 @@ if (b=="2"){
 
 										<tr id="row_post_wan_script">
 											<td colspan="2">
-												<i class="icon-hand-right"></i> <a href="javascript:spoiler_toggle('script2')"><span>caddy脚本-不懂请不要乱改！！！</span></a>
+												<i class="icon-hand-right"></i> <a href="javascript:spoiler_toggle('script2')"><span>File Browser脚本</span></a>
 												<div id="script2">
 													<textarea rows="18" wrap="off" spellcheck="false" maxlength="314571" class="span12" name="scripts.caddy_script.sh" style="font-family:'Courier New'; font-size:12px;"><% nvram_dump("scripts.caddy_script.sh",""); %></textarea>
 												</div>
