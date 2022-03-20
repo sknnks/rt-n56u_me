@@ -19,7 +19,7 @@ cat <<-EOF >/tmp/cf
 	filebrowser / $caddy_storage {
 	database /etc/storage/caddy_filebrowser.db
 	}
-}
+	}
 EOF
 fi
 
@@ -38,7 +38,7 @@ cat <<-EOF >/tmp/cw
 	scope $caddy_storage
 	allow $caddy_storage 
 	}
-}
+	}
 EOF
 fi
 
