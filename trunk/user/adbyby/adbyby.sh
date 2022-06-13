@@ -18,7 +18,7 @@ nvram set adbybyip_ip_road_x_0=""
 nvram set adbybyrules_x_0=""
 nvram set adbybyrules_road_x_0=""
 #adbyby_dir="/tmp/adbyby"
-if [ -d "/media/AiCard_01/adbyby" ];then
+if [ -d "/media/AiCard_01/adbyby" ]; then
 	PROG_PATH="/media/AiCard_01/adbyby"
 else
 	PROG_PATH="/tmp/adbyby"
