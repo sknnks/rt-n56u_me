@@ -1,5 +1,5 @@
 #!/bin/sh
-#2019/08/30 by bkye
+
 adbyby_enable=`nvram get adbyby_enable`
 adbyby_ip_x=`nvram get adbyby_ip_x`
 adbyby_rules_x=`nvram get adbyby_rules_x`
@@ -8,20 +8,25 @@ http_username=`nvram get http_username`
 adbyby_update=`nvram get adbyby_update`
 adbyby_update_hour=`nvram get adbyby_update_hour`
 adbyby_update_min=`nvram get adbyby_update_min`
-nvram set adbyby_adb=0
-ipt_n="iptables -t nat"
-#adbyby_dir="/tmp/adbyby"
-PROG_PATH="/tmp/adbyby"
-DATA_PATH="$PROG_PATH/data"
-WAN_FILE="/etc/storage/dnsmasq-adbyby.d/03-adbyby-ipset.conf"
 wan_mode=`nvram get adbyby_set`
 #abp_mode=`nvram get adbyby_adb_update`
+nvram set adbyby_adb=0
 nvram set adbybyip_mac_x_0=""
 nvram set adbybyip_ip_x_0=""
 nvram set adbybyip_name_x_0=""
 nvram set adbybyip_ip_road_x_0=""
 nvram set adbybyrules_x_0=""
 nvram set adbybyrules_road_x_0=""
+#adbyby_dir="/tmp/adbyby"
+if [ -d "/media/AiCard_01/adbyby" ];then
+	PROG_PATH="/media/AiCard_01/adbyby"
+else
+	PROG_PATH="/tmp/adbyby"
+fi
+DATA_PATH="$PROG_PATH/data"
+WAN_FILE="/etc/storage/dnsmasq-adbyby.d/03-adbyby-ipset.conf"
+ipt_n="iptables -t nat"
+
 adbyby_start()
 {
 	addscripts
