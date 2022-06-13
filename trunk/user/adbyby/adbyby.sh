@@ -18,9 +18,11 @@ nvram set adbybyip_ip_road_x_0=""
 nvram set adbybyrules_x_0=""
 nvram set adbybyrules_road_x_0=""
 #adbyby_dir="/tmp/adbyby"
-if [ -d "/media/AiCard_01/adbyby" ]; then
+if [ -d "/media/AiCard_01" ]; then
+	TAR_PATH="/media/AiCard_01"
 	PROG_PATH="/media/AiCard_01/adbyby"
 else
+	TAR_PATH="/tmp"
 	PROG_PATH="/tmp/adbyby"
 fi
 DATA_PATH="$PROG_PATH/data"
@@ -32,7 +34,7 @@ adbyby_start()
 	addscripts
 	if [ ! -f "$PROG_PATH/adbyby" ]; then
 	logger -t "adbyby" "adbyby程序文件不存在，正在解压..."
-	tar -xzvf "/etc_ro/adbyby.tar.gz" -C "/tmp"
+	tar -xzvf "/etc_ro/adbyby.tar.gz" -C "$TAR_PATH"
 	logger -t "adbyby" "成功解压至：$PROG_PATH"
 	fi
 	#if [ $abp_mode -eq 1 ]; then
