@@ -37,10 +37,6 @@ adbyby_start()
 	tar -xzvf "/etc_ro/adbyby.tar.gz" -C "$TAR_PATH"
 	logger -t "adbyby" "成功解压至：$PROG_PATH"
 	fi
-	#if [ $abp_mode -eq 1 ]; then
-	#/tmp/adbyby/adblock.sh &
-	#fi
-	#/tmp/adbyby/adupdate.sh &
 	add_rules
 	$PROG_PATH/adbyby &>/dev/null &
 	add_dns
@@ -70,9 +66,9 @@ adbyby_close()
 add_rules()
 {
 	logger -t "adbyby" "正在检查规则是否需要更新!"
-	rm -f /tmp/adbyby/data/*.bak
+	rm -f $PROG_PATH/data/*.bak
 
-	touch /tmp/local-md5.json && md5sum /tmp/adbyby/data/lazy.txt /tmp/adbyby/data/video.txt > /tmp/local-md5.json
+	touch /tmp/local-md5.json && md5sum $PROG_PATH/data/lazy.txt $PROG_PATH/data/video.txt > /tmp/local-md5.json
 	touch /tmp/md5.json && curl -k -s -o /tmp/md5.json --connect-timeout 5 --retry 3 https://adbyby.coding.net/p/xwhyc-rules/d/xwhyc-rules/git/raw/master/md5.json
 
 	lazy_local=$(grep 'lazy' /tmp/local-md5.json | awk -F' ' '{print $1}')
@@ -90,8 +86,8 @@ add_rules()
 	video_local=$(grep 'video' /tmp/local-md5.json | awk -F' ' '{print $1}')
 	if [ "$lazy_online"x == "$lazy_local"x -a "$video_online"x == "$video_local"x ]; then
 	echo "New rules MD5 match!"
-	mv /tmp/lazy.txt /tmp/adbyby/data/lazy.txt
-	mv /tmp/video.txt /tmp/adbyby/data/video.txt
+	mv /tmp/lazy.txt $PROG_PATH/data/lazy.txt
+	mv /tmp/video.txt $PROG_PATH/data/video.txt
 	echo $(date +"%Y-%m-%d %H:%M:%S") > /tmp/adbyby.updated
 	fi
 	else
@@ -101,9 +97,9 @@ add_rules()
 
 	rm -f /tmp/lazy.txt /tmp/video.txt /tmp/local-md5.json /tmp/md5.json
 	logger -t "adbyby" "Adbyby规则更新完成"
-	nvram set adbyby_ltime=`head -1 /tmp/adbyby/data/lazy.txt | awk -F' ' '{print $3,$4}'`
-	nvram set adbyby_vtime=`head -1 /tmp/adbyby/data/video.txt | awk -F' ' '{print $3,$4}'`
-	#nvram set adbyby_rules=`grep -v '^!' /tmp/adbyby/data/rules.txt | wc -l`
+	nvram set adbyby_ltime=`head -1 $PROG_PATH/data/lazy.txt | awk -F' ' '{print $3,$4}'`
+	nvram set adbyby_vtime=`head -1 $PROG_PATH/data/video.txt | awk -F' ' '{print $3,$4}'`
+	#nvram set adbyby_rules=`grep -v '^!' $PROG_PATH/data/rules.txt | wc -l`
 
 	#nvram set adbyby_utime=`cat /tmp/adbyby.updated 2>/dev/null`
 	grep -v '^!' /etc/storage/adbyby_rules.sh | grep -v "^$" > $PROG_PATH/rules.txt
@@ -123,16 +119,16 @@ add_rules()
 		rules_road=`nvram get adbybyrules_road_x$j`
 		if [ $rules_road -ne 0 ]; then
 			logger -t "adbyby" "正在下载和合并第三方规则"
-			curl -k -s -o /tmp/adbyby/user2.txt --connect-timeout 5 --retry 3 $rules_address
-			grep -v '^!' /tmp/adbyby/user2.txt | grep -E '^(@@\||\||[[:alnum:]])' | sort -u | grep -v "^$" >> $DATA_PATH/user3adblocks.txt
-			rm -f /tmp/adbyby/user2.txt
+			curl -k -s -o $PROG_PATH/user2.txt --connect-timeout 5 --retry 3 $rules_address
+			grep -v '^!' $PROG_PATH/user2.txt | grep -E '^(@@\||\||[[:alnum:]])' | sort -u | grep -v "^$" >> $DATA_PATH/user3adblocks.txt
+			rm -f $PROG_PATH/user2.txt
 		fi
 	done
 	grep -v '^!' $DATA_PATH/user3adblocks.txt | grep -v "^$" >> $DATA_PATH/user.txt
 	rm -f $DATA_PATH/user3adblocks.txt
 	fi
 	grep -v ^! $PROG_PATH/rules.txt >> $DATA_PATH/user.txt
-	nvram set adbyby_user=`cat /tmp/adbyby/data/user.txt | wc -l`
+	nvram set adbyby_user=`cat $PROG_PATH/data/user.txt | wc -l`
 }
 
 
@@ -317,13 +313,13 @@ adbyby_uprules()
 	addscripts
 	if [ ! -f "$PROG_PATH/adbyby" ]; then
 	logger -t "adbyby" "adbyby程序文件不存在，正在解压..."
-	tar -xzvf "/etc_ro/adbyby.tar.gz" -C "/tmp"
+	tar -xzvf "/etc_ro/adbyby.tar.gz" -C "$TAR_PATH"
 	logger -t "adbyby" "成功解压至：$PROG_PATH"
 	fi
 	#if [ $abp_mode -eq 1 ]; then
-	#/tmp/adbyby/adblock.sh &
+	#$PROG_PATH/adblock.sh &
 	#fi
-	#/tmp/adbyby/adupdate.sh &
+	#$PROG_PATH/adupdate.sh &
 	add_rules
 	$PROG_PATH/adbyby &>/dev/null &
 	add_dns
@@ -336,7 +332,7 @@ adbyby_uprules()
 
 #updateadb()
 #{
-#	/tmp/adbyby/adblock.sh &
+#	$PROG_PATH/adblock.sh &
 #}
 anti_ad(){
 anti_ad=`nvram get anti_ad`
