@@ -69,7 +69,7 @@ add_rules()
 	rm -f $PROG_PATH/data/*.bak
 
 	touch /tmp/local-md5.json && md5sum $PROG_PATH/data/lazy.txt $PROG_PATH/data/video.txt > /tmp/local-md5.json
-	touch /tmp/md5.json && curl -k -s -o /tmp/md5.json --connect-timeout 5 --retry 3 https://adbyby.coding.net/p/xwhyc-rules/d/xwhyc-rules/git/raw/master/md5.json
+	touch /tmp/md5.json && curl -k -s -o /tmp/md5.json --connect-timeout 5 --retry 3 https://raw.githubusercontent.com/adbyby/xwhyc-rules/master/md5.json
 
 	lazy_local=$(grep 'lazy' /tmp/local-md5.json | awk -F' ' '{print $1}')
 	video_local=$(grep 'video' /tmp/local-md5.json | awk -F' ' '{print $1}')  
@@ -79,8 +79,8 @@ add_rules()
 	if [ "$lazy_online"x != "$lazy_local"x -o "$video_online"x != "$video_local"x ]; then
 	echo "MD5 not match! Need update!"
 	logger -t "adbyby" "发现更新的规则,下载规则！"
-	touch /tmp/lazy.txt && curl -k -s -o /tmp/lazy.txt --connect-timeout 5 --retry 3 https://adbyby.coding.net/p/xwhyc-rules/d/xwhyc-rules/git/raw/master/lazy.txt
-	touch /tmp/video.txt && curl -k -s -o /tmp/video.txt --connect-timeout 5 --retry 3 https://adbyby.coding.net/p/xwhyc-rules/d/xwhyc-rules/git/raw/master/video.txt
+	touch /tmp/lazy.txt && curl -k -s -o /tmp/lazy.txt --connect-timeout 5 --retry https://raw.githubusercontent.com/adbyby/xwhyc-rules/master/lazy.txt
+	touch /tmp/video.txt && curl -k -s -o /tmp/video.txt --connect-timeout 5 --retry 3 https://raw.githubusercontent.com/adbyby/xwhyc-rules/master/video.txt
 	touch /tmp/local-md5.json && md5sum /tmp/lazy.txt /tmp/video.txt > /tmp/local-md5.json
 	lazy_local=$(grep 'lazy' /tmp/local-md5.json | awk -F' ' '{print $1}')
 	video_local=$(grep 'video' /tmp/local-md5.json | awk -F' ' '{print $1}')
@@ -337,15 +337,21 @@ adbyby_uprules()
 anti_ad(){
 anti_ad=`nvram get anti_ad`
 anti_ad_link=`nvram get anti_ad_link`
+adtmp=/tmp/anti-ad-for-dnsmasq.conf
+adconf=/etc/storage/dnsmasq-adbyby.d/anti-ad-for-dnsmasq.conf
 nvram set anti_ad_count=0
 if [ "$anti_ad" = "1" ]; then
-curl -k -s -o /etc/storage/dnsmasq-adbyby.d/anti-ad-for-dnsmasq.conf --connect-timeout 5 --retry 3 $anti_ad_link
-if [ ! -f "/etc/storage/dnsmasq-adbyby.d/anti-ad-for-dnsmasq.conf" ]; then
-	logger -t "adbyby" "anti_AD下载失败！"
-else
-	logger -t "adbyby" "anti_AD下载成功,处理中..."
-nvram set anti_ad_count=`grep -v '^#' /etc/storage/dnsmasq-adbyby.d/anti-ad-for-dnsmasq.conf | wc -l`
-fi
+	curl -k -s -o $adtmp --connect-timeout 5 --retry 3 $anti_ad_link
+	if [ ! -f "$adtmp" ]; then
+		logger -t "adbyby" "anti_AD下载失败！"
+	else
+		logger -t "adbyby" "anti_AD下载成功,处理中..."
+		if [ `md5sum $adtmp | awk '{ print $1 }'` != `md5sum $adconf | awk '{ print $1 }'` ]; then
+			nvram set anti_ad_count=`grep -v '^#' $adconf | wc -l` && mv -f $adtmp $adconf 
+		else 
+			logger -t "adbyby" "anti_AD无更新可用！"
+		fi
+	fi
 fi
 }
 
@@ -353,25 +359,25 @@ hosts_ads(){
 adbyby_hosts=`nvram get hosts_ad`
 nvram set adbyby_hostsad=0
 if [ "$adbyby_hosts" = "1" ]; then
-rm -rf $PROG_PATH/hosts
-grep -v '^#' /etc/storage/adbyby_host.sh | grep -v "^$" > $PROG_PATH/hostlist.txt
-for ip in `cat $PROG_PATH/hostlist.txt`
-do
-logger -t "adbyby" "正在下载: $ip"
-curl -k -s -o /tmp/host.txt --connect-timeout 5 --retry 3 $ip
-if [ ! -f "/tmp/host.txt" ]; then
-	logger -t "adbyby" "$ip 下载失败！"
-else
-	logger -t "adbyby" "hosts下载成功,处理中..."
-grep -v '^#' /tmp/host.txt | grep -v "^$" >> $PROG_PATH/hosts
-fi
-done
-rm -f /tmp/host.txt
-logger -t "adbyby" "正在对hosts文件进行去重处理."
-sort $PROG_PATH/hosts | uniq
-nvram set adbyby_hostsad=`grep -v '^!' $PROG_PATH/hosts | wc -l`
-sed -i '/hosts/d' /etc/storage/dnsmasq/dnsmasq.conf
-cat >> /etc/storage/dnsmasq/dnsmasq.conf <<-EOF
+	rm -rf $PROG_PATH/hosts
+	grep -v '^#' /etc/storage/adbyby_host.sh | grep -v "^$" > $PROG_PATH/hostlist.txt
+	for ip in `cat $PROG_PATH/hostlist.txt`
+	do
+		logger -t "adbyby" "正在下载: $ip"
+		curl -k -s -o /tmp/host.txt --connect-timeout 5 --retry 3 $ip
+		if [ ! -f "/tmp/host.txt" ]; then
+			logger -t "adbyby" "$ip 下载失败！"
+		else
+			logger -t "adbyby" "hosts下载成功,处理中..."
+			grep -v '^#' /tmp/host.txt | grep -v "^$" >> $PROG_PATH/hosts
+		fi
+	done
+	rm -f /tmp/host.txt
+	logger -t "adbyby" "正在对hosts文件进行去重处理."
+	sort $PROG_PATH/hosts | uniq
+	nvram set adbyby_hostsad=`grep -v '^!' $PROG_PATH/hosts | wc -l`
+	sed -i '/hosts/d' /etc/storage/dnsmasq/dnsmasq.conf
+	cat >> /etc/storage/dnsmasq/dnsmasq.conf <<-EOF
 	addn-hosts=$PROG_PATH/hosts
 EOF
 fi
