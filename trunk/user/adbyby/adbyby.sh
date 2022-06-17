@@ -78,7 +78,7 @@ add_rules()
 
 	if [ "$lazy_online"x != "$lazy_local"x -o "$video_online"x != "$video_local"x ]; then
 	echo "MD5 not match! Need update!"
-	logger -t "adbyby" "发现更新的规则,下载规则！"
+	logger -t "adbyby" "更新规则,下载..."
 	touch /tmp/lazy.txt && curl -k -s -o /tmp/lazy.txt --connect-timeout 5 --retry https://raw.githubusercontent.com/adbyby/xwhyc-rules/master/lazy.txt
 	touch /tmp/video.txt && curl -k -s -o /tmp/video.txt --connect-timeout 5 --retry 3 https://raw.githubusercontent.com/adbyby/xwhyc-rules/master/video.txt
 	touch /tmp/local-md5.json && md5sum /tmp/lazy.txt /tmp/video.txt > /tmp/local-md5.json
@@ -92,7 +92,7 @@ add_rules()
 	fi
 	else
 	echo "MD5 match! No need to update!"
-	logger -t "adbyby" "没有更新的规则,本次无需更新！"
+	logger -t "adbyby" "没有新的规则,无需更新！"
 	fi
 
 	rm -f /tmp/lazy.txt /tmp/video.txt /tmp/local-md5.json /tmp/md5.json
@@ -349,7 +349,7 @@ if [ "$anti_ad" = "1" ]; then
 		if [ `md5sum $adtmp | awk '{ print $1 }'` != `md5sum $adconf | awk '{ print $1 }'` ]; then
 			nvram set anti_ad_count=`grep -v '^#' $adconf | wc -l` && mv -f $adtmp $adconf 
 		else 
-			logger -t "adbyby" "anti_AD无更新可用！"
+			rm -f $adtmp && logger -t "adbyby" "anti_AD无更新可用！"
 		fi
 	fi
 fi
