@@ -65,7 +65,7 @@ adbyby_close()
 
 add_rules()
 {
-	logger -t "adbyby" "正在检查规则是否需要更新!"
+	logger -t "adbyby" "正在检查规则是否需要更新..."
 	rm -f $PROG_PATH/data/*.bak
 
 	touch /tmp/local-md5.json && md5sum $PROG_PATH/data/lazy.txt $PROG_PATH/data/video.txt > /tmp/local-md5.json
@@ -96,7 +96,7 @@ add_rules()
 	fi
 
 	rm -f /tmp/lazy.txt /tmp/video.txt /tmp/local-md5.json /tmp/md5.json
-	logger -t "adbyby" "Adbyby规则更新完成!"
+	logger -t "adbyby" "Adbyby规则更新完成！"
 	nvram set adbyby_ltime=`head -1 $PROG_PATH/data/lazy.txt | awk -F' ' '{print $3,$4}'`
 	nvram set adbyby_vtime=`head -1 $PROG_PATH/data/video.txt | awk -F' ' '{print $3,$4}'`
 	#nvram set adbyby_rules=`grep -v '^!' $PROG_PATH/data/rules.txt | wc -l`
@@ -118,7 +118,7 @@ add_rules()
 		rules_address=`nvram get adbybyrules_x$j`
 		rules_road=`nvram get adbybyrules_road_x$j`
 		if [ $rules_road -ne 0 ]; then
-			logger -t "adbyby" "正在下载和合并第三方规则"
+			logger -t "adbyby" "正在下载和合并第三方规则..."
 			curl -k -s -o $PROG_PATH/user2.txt --connect-timeout 5 --retry 3 $rules_address
 			grep -v '^!' $PROG_PATH/user2.txt | grep -E '^(@@\||\||[[:alnum:]])' | sort -u | grep -v "^$" >> $DATA_PATH/user3adblocks.txt
 			rm -f $PROG_PATH/user2.txt
