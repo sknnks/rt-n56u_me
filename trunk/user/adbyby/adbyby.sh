@@ -96,7 +96,7 @@ add_rules()
 	fi
 
 	rm -f /tmp/lazy.txt /tmp/video.txt /tmp/local-md5.json /tmp/md5.json
-	logger -t "adbyby" "Adbyby规则更新完成"
+	logger -t "adbyby" "Adbyby规则更新完成!"
 	nvram set adbyby_ltime=`head -1 $PROG_PATH/data/lazy.txt | awk -F' ' '{print $3,$4}'`
 	nvram set adbyby_vtime=`head -1 $PROG_PATH/data/video.txt | awk -F' ' '{print $3,$4}'`
 	#nvram set adbyby_rules=`grep -v '^!' $PROG_PATH/data/rules.txt | wc -l`
@@ -349,7 +349,7 @@ if [ "$anti_ad" = "1" ]; then
 		if [ `md5sum $adtmp | awk '{ print $1 }'` != `md5sum $adconf | awk '{ print $1 }'` ]; then
 			nvram set anti_ad_count=`grep -v '^#' $adconf | wc -l` && mv -f $adtmp $adconf 
 		else 
-			rm -f $adtmp && logger -t "adbyby" "anti_AD无更新可用！"
+			rm -f $adtmp && logger -t "adbyby" "anti_AD无需更新！"
 		fi
 	fi
 fi
