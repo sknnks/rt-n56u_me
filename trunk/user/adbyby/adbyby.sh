@@ -60,7 +60,6 @@ adbyby_close()
 	kill -9 $(ps | grep admem.sh | grep -v grep | awk '{print $1}') >/dev/null 2>&1 
 	/sbin/restart_dhcpd
 	logger -t "adbyby" "Adbyby已关闭。"
-
 }
 
 add_rules()
@@ -216,7 +215,7 @@ ip_rule()
 add_dns()
 {
 	mkdir -p /etc/storage/dnsmasq-adbyby.d
-	mkdir -p /tmp/dnsmasq.d
+	mkdir -p /tmp/dnsmasq-adbyby.d
 	anti_ad
 	block_ios=`nvram get block_ios`
 	block_douyin=`nvram get block_douyin`
@@ -228,11 +227,12 @@ add_dns()
 address=/api.amemv.com/0.0.0.0
 address=/.snssdk.com/0.0.0.0
 address=/.douyin.com/0.0.0.0
-		EOF
+EOF
 	fi
 	sed -i '/dnsmasq-adbyby/d' /etc/storage/dnsmasq/dnsmasq.conf
 	cat >> /etc/storage/dnsmasq/dnsmasq.conf << EOF
 conf-dir=/etc/storage/dnsmasq-adbyby.d
+conf-dir=/tmp/dnsmasq-adbyby.d
 EOF
 	if [ $wan_mode -eq 1 ]; then
 	awk '!/^$/&&!/^#/{printf("ipset=/%s/'"adbyby_wan"'\n",$0)}' $PROG_PATH/adhost.conf > $WAN_FILE
@@ -258,7 +258,6 @@ del_dns()
 	rm -f /etc/storage/dnsmasq-adbyby.d/*
 	rm -f /tmp/adbyby_host.conf
 }
-
 
 add_rule()
 {
@@ -347,7 +346,8 @@ if [ "$anti_ad" = "1" ]; then
 	else
 		logger -t "adbyby" "anti_AD下载成功,处理中..."
 		if [ `md5sum $adtmp | awk '{ print $1 }'` != `md5sum $adconf | awk '{ print $1 }'` ]; then
-			nvram set anti_ad_count=`grep -v '^#' $adtmp | wc -l` && mv -f $adtmp $adconf 
+			nvram set anti_ad_count=`grep -v '^#' $adtmp | wc -l`
+			mv -f $adtmp $adconf || [[ mv -f $adtmp /tmp/dnsmasq-adbyby.d/ && rm -f $adconf ]]
 		else 
 			rm -f $adtmp && logger -t "adbyby" "anti_AD无需更新！"
 		fi
