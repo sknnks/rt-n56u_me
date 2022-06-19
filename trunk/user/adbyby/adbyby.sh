@@ -215,7 +215,6 @@ ip_rule()
 add_dns()
 {
 	mkdir -p /etc/storage/dnsmasq-adbyby.d
-	mkdir -p /tmp/dnsmasq-adbyby.d
 	anti_ad
 	block_ios=`nvram get block_ios`
 	block_douyin=`nvram get block_douyin`
@@ -232,7 +231,6 @@ EOF
 	sed -i '/dnsmasq-adbyby/d' /etc/storage/dnsmasq/dnsmasq.conf
 	cat >> /etc/storage/dnsmasq/dnsmasq.conf << EOF
 conf-dir=/etc/storage/dnsmasq-adbyby.d
-conf-dir=/tmp/dnsmasq-adbyby.d
 EOF
 	if [ $wan_mode -eq 1 ]; then
 	awk '!/^$/&&!/^#/{printf("ipset=/%s/'"adbyby_wan"'\n",$0)}' $PROG_PATH/adhost.conf > $WAN_FILE
@@ -345,9 +343,9 @@ if [ "$anti_ad" = "1" ]; then
 		logger -t "adbyby" "anti_AD下载失败！"
 	else
 		logger -t "adbyby" "anti_AD下载成功,处理中..."
-		if [ `md5sum $adtmp | awk '{ print $1 }'` != `md5sum $adconf | awk '{ print $1 }'` ]; then
+		if [ "`md5sum $adtmp | awk '{ print $1 }'`" != "`md5sum $adconf | awk '{ print $1 }'`" ]; then
 			nvram set anti_ad_count=`grep -v '^#' $adtmp | wc -l`
-			mv -f $adtmp $adconf || [[ mv -f $adtmp /tmp/dnsmasq-adbyby.d/ && rm -f $adconf ]]
+			mv -f $adtmp $adconf || [[ rm -f $adconf && ln -s $adtmp $adconf ]]
 		else 
 			rm -f $adtmp && logger -t "adbyby" "anti_AD无需更新！"
 		fi
