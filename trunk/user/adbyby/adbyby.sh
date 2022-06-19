@@ -339,7 +339,7 @@ anti_ad=`nvram get anti_ad`
 anti_ad_link=`nvram get anti_ad_link`
 adtmp=/tmp/anti-ad-for-dnsmasq.conf
 adconf=/etc/storage/dnsmasq-adbyby.d/anti-ad-for-dnsmasq.conf
-nvram set anti_ad_count=0
+[ -z "`nvram get anti_ad_count`" ] && nvram set anti_ad_count=0
 if [ "$anti_ad" = "1" ]; then
 	curl -k -s -o $adtmp --connect-timeout 5 --retry 3 $anti_ad_link
 	if [ ! -f "$adtmp" ]; then
@@ -347,7 +347,7 @@ if [ "$anti_ad" = "1" ]; then
 	else
 		logger -t "adbyby" "anti_AD下载成功,处理中..."
 		if [ `md5sum $adtmp | awk '{ print $1 }'` != `md5sum $adconf | awk '{ print $1 }'` ]; then
-			nvram set anti_ad_count=`grep -v '^#' $adconf | wc -l` && mv -f $adtmp $adconf 
+			nvram set anti_ad_count=`grep -v '^#' $adtmp | wc -l` && mv -f $adtmp $adconf 
 		else 
 			rm -f $adtmp && logger -t "adbyby" "anti_AD无需更新！"
 		fi
