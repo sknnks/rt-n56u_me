@@ -1,8 +1,8 @@
 #!/bin/sh
 #nvram set ntp_ready=0
 
-mkdir -p /tmp/dnsmasq.music
-logger -t "为防止dnsmasq启动失败，创建/tmp/dnsmasq.music"
+mkdir -p /tmp/dnsmasq.dom
+logger -t "为防止dnsmasq启动失败，创建/tmp/dnsmasq.dom/"
 
 if [ $(nvram get sdns_enable) = 1 ] ; then
 logger -t "自动启动" "正在启动SmartDns"
@@ -18,20 +18,12 @@ logger -t "自动启动" "正在检查路由是否已连接互联网！"
 count=0
 while :
 do
-	ping -c 1 -W 1 -q www.baidu.com 1>/dev/null 2>&1
-	if [ "$?" == "0" ]; then
-		break
-	fi
-	ping -c 1 -W 1 -q 202.108.22.5 1>/dev/null 2>&1
+	ping -c 1 -W 1 -q 223.5.5.5 1>/dev/null 2>&1
 	if [ "$?" == "0" ]; then
 		break
 	fi
 	sleep 5
-	ping -c 1 -W 1 -q www.google.com 1>/dev/null 2>&1
-	if [ "$?" == "0" ]; then
-		break
-	fi
-	ping -c 1 -W 1 -q 8.8.8.8 1>/dev/null 2>&1
+	ping -c 1 -W 1 -q baidu.com 1>/dev/null 2>&1
 	if [ "$?" == "0" ]; then
 		break
 	fi
@@ -75,4 +67,24 @@ fi
 if [ $(nvram get zerotier_enable) = 1 ] ; then
 logger -t "自动启动" "正在启动zerotier"
 /usr/bin/zerotier.sh start
+fi
+
+if [ $(nvram get nvpproxy_enable) = 1 ] ; then
+logger -t "自动启动" "正在启动nvpproxy"
+/usr/bin/nvpproxy.sh start
+fi
+
+if [ $(nvram get ddnsto_enable) = 1 ] ; then
+logger -t "自动启动" "正在启动ddnsto"
+/usr/bin/ddnsto.sh start
+fi
+
+if [ $(nvram get aliyundrive_enable) = 1 ] ; then
+logger -t "自动启动" "正在启动阿里云盘"
+/usr/bin/aliyundrive-webdav.sh start
+fi
+
+if [ $(nvram get wireguard_enable) = 1 ] ; then
+logger -t "自动启动" "正在启动wireguard"
+/usr/bin/wireguard.sh start
 fi

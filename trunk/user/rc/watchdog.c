@@ -529,7 +529,7 @@ svc_timecheck(void)
 				svcStatus[GUEST2_ACTIVE] = -1;
 		}
 	}
-	
+
 	char reboot_schedule[PATH_MAX];
 	if (nvram_match("reboot_schedule_enable", "1"))
 	{
@@ -1070,8 +1070,8 @@ ntpc_updated_main(int argc, char *argv[])
 		system("hwclock -w");
 #endif
 		logmessage("NTP Client", "System time changed, offset: %ss", offset);
-		sleep(5);
-		nvram_set_int("ntp_ready", 1);
+                sleep(5);
+                nvram_set_int("ntp_ready", 1);
 	}
 
 	return 0;
@@ -1289,3 +1289,4 @@ watchdog_main(int argc, char *argv[])
 
 	return 0;
 }
+

@@ -120,6 +120,10 @@ load_wireless_modules(void)
 	module_smart_load("mt_7615e", NULL);
 #endif
 
+#if defined (USE_MT7915_AP)
+	module_smart_load("mt_7915", NULL);
+#endif
+
 #if defined (USE_RT3090_AP)
 	module_smart_load("rt3090_ap", NULL);
 #elif defined (USE_RT5392_AP)
@@ -277,6 +281,16 @@ init_gpio_leds_buttons(void)
 #endif
 	/* show PWR soft-led  */
 #if defined (BOARD_GPIO_LED_POWER)
+#if defined (BOARD_CR660x)
+	cpu_gpio_set_pin_direction(14, 1);
+	cpu_gpio_set_pin(14, LED_OFF);
+#elif defined (BOARD_Q20)
+	cpu_gpio_set_pin_direction(14, 1);
+	cpu_gpio_set_pin(14, LED_ON); // set GPIO to low
+#elif defined (BOARD_EA7500)
+	cpu_gpio_set_pin_direction(BOARD_GPIO_LED_POWER, 1);
+	cpu_gpio_set_pin(BOARD_GPIO_LED_POWER, LED_OFF);
+#endif
 	cpu_gpio_set_pin_direction(BOARD_GPIO_LED_POWER, 1);
 	LED_CONTROL(BOARD_GPIO_LED_POWER, LED_ON);
 #endif
@@ -1320,6 +1334,12 @@ handle_notifications(void)
 			restart_zerotier();
 		}
 #endif
+#if defined(APP_DDNSTO)
+		else if (strcmp(entry->d_name, RCN_RESTART_DDNSTO) == 0)
+		{
+			restart_ddnsto();
+		}
+#endif
 #if defined(APP_KOOLPROXY)
 		else if (strcmp(entry->d_name, RCN_RESTART_KOOLPROXY) == 0)
 		{
@@ -1358,6 +1378,12 @@ handle_notifications(void)
 			restart_frp();
 		}
 #endif
+/*#if defined(APP_NPC)
+		else if (strcmp(entry->d_name, RCN_RESTART_NPC) == 0)
+		{
+			restart_npc();
+		}
+#endif*/
 #if defined(APP_CADDY)
 		else if (strcmp(entry->d_name, RCN_RESTART_CADDY) == 0)
 		{
@@ -1374,6 +1400,24 @@ handle_notifications(void)
 		else if (strcmp(entry->d_name, RCN_RESTART_DNSFORWARDER) == 0)
 		{
 			restart_dnsforwarder();
+		}
+#endif
+#if defined(APP_NVPPROXY)
+		else if (strcmp(entry->d_name, RCN_RESTART_NVPPROXY) == 0)
+		{
+			restart_nvpproxy();
+		}
+#endif
+#if defined(APP_WIREGUARD)
+		else if (strcmp(entry->d_name, RCN_RESTART_WIREGUARD) == 0)
+		{
+			restart_wireguard();
+		}
+#endif
+#if defined(APP_ALDRIVER)
+		else if (strcmp(entry->d_name, RCN_RESTART_ALDRIVER) == 0)
+		{
+			restart_aldriver();
 		}
 #endif
 #if defined(APP_SMBD) || defined(APP_NMBD)

@@ -5,6 +5,7 @@ clean:
 
 romfs:
 	./makedevlinks $(ROMFSDIR)
+	$(ROMFSINST) /sbin/radio2_kicksta
 	$(ROMFSINST) /sbin/dev_init.sh
 	$(ROMFSINST) /sbin/reset_ss.sh
 	$(ROMFSINST) /sbin/mtd_storage.sh
@@ -29,3 +30,4 @@ endif
 	mkdir -p $(INSTALLDIR)/usr/share/terminfo
 	tar -xzf ./terminfo.tar.gz -C $(INSTALLDIR)/usr/share
 	$(ROMFSINST) /sbin/check_crontab.sh
+	$(ROMFSINST) $(THISDIR)/certs.tgz /etc_ro/certs.tgz
