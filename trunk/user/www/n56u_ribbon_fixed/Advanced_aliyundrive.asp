@@ -142,7 +142,7 @@ function done_validating(action){
 									<table width="100%" align="center" cellpadding="4" cellspacing="0" class="table">
 
 										<tr>
-											<th>refresh token</th>
+											<th>获取 refresh token</th>
 											<td>
 				<input type="button" class="btn btn-success" value="点击查看获取 refresh token 的方法" onclick="window.open('https://github.com/messense/aliyundrive-webdav#%E8%8E%B7%E5%8F%96-refresh_token')" size="0">
 											</td>
