@@ -1106,12 +1106,10 @@ void announce_802_3_packet(
 		if (ra_sw_nat_hook_rx != NULL) {
 
 			RtmpOsPktProtocolAssign(pRxPkt);
-			FOE_MAGIC_TAG(RTPKT_TO_OSPKT(pRxPkt)) = FOE_MAGIC_EXTIF;
+			RtmpOsPktNatMagicTag(pRxPkt);
 
-			if (ra_sw_nat_hook_rx(pRxPkt)) {
-				FOE_MAGIC_TAG(RTPKT_TO_OSPKT(pRxPkt)) = 0;
+			if (ra_sw_nat_hook_rx(pRxPkt))
 				RtmpOsPktRcvHandle(pRxPkt);
-			}
 
 			return;
 		}
