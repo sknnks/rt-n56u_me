@@ -425,9 +425,11 @@ if (found_app_aliddns()){
 }else{
 if (found_app_ddnsto()){
 	tabtitle[16] = new Array("", "<#menu5_30#>");
+}
 }else{
 if (found_app_wireguard()){
 	tabtitle[16] = new Array("", "<#menu5_30#>");
+}
 }else{
 if (found_app_zerotier()){
 	tabtitle[16] = new Array("", "<#menu5_32#>");
@@ -552,7 +554,7 @@ if (found_app_aliddns()){
 	menuL2_title.push("<#menu5_30#>");
 } else if (found_app_ddnsto()){
 	menuL2_title.push("<#menu5_30#>");
-}  else if (found_app_wireguard()){
+} else if (found_app_wireguard()){
 	menuL2_title.push("<#menu5_30#>");
 } else if (found_app_zerotier()){
 	menuL2_title.push("<#menu5_30#>");
@@ -604,7 +606,7 @@ if (found_app_aliddns()){
 	menuL2_link.push(aliddns_array[1]);
 } else if (found_app_ddnsto()){
 	menuL2_link.push(ddnsto_array[1]);
-}  else if (found_app_wireguard()){
+} else if (found_app_wireguard()){
 	menuL2_link.push(wireguard_array[1]);
 } else if (found_app_zerotier()){
 	menuL2_link.push(zerotier_array[1]);
