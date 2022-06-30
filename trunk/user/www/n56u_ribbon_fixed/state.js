@@ -361,7 +361,7 @@ function show_banner(L3){
 	bc += '  </tr>\n';
 	bc += '  <tr>\n';
 	bc += '    <td><button type="button" id="commit_btn" class="btn btn-mini" style="width: 114px; height: 21px; outline:0; '+enabledBtnCommit+'" onclick="commit();"><i class="icon icon-fire"></i>&nbsp;<#CTL_Commit#></button></td>\n';
-	bc += '    <td><button type="button" id="freememory_btn" class="btn btn-mini" style="height: 21px; outline:0;" title="<#BTN_FREEMEMORY#>" onclick="freememory();"><i class="icon icon-trash"></i></button><button type="button" id="logout_btn" class="btn btn-mini" style="height: 21px; outline:0;" title="<#t1Logout#>" onclick="logout();"><i class="icon icon-user"></i></button> <button type="button" id="reboto_btn" class="btn btn-mini" style="height: 21px; outline:0;" title="<#BTN_REBOOT#>" onclick="reboot();"><i class="icon icon-repeat"></i></button></td>\n';
+	bc += '    <td><button type="button" id="logout_btn" class="btn btn-mini" style="height: 21px; outline:0;" title="<#t1Logout#>" onclick="logout();"><i class="icon icon-user"></i></button> <button type="button" id="reboto_btn" class="btn btn-mini" style="height: 21px; outline:0;" title="<#BTN_REBOOT#>" onclick="reboot();"><i class="icon icon-repeat"></i></button> <button type="button" id="shutdown_btn" class="btn btn-mini" style="height: 21px; outline:0;" title="<#BTN_SHUTDOWN#>" onclick="shutdown();"><i class="icon icon-off"></i></button></td>\n';
 	bc += '  </tr>\n';
 	bc += '</table>\n';
 	bc += '</div>\n';
@@ -423,14 +423,6 @@ if (found_app_adguardhome()){
 if (found_app_aliddns()){
 	tabtitle[16] = new Array("", "<#menu5_30#>");
 }else{
-if (found_app_ddnsto()){
-	tabtitle[16] = new Array("", "<#menu5_30#>");
-}
-}else{
-if (found_app_wireguard()){
-	tabtitle[16] = new Array("", "<#menu5_30#>");
-}
-}else{
 if (found_app_zerotier()){
 	tabtitle[16] = new Array("", "<#menu5_32#>");
 }
@@ -443,9 +435,6 @@ if (found_app_caddy()){
 }
 if (found_app_wyy()){
 	tabtitle[18] = new Array("", "<#menu5_31_1#>");
-}
-if (found_app_aldriver()){
-	tabtitle[19] = new Array("", "<#menu5_36_1#>");
 }
 //Level 3 Tab title
 
@@ -492,12 +481,6 @@ if (found_app_smartdns()){
 if (found_app_aliddns()){
 	aliddns_array = new Array("","Advanced_aliddns.asp");
 	tablink[16] = (aliddns_array);
-}else if (found_app_ddnsto()){
-	ddnsto_array = new Array("","Advanced_ddnsto.asp");
-	tablink[16] = (ddnsto_array);
-}else if (found_app_wireguard()){
-	wireguard_array = new Array("","Advanced_wireguard.asp");
-	tablink[16] = (wireguard_array);
 }else if (found_app_zerotier()){
 	zerotier_array = new Array("","Advanced_zerotier.asp");
 	tablink[16] = (zerotier_array);
@@ -513,10 +496,6 @@ if (found_app_caddy()){
 if (found_app_wyy()){
 	wyy_array = new Array("","Advanced_wyy.asp");
 	tablink[19] = (wyy_array);
-}
-if (found_app_aldriver()){
-	aldriver_array = new Array("","Advanced_aliyundrive.asp");
-	tablink[20] = (aldriver_array);
 }
 
 //Level 2 Menu
@@ -552,10 +531,6 @@ if (found_app_smartdns()){
 
 if (found_app_aliddns()){
 	menuL2_title.push("<#menu5_30#>");
-} else if (found_app_ddnsto()){
-	menuL2_title.push("<#menu5_30#>");
-} else if (found_app_wireguard()){
-	menuL2_title.push("<#menu5_30#>");
 } else if (found_app_zerotier()){
 	menuL2_title.push("<#menu5_30#>");
 } else menuL2_title.push("");
@@ -570,10 +545,6 @@ if (found_app_caddy()){
 
 if (found_app_wyy()){
 	menuL2_title.push("<#menu5_31#>");
-} else menuL2_title.push("");
-
-if (found_app_aldriver()){
-	menuL2_title.push("<#menu5_36#>");
 } else menuL2_title.push("");
 
 menuL2_link  = new Array("", tablink[0][1], tablink[1][1], tablink[2][1], tablink[3][1], tablink[4][1], tablink[5][1], tablink[6][1], tablink[7][1], support_2g_radio() ? tablink[8][1] : "Main_EStatus_Content.asp", tablink[9][1]);
@@ -604,10 +575,6 @@ if (found_app_smartdns()){
 } else menuL2_link.push("");
 if (found_app_aliddns()){
 	menuL2_link.push(aliddns_array[1]);
-} else if (found_app_ddnsto()){
-	menuL2_link.push(ddnsto_array[1]);
-} else if (found_app_wireguard()){
-	menuL2_link.push(wireguard_array[1]);
 } else if (found_app_zerotier()){
 	menuL2_link.push(zerotier_array[1]);
 } else menuL2_link.push("");
@@ -619,9 +586,6 @@ if (found_app_caddy()){
 } else menuL2_link.push("");
 if (found_app_wyy()){
 	menuL2_link.push(wyy_array[1]);
-} else menuL2_link.push("");
-if (found_app_aldriver()){
-	menuL2_link.push(aldriver_array[1]);
 } else menuL2_link.push("");
 
 //Level 1 Menu in Gateway, Router mode
@@ -889,23 +853,14 @@ function reboot(){
 	});
 }
 
-/*function shutdown() {
-	if (!confirm('<#JS_shutdown#>'))
+function shutdown(){
+	if(!confirm('<#JS_shutdown#>'))
 		return;
 	var $j = jQuery.noConflict();
 	$j.post('/apply.cgi',
-		{
-			'action_mode': ' Shutdown ',
-			'current_page': 'Main_LogStatus_Content.asp'
-		});
-}*/
-
-function freememory(){
-	var $j = jQuery.noConflict();
-	$j.post('/apply.cgi',
 	{
-		'action_mode': ' FreeMemory ',
-		'current_page': 'index.asp'
+		'action_mode': ' Shutdown ',
+		'current_page': 'Main_LogStatus_Content.asp'
 	});
 }
 
@@ -1310,21 +1265,6 @@ function inputCtrl(obj, flag){
 	obj.disabled = (flag == 0);
 }
 
-function IsPC() {
-	var userAgentInfo = navigator.userAgent;
-	var Agents = ["Android", "iPhone",
-		"SymbianOS", "Windows Phone",
-		"iPad", "iPod"];
-	var flag = true;
-	for (var v = 0; v < Agents.length; v++) {
-		if (userAgentInfo.indexOf(Agents[v]) > 0) {
-			flag = false;
-			break;
-		}
-	}
-	return flag;
-}
-
 // add eagle23
 jQuery(document).ready(function(){
     var $j = jQuery.noConflict();
@@ -1528,7 +1468,6 @@ var w_dnsf = '<% nvram_get_x("", "w_dnsf"); %>';
 var w_ss = '<% nvram_get_x("", "w_ss"); %>';
 var w_men = '<% nvram_get_x("", "w_men"); %>';
 var w_adbyby = '<% nvram_get_x("", "w_adbyby"); %>';
-var w_pdnsd = '<% nvram_get_x("", "w_pdnsd"); %>';
 
 if (w_ai==0){
 	menuL1_link[2] = "";
@@ -1581,32 +1520,6 @@ if (w_men==0){
 if (w_adbyby==0){
 	menuL2_link[15] = "";
 	menuL2_title[15] = "";
-}
-if (w_pdnsd==0){
-	menuL2_link[16] = "";
-	menuL2_title[16] = "";
-}
-function mobilestyle() {
-	var sc = document.createElement("meta");
-	sc.setAttribute("name", "viewport");
-	sc.setAttribute("content", "width=device-width, initial-scale=1, user-scalable=yes");
-	document.head.appendChild(sc);
-
-	$j = jQuery.noConflict();
-	setTimeout(function () {
-		if ($j(window).width() < 800) {//body 加载晚
-			var qc = "";
-			$j('.table-big tr').each(function () {
-				var o = $j(this);
-				qc += '<div class="sub" id="' + o.attr('id') + '" style="' + o.attr('style') + '">' + $j('td', o).html() + '</div>';
-			});
-			$j('<div class="quickmenu">' + qc + '</div>').insertBefore("#tabMenu");
-			$j('.table-big').remove();
-
-			$j('#net_chart,#cpu_chart').parents("table").parent().addClass('chart-parent');
-
-		}
-	}, 500);
 }
 (function($){
     var $j = $.noConflict();
@@ -1787,5 +1700,4 @@ function mobilestyle() {
             hoverAction();
         }
     };
-	mobilestyle();
 })(jQuery);
