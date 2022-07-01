@@ -227,9 +227,7 @@ dir_$(CONFIG_FIRMWARE_INCLUDE_MINIDLNA)		+= libogg
 dir_$(CONFIG_FIRMWARE_INCLUDE_MINIDLNA)		+= libvorbis
 dir_$(LIBS_INCLUDE_MEDIA)			+= libflac
 dir_$(LIBS_INCLUDE_MEDIA)			+= libsqlite
-
-# transmission shared libs
-dir_$(CONFIG_FIRMWARE_INCLUDE_TRANSMISSION)	+= libevent
+dir_$(LIBS_INCLUDE_LIBEVENT)			+= libevent
 
 # aria2 shared libs
 dir_$(LIBS_INCLUDE_LIBXML2)		+= libxml2
