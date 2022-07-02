@@ -548,6 +548,7 @@ menuL1.push({ "title": "<#menu5#>", "link": "as.asp", "icon": "icon-wrench" });
 //Level 2 Menu
 //sub 与 L1的sub 对应，自动显示到L1下面
 var menuL2 = [
+  { "title": "", "link": "" },
 	{ "title": "<#menu5_11#>", "link": tabMenuHash.get('1')[0].link, index: "1" },
 	{ "title": "<#menu5_12#>", "link": tabMenuHash.get('2')[0].link, index: "2" },
 	{ "title": "<#menu5_2#>", "link": tabMenuHash.get('3')[0].link, index: "3" },
