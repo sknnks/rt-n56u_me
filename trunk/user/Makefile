@@ -169,8 +169,8 @@ dir_$(CONFIG_FIRMWARE_INCLUDE_SOCAT)		+= socat
 dir_$(CONFIG_FIRMWARE_INCLUDE_SRELAY)		+= srelay
 dir_$(CONFIG_FIRMWARE_INCLUDE_TUNSAFE) 		+= tunsafe
 ifeq ($(CONFIG_FIRMWARE_INCLUDE_WIREGUARD),y)
-dir_y += wireguard-go
-dir_y += wireguard-tools
+dir_y						+= wireguard-go
+dir_y						+= wireguard-tools
 endif
 ifeq ($(CONFIG_FIRMWARE_INCLUDE_SMBD36),y)
 dir_$(SAMBA_ENABLED)				+= samba36
@@ -197,8 +197,8 @@ dir_$(CONFIG_FIRMWARE_INCLUDE_SMARTDNS)		+= smartdns
 dir_$(CONFIG_FIRMWARE_INCLUDE_CADDY)		+= caddy
 dir_$(CONFIG_FIRMWARE_INCLUDE_xTUN) 		+= xTun
 ifeq ($(CONFIG_FIRMWARE_INCLUDE_WING),y)
-dir_y 			+= wing
-dir_y 			+= ipt2socks
+dir_y						+= wing
+dir_y						+= ipt2socks
 endif
 
 dir_$(CONFIG_FIRMWARE_INCLUDE_REDSOCKS)		+= redsocks
