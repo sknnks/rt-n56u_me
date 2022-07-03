@@ -222,7 +222,7 @@ struct nvram_pair router_defaults[] = {
 	{ "wl_greenap", "0" },
 	{ "wl_ldpc", "2" },
 	{ "wl_HT_RDG", "0" },
-#if defined (USE_WID_5G) && (USE_WID_5G==7615 || USE_WID_5G==7915)
+#if defined (USE_WID_5G) && USE_WID_5G==7615
 	{ "wl_HT_AMSDU", "1" },
 	{ "wl_HT_BAWinSize", "256" },
 	{ "wl_mumimo", "0" },
@@ -332,7 +332,7 @@ struct nvram_pair router_defaults[] = {
 	{ "rt_HT_80211KV", "1" },
 	{ "rt_HT_80211R", "0" },
 	{ "rt_HT_MpduDensity", "5" },
-#if defined (USE_WID_2G) && (USE_WID_2G==7615 || USE_WID_2G==7915)
+#if defined (USE_WID_2G) && USE_WID_2G==7615
 	{ "rt_HT_BAWinSize", "256" },
 	{ "rt_ldpc", "1" },
 	{ "rt_turbo_qam", "1" },
@@ -453,6 +453,7 @@ struct nvram_pair router_defaults[] = {
 	{ "adbyby_set", "0" },
 	{ "adbyby_adb_update", "0" },
 	{ "adbyby_update", "2" },
+	{ "hosts_ad", "0" },
 	{ "adbyby_update_hour", "03" },
 	{ "adbyby_update_min", "30" },
 	{ "adbyby_ip_x", "0" },
@@ -465,13 +466,11 @@ struct nvram_pair router_defaults[] = {
 	{ "anti_ad_link", "https://anti-ad.net/anti-ad-for-dnsmasq.conf" },
 	{ "anti_ad_count", "0" },
 #endif
-
 	/* Pdnsd */
 	{ "dns_enable", "0" },
 	{ "dns_server", "223.5.5.5,114.114.114.114" },
 	{ "dns_server_port", "5333" },
 	{ "dns_server_bind", "0.0.0.0" },
-
 #if defined(APP_ALIDDNS)
 	/* Aliddns */
 	{ "aliddns_enable", "0" },
@@ -496,6 +495,7 @@ struct nvram_pair router_defaults[] = {
 
 	{ "hdd_spindt", "0" },
 	{ "hdd_apmoff", "0" },
+
 	/*WEB DIY*/
 	{ "w_ai", "1" },
 	{ "w_vpn_s", "1" },
@@ -679,7 +679,7 @@ struct nvram_pair router_defaults[] = {
 	{ "socks5_s_username", "" },
 	{ "socks5_s_password", "" },
 	{ "ss_turn", "0" },
-	{ "ss_watchcat", "0" },
+	{ "ss_watchcat", "1" },
 	{ "ss_turn_s", "600" },
 	{ "ss_turn_ss", "5" },
 	{ "lan_con", "0" },
@@ -687,6 +687,7 @@ struct nvram_pair router_defaults[] = {
 	{ "ss_adblock_url", "https://gitee.com/privacy-protection-tools/anti-ad/raw/master/anti-ad-for-dnsmasq.conf"},
 	{ "ss_schedule_enable", "0" },
 	{ "ss_schedule", "00000000000" },
+
 	{ "ss_enable", "0" },
 	{ "trojan_local_enable", "0" },
 	{ "trojan_local", "/tmp/trojan" },
@@ -710,13 +711,16 @@ struct nvram_pair router_defaults[] = {
 	{ "ss_proto_param", ""},
 	{ "ss_obfs", "plain"},
 	{ "ss_obfs_param", ""},
+
 	{ "ss-tunnel_enable", "0" },
 	{ "ss-tunnel_local_port", "5353" },
 	{ "ss-tunnel_remote", "8.8.4.4:53" },
 	{ "ss-tunnel_mtu", "1492" },
+	
 	{ "ss_update_chnroute", "0" },
 	{ "ss_update_gfwlist", "0" },
 	{ "ssp_staticnum_x", "0" },
+	
 	{ "v2_type_tcp", "none" },
 	{ "v2_type_mkcp", "none" },
 	{ "v2_mkcp_mtu", "1350" },
@@ -758,7 +762,6 @@ struct nvram_pair router_defaults[] = {
 	{ "d_keyword_y", "" },
 	{ "d_update_link", "" },
 	{ "ss_keyword", "过期时间/剩余流量" },
-	{ "ss_watchcat", "1" },
 	{ "ss_update_chnroute", "0" },
 	{ "ss_update_gfwlist", "0" },
 #endif
@@ -767,7 +770,6 @@ struct nvram_pair router_defaults[] = {
 	/* AdguargHome */
 	{ "adg_enable", "0" },
 	{ "adg_redirect", "0" },
-	{ "adg_link", "https://cdn.jsdelivr.net/gh/chongshengB/rt-n56u/trunk/user/adguardhome/AdGuardHome" },
 #endif
 
 #if defined(APP_CADDY)
@@ -809,6 +811,10 @@ struct nvram_pair router_defaults[] = {
 	{ "zerotier_nat", "0" },
 	{ "zerotier_secret", "" },
 	{ "zero_staticnum_x", "0" },
+
+	{ "ss_watchcat", "1" },
+	{ "ss_update_chnroute", "0" },
+	{ "ss_update_gfwlist", "0" },
 #endif
 
 /*#if defined(APP_NPC)
@@ -1080,7 +1086,7 @@ struct nvram_pair router_defaults[] = {
 #endif
 
 #if defined(CONFIG_RALINK_MT7621) || (defined(CONFIG_RALINK_MT7620) && !defined(BOARD_N14U))
-#if defined(USE_MT7615_AP) || (USE_MT7915_AP) // hwnat is disabled by default
+#if defined(USE_MT7615_AP) // hwnat is disabled by default
 	{ "hw_nat_mode", "2" },
 #else
 	{ "hw_nat_mode", "4" },
