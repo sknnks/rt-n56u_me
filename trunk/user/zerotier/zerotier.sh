@@ -1,5 +1,5 @@
 #!/bin/sh
-#20200426 chongshengB
+
 PROG=/usr/bin/zerotier-one
 PROGCLI=/usr/bin/zerotier-cli
 PROGIDT=/usr/bin/zerotier-idtool
