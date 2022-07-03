@@ -811,10 +811,6 @@ struct nvram_pair router_defaults[] = {
 	{ "zerotier_nat", "0" },
 	{ "zerotier_secret", "" },
 	{ "zero_staticnum_x", "0" },
-
-	{ "ss_watchcat", "1" },
-	{ "ss_update_chnroute", "0" },
-	{ "ss_update_gfwlist", "0" },
 #endif
 
 /*#if defined(APP_NPC)
