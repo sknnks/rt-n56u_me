@@ -57,13 +57,15 @@ function textarea_scripts_enabled(v){
 }
 
 function applyRule(){
-	showLoading();
-	
-	document.form.action_mode.value = " Apply ";
-	document.form.current_page.value = "/Advanced_aliddns.asp";
-	document.form.next_page.value = "";
-	
-	document.form.submit();
+//	if(validForm()){
+		showLoading();
+		
+		document.form.action_mode.value = " Apply ";
+		document.form.current_page.value = "/Advanced_aliddns.asp";
+		document.form.next_page.value = "";
+		
+		document.form.submit();
+//	}
 }
 
 

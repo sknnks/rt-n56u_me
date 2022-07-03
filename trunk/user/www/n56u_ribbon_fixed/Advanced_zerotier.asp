@@ -62,13 +62,15 @@ showhide_div('dtolink', found_app_ddnsto());
 showhide_div('wirlink', found_app_wireguard());
 }
 function applyRule(){
-	showLoading();
-	
-	document.form.action_mode.value = " Restart ";
-	document.form.current_page.value = "/Advanced_zerotier.asp";
-	document.form.next_page.value = "";
-	
-	document.form.submit();
+//	if(validForm()){
+		showLoading();
+		
+		document.form.action_mode.value = " Restart ";
+		document.form.current_page.value = "/Advanced_zerotier.asp";
+		document.form.next_page.value = "";
+		
+		document.form.submit();
+//	}
 }
 
 function done_validating(action){

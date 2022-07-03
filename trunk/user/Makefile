@@ -153,7 +153,7 @@ dir_$(CONFIG_FIRMWARE_INCLUDE_V2RAY)	        += v2ray
 dir_$(CONFIG_FIRMWARE_INCLUDE_XRAY)		+= xray
 dir_$(CONFIG_FIRMWARE_INCLUDE_TROJAN)	        += trojan
 endif
-#dir_$(CONFIG_FIRMWARE_INCLUDE_SSOBFS)		+= simple-obfs
+dir_$(CONFIG_FIRMWARE_INCLUDE_SSOBFS)			+= simple-obfs
 dir_$(CONFIG_FIRMWARE_INCLUDE_ZEROTIER)	        += zerotier
 dir_$(CONFIG_FIRMWARE_INCLUDE_WYY)		+= unblockmusic
 dir_$(OPENSSH_ENABLED)				+= openssh
@@ -169,7 +169,7 @@ dir_$(CONFIG_FIRMWARE_INCLUDE_SOCAT)		+= socat
 dir_$(CONFIG_FIRMWARE_INCLUDE_SRELAY)		+= srelay
 dir_$(CONFIG_FIRMWARE_INCLUDE_TUNSAFE) 		+= tunsafe
 ifeq ($(CONFIG_FIRMWARE_INCLUDE_WIREGUARD),y)
-dir_y += wireguard
+dir_y += wireguard-go
 dir_y += wireguard-tools
 endif
 ifeq ($(CONFIG_FIRMWARE_INCLUDE_SMBD36),y)
@@ -196,8 +196,11 @@ dir_$(CONFIG_FIRMWARE_INCLUDE_MENTOHUST)	+= mentohust
 dir_$(CONFIG_FIRMWARE_INCLUDE_SMARTDNS)		+= smartdns
 dir_$(CONFIG_FIRMWARE_INCLUDE_CADDY)		+= caddy
 dir_$(CONFIG_FIRMWARE_INCLUDE_xTUN) 		+= xTun
-dir_$(CONFIG_FIRMWARE_INCLUDE_WING) 		+= wing
-dir_$(CONFIG_FIRMWARE_INCLUDE_WING) 		+= ipt2socks
+ifeq ($(CONFIG_FIRMWARE_INCLUDE_WING),y)
+dir_y 			+= wing
+dir_y 			+= ipt2socks
+endif
+
 dir_$(CONFIG_FIRMWARE_INCLUDE_REDSOCKS)		+= redsocks
 dir_$(CONFIG_FIRMWARE_INCLUDE_3PROXY)		+= 3proxy
 
