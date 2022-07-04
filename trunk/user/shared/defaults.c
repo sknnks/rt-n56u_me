@@ -874,8 +874,7 @@ struct nvram_pair router_defaults[] = {
 	{ "wireguard_peerkey", "" },
 #endif
 
-#if defined(APP_ALDRIVER)
-	/*阿里云盘*/
+/*#if defined(APP_ALDRIVER)
 	{ "aliyundrive_enable", "0" },
 	{ "ald_refresh_token", "" },
 	{ "ald_auth_user", "" },
@@ -889,7 +888,7 @@ struct nvram_pair router_defaults[] = {
 	{ "ald_domain_id", "0" },
 	{ "ald_no_trash", "0" },
 	{ "ald_read_only", "0" },
-#endif
+#endif*/
 
 	/* DHCP server parameters */
 	{ "dhcp_start", DEF_LAN_DHCP_BEG },	/* First assignable DHCP address */
