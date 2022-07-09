@@ -44,10 +44,10 @@ function initial(){
 	show_banner(2);
 	show_menu(5,19);
 	show_footer();
-show_caddy_stroage();
-show_caddy_dir();
-switch_caddy_type();
-fill_status(caddy_status());
+	show_caddy_stroage();
+	show_caddy_dir();
+	switch_caddy_type();
+	fill_status(caddy_status());
 	var o1 = document.form.caddy_storage;
 	var o2 = document.form.caddy_dir;
 	o1.value = '<% nvram_get_x("","caddy_storage"); %>';
