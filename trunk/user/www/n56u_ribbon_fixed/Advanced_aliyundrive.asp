@@ -45,6 +45,9 @@ function initial(){
 	show_menu(5,22,0);
 	fill_status(aliyundrive_status());
 	show_footer();
+	show_aliyundrive_dir();
+	var o1 = document.form.aliyundrive_dir;
+	o1.value = '<% nvram_get_x("","aliyundrive_dir"); %>';
 }
 
 function fill_status(status_code){
@@ -69,7 +72,19 @@ function done_validating(action){
 	refreshpage();
 }
 
+function show_aliyundrive_dir(){
 
+	var code = '<option value="/tmp" >/tmp/aliyundrive</option>';
+	if(pool_names().length == 0)
+		code +='<option value="non" >未插入存储设备</option>';
+	else{
+	
+		for(var i = 0; i < pool_names().length; ++i){
+			code +='<option value="/media/'+ pool_names()[i] +'" >/media/'+ pool_names()[i] + '/aliyun</option>';
+		}
+	}
+	$("aliyundrive_dir").innerHTML = code;
+}
 
 </script>
 </head>
@@ -123,37 +138,34 @@ function done_validating(action){
 						<div class="box well grad_colour_dark_blue">
 							<h2 class="box_head round_top"><#menu5_36#></h2>
 							<div class="round_bottom">
-							<div>
-                            <ul class="nav nav-tabs" style="margin-bottom: 10px;">
-								<li class="active">
-                                    <a href="Advanced_aliyundrive.asp">阿里云盘</a>
-                                </li>
-                            </ul>
-                        </div>
-								<div class="row-fluid">
-									<div id="tabMenu" class="submenuBlock"></div>
+								<div>
+                            	<ul class="nav nav-tabs" style="margin-bottom: 10px;">
+									<li class="active">
+                                    	<a href="Advanced_aliyundrive.asp">阿里云盘</a>
+                                	</li>
+                            	</ul>
+							</div>
+							<div class="row-fluid">
+								<div id="tabMenu" class="submenuBlock"></div>
 									<div class="alert alert-info" style="margin: 10px;">
-									<p>阿里云盘 WebDAV<br>
-									</p>
+										<p>阿里云盘 WebDAV<br>
+										</p>
 									</div>
-
-
-
 									<table width="100%" align="center" cellpadding="4" cellspacing="0" class="table">
-
 										<tr>
 											<th>获取 refresh token</th>
-											<td>
-				<input type="button" class="btn btn-success" value="点击查看获取 refresh token 的方法" onclick="window.open('https://github.com/messense/aliyundrive-webdav#%E8%8E%B7%E5%8F%96-refresh_token')" size="0">
-											</td>
-										</tr>
-										<tr> <th><#running_status#></th>
-                                            <td id="aliyundrive_status" colspan="3"></td>
-                                        </tr>
+												<td>
+													<input type="button" class="btn btn-success" value="点击查看获取 refresh token 的方法" onclick="window.open('https://github.com/messense/aliyundrive-webdav#%E8%8E%B7%E5%8F%96-refresh_token')" size="0">
+												</td>
+											</tr>
+											<tr> 
+												<th><#running_status#></th>
+                                            	<td id="aliyundrive_status" colspan="3"></td>
+                                        	</tr>
 										<tr>
 										<th width="30%" style="border-top: 0 none;">启用阿里云盘 WebDAV</th>
 											<td style="border-top: 0 none;">
-													<div class="main_itoggle">
+												<div class="main_itoggle">
 													<div id="aliyundrive_enable_on_of">
 														<input type="checkbox" id="aliyundrive_enable_fake" <% nvram_match_x("", "aliyundrive_enable", "1", "value=1 checked"); %><% nvram_match_x("", "aliyundrive_enable", "0", "value=0"); %>  />
 													</div>
@@ -163,23 +175,30 @@ function done_validating(action){
 													<input type="radio" value="0" name="aliyundrive_enable" id="aliyundrive_enable_0" class="input" value="0" <% nvram_match_x("", "aliyundrive_enable", "0", "checked"); %> /><#checkbox_No#>
 												</div>
 											</td>
-
 										</tr>
 
 										<tr>
 										<th>Refresh Token</th>
-				<td>
-					<input type="text" class="input" name="ald_refresh_token" id="ald_refresh_token" style="width: 200px" value="<% nvram_get_x("","ald_refresh_token"); %>" />
-				</td>
-
+										<td>
+											<input type="text" class="input" name="ald_refresh_token" id="ald_refresh_token" style="width: 200px" value="<% nvram_get_x("","ald_refresh_token"); %>" />
+										</td>
 										</tr>
+
+										<tr>
+											<th width="30%">云盘app存放目录:</th>
+											<td colspan="2">
+												<select name="aliyundrive_dir" id="aliyundrive_dir" class="input">
+												</select>
+											</td>
+										</tr>
+
 										<tr>
 										<th>云盘根目录</th>
-				<td>
-					<input type="text" class="input" name="ald_root" id="ald_root" style="width: 200px" value="<% nvram_get_x("","ald_root"); %>" />
-				</td>
-
+											<td>
+												<input type="text" class="input" name="ald_root" id="ald_root" style="width: 200px" value="<% nvram_get_x("","ald_root"); %>" />
+											</td>
 										</tr>
+
 										<tr>
 										<th>监听主机</th>
 				<td>
