@@ -25,7 +25,7 @@ if [ ! -f $alibin ];then
 			url="https://github.com/messense/$NAME/releases/download/$ver/$NAME-$ver.mipsel-unknown-linux-musl.tar.gz"
 			cd /tmp && curl -k -s -o ald_webdav.tar.gz --connect-timeout 10 --retry 3 $url
 			if [ $? -ne 0 ]; then
-				"【阿里云webdav】" "目标URL连接受阻，无法下载程序,请检查网络连接后再尝试!" && exit 1
+				logger -t "【阿里云webdav】" "目标URL连接受阻，无法下载程序,请检查网络连接后再尝试!" && exit 1
 			else
 				tar -zxvf ald_webdav.tar.gz -C $app_dir && rm -f ald_webdav.tar.gz
 				[ -f $alibin ] && [ ! -x $alibin ] &&  chmod +x $alibin	
