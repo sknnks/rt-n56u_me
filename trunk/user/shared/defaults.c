@@ -877,10 +877,10 @@ struct nvram_pair router_defaults[] = {
 #if defined(APP_ALDRIVER)
 	/*阿里云盘*/
 	{ "aliyundrive_enable", "0" },
-	{ "aliyundrive_dir", "-1" },
+	{ "aliyundrive_dir", "" },
 	{ "ald_refresh_token", "" },
 	{ "ald_auth_user", "" },
-	{ "ald_auth_password", "" },
+	{ "ald_auth_pswd", "" },
 	{ "ald_read_buffer_size", "10485760" },
 	{ "ald_cache_size", "1000" },
 	{ "ald_cache_ttl", "600" },

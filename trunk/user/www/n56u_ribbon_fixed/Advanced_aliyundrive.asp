@@ -79,13 +79,12 @@ function done_validating(action){
 }
 
 function show_aliyundrive_dir(){
-	var code = '<option value="-1" >请选择存储路径</option>';
-	code +='<option value="/tmp/" >/tmp/aliyun/</option>';
+	var code ='<option value="/tmp/" >/tmp/aliyun</option>';
 	if(pool_names().length == 0)
 		code +='<option value="non" >未发现存储设备</option>';
 	else{
 		for(var i = 0; i < pool_names().length; ++i){
-			code +='<option value="/media/'+ pool_names()[i] +'" >/media/'+ pool_names()[i] + '/aliyun/</option>';
+			code +='<option value="/media/'+ pool_names()[i] +'" >/media/'+ pool_names()[i] + '/aliyun</option>';
 		}
 	}
 	$("aliyundrive_dir").innerHTML = code;
