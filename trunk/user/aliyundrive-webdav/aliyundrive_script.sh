@@ -67,4 +67,3 @@ case "$enable" in
 	;;
 *)	;;
 esac
-
