@@ -59,7 +59,7 @@ case "$enable" in
 	logger -t "【阿里云webdav】" "正在启动，请稍等..."
 	[ ! -d /var/run/aliyun/ ] && mkdir -p /var/run/aliyun/
 	options="--host $host --port $port --root $root --refresh-token $refresh_token -S $read_buffer_size --cache-size $cache_size --cache-ttl $cache_ttl --workdir /var/run/aliyun/"
-	if [ -n $auth_user -a -n $auth_pswd ]; then
+	if [ -n "$auth_user" -a -n "$auth_pswd" ]; then
 		$alibin $extra_options -U $auth_user -W $auth_pswd $options >/dev/null 2>&1 &
 	else
 		$alibin $extra_options $options >/dev/null 2>&1 &
