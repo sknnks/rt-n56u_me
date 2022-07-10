@@ -4,7 +4,7 @@ NAME=aliyundrive-webdav
 
 start_ald() {
 	/etc/storage/aliyundrive_script.sh
-	[ -n "`pgrep aliyundrive`" ] && logger -t "【阿里云webdav】" "启动成功!"
+	[ -n "$(pidof $NAME)" ] && logger -t "【阿里云webdav】" "启动成功!"
 }
 
 stop_ald() {
