@@ -280,8 +280,8 @@ function show_aliyundrive_dir(){
 													<input type="radio" value="0" name="ald_read_only" id="ald_read_only_0" class="input" value="0" <% nvram_match_x("", "ald_read_only", "0", "checked"); %> /><#checkbox_No#>
 												</div>
 											</td>
-
-										</tr><!--
+										</tr>								
+										<!--
 										<tr>
 										<th width="30%" style="border-top: 0 none;">阿里云相册与云盘服务 domainId</th>
 											<td style="border-top: 0 none;">
@@ -297,6 +297,15 @@ function show_aliyundrive_dir(){
 											</td>
 
 										</tr>-->
+										<tr id="row_post_wan_script">
+											<td colspan="2">
+												<i class="icon-hand-right"></i> <a href="javascript:spoiler_toggle('script2')"><span>aliyundrive脚本</span></a>
+												<div id="script2">
+													<textarea rows="18" wrap="off" spellcheck="false" maxlength="314571" class="span12" name="scripts.aliyundrive_script.sh" style="font-family:'Courier New'; font-size:12px;"><% nvram_dump("scripts.aliyundrive_script.sh",""); %></textarea>
+												</div>
+											</td>
+										</tr>
+
 										<tr>
 											<td colspan="4" style="border-top: 0 none;">
 												<br />

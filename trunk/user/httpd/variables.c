@@ -854,7 +854,7 @@
 #if defined(USE_MT76X2_AP)
 			{"wl_VgaClamp", "", NULL, EVM_RESTART_WIFI5},
 #endif
-#if defined (USE_WID_5G) && (USE_WID_5G==7615 || USE_WID_5G==7915)
+#if defined (USE_WID_5G) && USE_WID_5G==7615
 			{"wl_band_steering", "", NULL, EVM_RESTART_WIFI5},
 			{"wl_mumimo", "", NULL, EVM_RESTART_WIFI5},
 #endif
@@ -1188,17 +1188,17 @@
 #if defined(APP_SMARTDNS)
     struct variable variables_SmartdnsConf[] = {
 			{"sdns_enable", "", NULL, EVM_RESTART_SMARTDNS},
-			{"snds_name", "", NULL, EVM_RESTART_SMARTDNS},
+			{"sdns_name", "", NULL, EVM_RESTART_SMARTDNS},
 			{"sdns_port", "", NULL, EVM_RESTART_SMARTDNS},
 			{"sdns_tcp_server", "", NULL, EVM_RESTART_SMARTDNS},
 			{"sdns_ipv6_server", "", NULL, EVM_RESTART_SMARTDNS},
-			{"snds_ip_change", "", NULL, EVM_RESTART_SMARTDNS},
-			{"snds_ip_change_time", "", NULL, EVM_RESTART_SMARTDNS},
-			{"snds_ipv6", "", NULL, EVM_RESTART_SMARTDNS},
+			{"sdns_ip_change", "", NULL, EVM_RESTART_SMARTDNS},
+			{"sdns_ip_change_time", "", NULL, EVM_RESTART_SMARTDNS},
+			{"sdns_ipv6", "", NULL, EVM_RESTART_SMARTDNS},
 			{"sdns_www", "", NULL, EVM_RESTART_SMARTDNS},
 			{"sdns_exp", "", NULL, EVM_RESTART_SMARTDNS},
-			{"snds_redirect", "", NULL, EVM_RESTART_SMARTDNS},
-			{"snds_cache", "", NULL, EVM_RESTART_SMARTDNS},
+			{"sdns_redirect", "", NULL, EVM_RESTART_SMARTDNS},
+			{"sdns_cache", "", NULL, EVM_RESTART_SMARTDNS},
 			{"sdns_ttl", "", NULL, EVM_RESTART_SMARTDNS},
 			{"sdns_ttl_min", "", NULL, EVM_RESTART_SMARTDNS},
 			{"sdns_ttl_max", "", NULL, EVM_RESTART_SMARTDNS},
@@ -1226,15 +1226,14 @@
 #endif
 
 
-#if defined(APP_NVPPROXY)
-    struct variable variables_NvpproxyConf[] = {
+/*#if defined(APP_NVPPROXY)
+	struct variable variables_NvpproxyConf[] = {
 			{"nvpproxy_enable", "", NULL, EVM_RESTART_NVPPROXY},
 			{"nvpproxy_wan_port", "", NULL, EVM_RESTART_SMARTDNS},
 			{"nvpproxy_vpn_port", "", NULL, EVM_RESTART_SMARTDNS},
 			{0,0,0,0}
 	};
-#endif
-
+#endif*/
 
 #if defined(APP_WIREGUARD)
 	struct variable variables_WIREGUARD[] = {
@@ -1251,6 +1250,7 @@
 #if defined(APP_ALDRIVER)
 	struct variable variables_ALDRIVER[] = {
 			{"aliyundrive_enable", "", NULL, EVM_RESTART_ALDRIVER},
+			{"aliyundrive_dir", "", NULL, EVM_RESTART_ALDRIVER},
 			{"ald_refresh_token", "", NULL, EVM_RESTART_ALDRIVER},
 			{"ald_auth_user", "", NULL, EVM_RESTART_ALDRIVER},
 			{"ald_auth_password", "", NULL, EVM_RESTART_ALDRIVER},
@@ -1263,11 +1263,12 @@
 			{"ald_domain_id", "", NULL, EVM_RESTART_ALDRIVER},
 			{"ald_no_trash", "", NULL, EVM_RESTART_ALDRIVER},
 			{"ald_read_only", "", NULL, EVM_RESTART_ALDRIVER},
+			{"scripts.aliyundrive_script.sh", "File", NULL, EVM_RESTART_ALDRIVER},
 			{0,0,0,0}
 		};
 #endif
 
-    struct variable variables_DwebConf[] = {
+	struct variable variables_DwebConf[] = {
 			{"w_ai", "", NULL, FALSE},
 			{"w_vpn_s", "", NULL, FALSE},
 			{"w_vpn_c", "", NULL, FALSE},
@@ -1338,7 +1339,7 @@
 #if defined(USE_MT76X2_AP)
 			{"rt_VgaClamp", "", NULL, EVM_RESTART_WIFI2},
 #endif
-#if defined (USE_WID_2G) && (USE_WID_2G==7615 || USE_WID_2G==7915)
+#if defined (USE_WID_2G) && USE_WID_2G==7615
 			{"rt_turbo_qam", "", NULL, EVM_RESTART_WIFI2},
 			{"rt_airtimefairness", "", NULL, EVM_RESTART_WIFI2},
 #endif
@@ -1435,11 +1436,11 @@
 		{"AdbybyConf",		variables_AdbybyConf},
 #endif
 #if defined(APP_SMARTDNS)
-		{"SmartdnsConf",		variables_SmartdnsConf},
+		{"SmartdnsConf",	variables_SmartdnsConf},
 #endif
-#if defined(APP_NVPPROXY)
-		{"NvpproxyConf",		variables_NvpproxyConf},
-#endif
+/*#if defined(APP_NVPPROXY)
+		{"NvpproxyConf",	variables_NvpproxyConf},
+#endif*/
 #if defined(APP_WIREGUARD)
 		{"WIREGUARD",		variables_WIREGUARD},
 #endif
@@ -1447,7 +1448,7 @@
 		{"ALDRIVER",		variables_ALDRIVER},
 #endif
 		{"DwebConf",		variables_DwebConf},
-		{"LANGUAGE",			variables_Language},
+		{"LANGUAGE",		variables_Language},
 		{0,0}
 	};
 
@@ -1537,7 +1538,7 @@
 		{EVM_RESTART_KOOLPROXY,		EVT_RESTART_KOOLPROXY,		RCN_RESTART_KOOLPROXY,	0},
 #endif
 #if defined(APP_ADGUARDHOME)
-		{EVM_RESTART_ADGUARDHOME,		EVT_RESTART_ADGUARDHOME,		RCN_RESTART_ADGUARDHOME,	0},
+		{EVM_RESTART_ADGUARDHOME,	EVT_RESTART_ADGUARDHOME,	RCN_RESTART_ADGUARDHOME,	0},
 #endif
 #if defined(APP_CADDY)
 		{EVM_RESTART_CADDY,		EVT_RESTART_CADDY,		RCN_RESTART_CADDY,	0},
