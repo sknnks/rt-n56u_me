@@ -44,7 +44,7 @@ function initial(){
 	show_banner(2);
 	show_menu(5,19);
 	show_footer();
-	show_caddy_stroage();
+	show_caddy_storage();
 	show_caddy_dir();
 	switch_caddy_type();
 	fill_status(caddy_status());
@@ -86,14 +86,13 @@ function done_validating(action){
 	refreshpage();
 }
 
-function show_caddy_stroage(){
+function show_caddy_storage(){
 
 	var code = '<option value="-1" >请选择存储设备</option>';
 	code +='<option value="/media/" >/media/</option>';
 	if(pool_names().length == 0)
 		code +='<option value="non" >未发现存储设备</option>';
 	else{
-	
 		for(var i = 0; i < pool_names().length; ++i){
 			code +='<option value="/media/'+ pool_names()[i] +'" >/media/'+ pool_names()[i] + '/</option>';
 		}
@@ -103,13 +102,12 @@ function show_caddy_stroage(){
 
 function show_caddy_dir(){
 
-	var code = '<option value="/tmp" >/tmp/caddy</option>';
+	var code = '<option value="/tmp/" >/tmp/caddy/</option>';
 	if(pool_names().length == 0)
 		code +='<option value="non" >未插入存储设备</option>';
 	else{
-	
 		for(var i = 0; i < pool_names().length; ++i){
-			code +='<option value="/media/'+ pool_names()[i] +'" >/media/'+ pool_names()[i] + '/caddy</option>';
+			code +='<option value="/media/'+ pool_names()[i] +'" >/media/'+ pool_names()[i] + '/caddy/</option>';
 		}
 	}
 	$("caddy_dir").innerHTML = code;
