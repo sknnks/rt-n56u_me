@@ -2,7 +2,7 @@
 
 enable=$(nvram get aliyundrive_enable)
 refresh_token=$(nvram get ald_refresh_token)
-app_dir=$(nvram get aliyundrive_dir)
+app_dir="`nvram get aliyundrive_dir`/aliyun"
 read_buffer_size=$(nvram get ald_read_buffer_size)
 cache_size=$(nvram get ald_cache_size)
 cache_ttl=$(nvram get ald_cache_ttl)

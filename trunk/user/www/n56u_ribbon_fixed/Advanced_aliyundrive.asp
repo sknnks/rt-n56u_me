@@ -79,7 +79,7 @@ function done_validating(action){
 }
 
 function show_aliyundrive_dir(){
-	var code ='<option value="/tmp/" >/tmp/aliyun</option>';
+	var code ='<option value="/tmp" >/tmp/aliyun</option>';
 	if(pool_names().length == 0)
 		code +='<option value="non" >未发现存储设备</option>';
 	else{
