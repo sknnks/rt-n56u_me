@@ -4,7 +4,8 @@ NAME=aliyundrive-webdav
 
 start_ald() {
 	/etc/storage/aliyundrive_script.sh
-	[ -n "$(pidof $NAME)" ] && logger -t "【阿里云webdav】" "启动成功!"
+	aliyun_process=$(pidof $NAME)
+	[ -n "$aliyun_process" ] && echo $aliyun_process > /var/run/aliyun.pid && logger -t "【阿里云webdav】" "启动成功!"
 }
 
 stop_ald() {

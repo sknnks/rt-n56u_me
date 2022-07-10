@@ -31,9 +31,7 @@ if [ ! -f $alibin ];then
 		fi
 fi
 
-if [ `echo -n $refresh_token | sed 's/^app://' | wc -c` = "32" ];then
-	echo $refresh_token > $alirun/refresh_token
-else
+if [ `echo -n $refresh_token | sed 's/^app://' | wc -c` != "32" ];then
 	logger -t "【阿里云webdav】" "错误提示" "refresh_token 参数有误，请检查后重启路由器！" && exit 1
 fi
 
@@ -58,7 +56,9 @@ fi
 
 case "$enable" in
 1|on|true|yes|enabled)
-	options="--host $host --port $port --root $root --refresh-token $refresh_token -S $read_buffer_size --cache-size $cache_size --cache-ttl $cache_ttl --workdir $app_dir"
+	logger -t "【阿里云webdav】" "正在启动，请稍等..."
+	[ ! -d /var/run/aliyun/ ] && mkdir -p /var/run/aliyun/
+	options="--host $host --port $port --root $root --refresh-token $refresh_token -S $read_buffer_size --cache-size $cache_size --cache-ttl $cache_ttl --workdir /var/run/aliyun/"
 	if [ -n $auth_user -a -n $auth_pswd ]; then
 		$alibin $extra_options -U $auth_user -W $auth_pswd $options >/dev/null 2>&1 &
 	else
@@ -67,3 +67,4 @@ case "$enable" in
 	;;
 *)	;;
 esac
+
