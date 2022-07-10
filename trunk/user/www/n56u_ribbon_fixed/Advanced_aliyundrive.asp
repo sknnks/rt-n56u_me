@@ -43,11 +43,17 @@ $j(document).ready(function() {
 function initial(){
 	show_banner(2);
 	show_menu(5,22,0);
-	fill_status(aliyundrive_status());
 	show_footer();
 	show_aliyundrive_dir();
+	fill_status(aliyundrive_status());
 	var o1 = document.form.aliyundrive_dir;
 	o1.value = '<% nvram_get_x("","aliyundrive_dir"); %>';
+	if (!login_safe())
+		textarea_scripts_enabled(0);
+}
+
+function textarea_scripts_enabled(v){
+	inputCtrl(document.form['scripts.aliyundrive_script.sh'], v);
 }
 
 function fill_status(status_code){
@@ -154,10 +160,10 @@ function show_aliyundrive_dir(){
 									<table width="100%" align="center" cellpadding="4" cellspacing="0" class="table">
 										<tr>
 											<th>获取 refresh token</th>
-												<td>
+											<td>
 													<input type="button" class="btn btn-success" value="点击查看获取 refresh token 的方法" onclick="window.open('https://github.com/messense/aliyundrive-webdav#%E8%8E%B7%E5%8F%96-refresh_token')" size="0">
-												</td>
-											</tr>
+											</td>
+										</tr>
 											<tr> 
 												<th><#running_status#></th>
                                             	<td id="aliyundrive_status" colspan="3"></td>
@@ -297,9 +303,7 @@ function show_aliyundrive_dir(){
 												<center><input class="btn btn-primary" style="width: 219px" type="button" value="<#CTL_apply#>" onclick="applyRule()" /></center>
 											</td>
 										</tr>
-</table>
-
-										
+									</table>
 								</div>
 							</div>
 						</div>

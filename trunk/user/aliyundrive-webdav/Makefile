@@ -10,5 +10,8 @@ configure:
 clean:
 
 romfs:
-	#$(ROMFSINST) -p +x $(THISDIR)/aliyundrive-webdav /usr/bin/aliyundrive-webdav
 	$(ROMFSINST) -p +x $(THISDIR)/aliyundrive-webdav.sh /usr/bin/aliyundrive-webdav.sh
+	$(ROMFSINST) /etc_ro/aliyundrive_script.sh
+ifeq ($(CONFIG_FIRMWARE_INCLUDE_ALDRIVERBIN),y)
+	$(ROMFSINST) -p +x $(THISDIR)/aliyundrive-webdav /usr/bin/aliyundrive-webdav
+endif
