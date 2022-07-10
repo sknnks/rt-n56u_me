@@ -2,7 +2,7 @@
 
 enable=$(nvram get aliyundrive_enable)
 refresh_token=$(nvram get ald_refresh_token)
-app_dir="`nvram get aliyundrive_dir`/aliyun"
+aliyundrive_dir=$(nvram get aliyundrive_dir)
 read_buffer_size=$(nvram get ald_read_buffer_size)
 cache_size=$(nvram get ald_cache_size)
 cache_ttl=$(nvram get ald_cache_ttl)
@@ -14,6 +14,7 @@ auth_user=$(nvram get ald_auth_user)
 auth_pswd=$(nvram get ald_auth_password)
 
 NAME=aliyundrive-webdav
+app_dir="$aliyundrive_dir/aliyun"
 alibin="$app_dir/$NAME"
 if [ ! -f $alibin ];then
 		[ ! -d "$app_dir" ] && mkdir -p $app_dir
