@@ -18,12 +18,16 @@ logger -t "自动启动" "正在检查路由是否已连接互联网！"
 count=0
 while :
 do
+	ping -c 1 -W 1 -q www.baidu.com 1>/dev/null 2>&1
+	if [ "$?" == "0" ]; then
+		break
+	fi
 	ping -c 1 -W 1 -q 223.5.5.5 1>/dev/null 2>&1
 	if [ "$?" == "0" ]; then
 		break
 	fi
 	sleep 5
-	ping -c 1 -W 1 -q baidu.com 1>/dev/null 2>&1
+	ping -c 1 -W 1 -q 8.8.8.8 1>/dev/null 2>&1
 	if [ "$?" == "0" ]; then
 		break
 	fi
@@ -69,9 +73,9 @@ logger -t "自动启动" "正在启动zerotier"
 /usr/bin/zerotier.sh start
 fi
 
-if [ $(nvram get nvpproxy_enable) = 1 ] ; then
-logger -t "自动启动" "正在启动nvpproxy"
-/usr/bin/nvpproxy.sh start
+if [ $(nvram get frpc_enable) = 1 ] ; then
+logger -t "自动启动" "正在启动frp client"
+/usr/bin/frp.sh start
 fi
 
 if [ $(nvram get ddnsto_enable) = 1 ] ; then
