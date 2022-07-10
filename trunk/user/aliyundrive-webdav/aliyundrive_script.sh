@@ -20,12 +20,17 @@ if [ ! -f $alibin ];then
 		[ ! -d "$app_dir" ] && mkdir -p $app_dir
 		logger -t "【阿里云webdav】" "未发现程序，稍后自动下载，不同网络情况所需时长不同，请耐心等待!"
 		if [ "$(ping 114.114.114.114 -c 1 -w 10 | grep -o ttl)" ] || [ "$(ping 114.114.115.115 -c 1 -w 10 | grep -o ttl)" ];then
-			logger -t "【阿里云webdav】" "检测设备联网成功，正在下载程序，请稍后..."
+			logger -t "【阿里云webdav】" "网络已联接，正在下载程序，请稍后..."
 			ver="v1.7.1"
 			url="https://github.com/messense/$NAME/releases/download/$ver/$NAME-$ver.mipsel-unknown-linux-musl.tar.gz"
-			wget --no-check-certificate $url -O ald_webdav.tar.gz && tar -zxvf ald_webdav.tar.gz -C $app_dir && rm -f ald_webdav.tar.gz
-			[ -f $alibin ] && [ ! -x $alibin ] &&  chmod +x $alibin	
-			[ -x $alibin ] && logger -t "【阿里云webdav】" "程序下载完成，保存程序文件..."
+			cd /tmp && curl -k -s -o ald_webdav.tar.gz --connect-timeout 10 --retry 3 $url
+			if [ $? -ne 0 ]; then
+				"【阿里云webdav】" "目标URL连接受阻，无法下载程序,请检查网络连接后再尝试!" && exit 1
+			else
+				tar -zxvf ald_webdav.tar.gz -C $app_dir && rm -f ald_webdav.tar.gz
+				[ -f $alibin ] && [ ! -x $alibin ] &&  chmod +x $alibin	
+				[ -x $alibin ] && logger -t "【阿里云webdav】" "程序下载完成，保存程序文件..."
+			fi
 		else
 			logger -t "【阿里云webdav】" "设备未联网，无法下载程序,请检查网络连接后再尝试!" && exit 1
 		fi
