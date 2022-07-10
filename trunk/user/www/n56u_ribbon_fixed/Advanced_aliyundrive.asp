@@ -157,16 +157,15 @@ function show_aliyundrive_dir(){
 										</p>
 									</div>
 									<table width="100%" align="center" cellpadding="4" cellspacing="0" class="table">
+									<tr> <th><#running_status#></th>
+                                    <td id="aliyundrive_status" colspan="3"></td>
+									</tr>
 										<tr>
 											<th>获取 refresh token</th>
 											<td>
 													<input type="button" class="btn btn-success" value="点击查看获取 refresh token 的方法" onclick="window.open('https://github.com/messense/aliyundrive-webdav#%E8%8E%B7%E5%8F%96-refresh_token')" size="0">
 											</td>
 										</tr>
-											<tr> 
-												<th><#running_status#></th>
-                                            	<td id="aliyundrive_status" colspan="3"></td>
-                                        	</tr>
 										<tr>
 										<th width="30%" style="border-top: 0 none;">启用阿里云盘 WebDAV</th>
 											<td style="border-top: 0 none;">
@@ -190,7 +189,7 @@ function show_aliyundrive_dir(){
 										</tr>
 
 										<tr>
-											<th width="30%">云盘app存放目录:</th>
+											<th>云盘app存放目录:</th>
 											<td colspan="2">
 												<select name="aliyundrive_dir" id="aliyundrive_dir" class="input">
 												</select>
