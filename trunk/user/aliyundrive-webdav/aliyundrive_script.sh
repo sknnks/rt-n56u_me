@@ -22,7 +22,7 @@ if [ ! -f $alibin ];then
 	if [ ! -f /tmp/ald_webdav.tar.gz ]; then
 		if [ "$(ping 114.114.114.114 -c 1 -w 10 | grep -o ttl)" ] || [ "$(ping 114.114.115.115 -c 1 -w 10 | grep -o ttl)" ];then
 			logger -t "【阿里云webdav】" "网络已联接，正在下载程序，请稍后..."
-			ver="v1.7.1"
+			ver="v1.7.2"
 			url="https://github.com/messense/$NAME/releases/download/$ver/$NAME-$ver.mipsel-unknown-linux-musl.tar.gz"
 			cd /tmp && curl -k -s -o "ald_webdav.tar.gz" --retry 2 $url
 			if [ $? -ne 0 ]; then
