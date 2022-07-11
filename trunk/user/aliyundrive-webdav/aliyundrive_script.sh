@@ -17,27 +17,33 @@ NAME=aliyundrive-webdav
 app_dir="$aliyundrive_dir/aliyun"
 alibin="$app_dir/$NAME"
 if [ ! -f $alibin ];then
-		[ ! -d "$app_dir" ] && mkdir -p $app_dir
-		logger -t "【阿里云webdav】" "未发现程序，稍后自动下载，不同网络情况所需时长不同，请耐心等待!"
+	[ ! -d "$app_dir" ] && mkdir -p $app_dir
+	logger -t "【阿里云webdav】" "未发现程序，稍后自动下载，不同网络情况所需时长不同，请耐心等待!"
+	if [ ! -f /tmp/ald_webdav.tar.gz ]; then
 		if [ "$(ping 114.114.114.114 -c 1 -w 10 | grep -o ttl)" ] || [ "$(ping 114.114.115.115 -c 1 -w 10 | grep -o ttl)" ];then
-			logger -t "【阿里云webdav】" "网络已连接，正在下载程序，请稍后..."
+			logger -t "【阿里云webdav】" "网络已联接，正在下载程序，请稍后..."
 			ver="v1.7.1"
 			url="https://github.com/messense/$NAME/releases/download/$ver/$NAME-$ver.mipsel-unknown-linux-musl.tar.gz"
-			cd /tmp && curl -k -s -o ald_webdav.tar.gz --connect-timeout 10 --retry 3 $url
+			cd /tmp && curl -k -s -o "ald_webdav.tar.gz" --retry 2 $url
 			if [ $? -ne 0 ]; then
 				logger -t "【阿里云webdav】" "目标URL连接受阻，无法下载程序,请检查网络连接后再尝试!" && exit 1
-			else
-				tar -zxvf ald_webdav.tar.gz -C $app_dir && rm -f ald_webdav.tar.gz
-				[ -f $alibin ] && [ ! -x $alibin ] &&  chmod +x $alibin	
-				[ -x $alibin ] && logger -t "【阿里云webdav】" "程序下载完成，保存程序文件..."
 			fi
 		else
 			logger -t "【阿里云webdav】" "设备未联网，无法下载程序,请检查网络连接后再尝试!" && exit 1
 		fi
+	fi
+	if [ -s /tmp/ald_webdav.tar.gz ]; then
+		tar -zxvf /tmp/ald_webdav.tar.gz -C $app_dir && rm -f /tmp/ald_webdav.tar.gz
+		[ -f $alibin ] && [ ! -x $alibin ] &&  chmod +x $alibin	
+		[ -x $alibin ] && logger -t "【阿里云webdav】" "程序下载完成，保存程序文件..."
+	else
+		rm -f /tmp/ald_webdav.tar.gz
+		logger -t "【阿里云webdav】" "无法解压程序，请手动下载或检查网络连接后再尝试!" && exit 1
+	fi
 fi
 
 if [ `echo -n $refresh_token | sed 's/^app://' | wc -c` != "32" ];then
-	logger -t "【阿里云webdav】" "错误提示" "refresh_token 参数有误，请检查后重启路由器！" && exit 1
+	logger -t "【阿里云webdav】" "refresh_token 参数有误，请检查后重启路由器！" && exit 1
 fi
 
 extra_options="-I"
