@@ -24,7 +24,7 @@ if [ ! -f $alibin ];then
 			logger -t "【阿里云webdav】" "网络已联接，正在下载程序，请稍后..."
 			ver="v1.7.2"
 			url="https://github.com/messense/$NAME/releases/download/$ver/$NAME-$ver.mipsel-unknown-linux-musl.tar.gz"
-			cd /tmp && curl -k -s -o "ald_webdav.tar.gz" --retry 2 $url
+			wget --no-check-certificate -q -t 3 -O "/tmp/ald_webdav.tar.gz" $url
 			if [ $? -ne 0 ]; then
 				logger -t "【阿里云webdav】" "目标URL连接受阻，无法下载程序,请检查网络连接后再尝试!" && exit 1
 			fi
