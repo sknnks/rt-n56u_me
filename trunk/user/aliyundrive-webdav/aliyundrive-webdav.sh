@@ -12,8 +12,7 @@ start_ald() {
 	else
 		aliyun_process=$(pidof $NAME)
 		if [ -n "$aliyun_process" ]; then
-			wport=$(iptables -t filter -L INPUT -v -n --line-numbers | grep dpt:$ald_port | cut -d " " -f 1 | sort -nr | wc -l)
-			if [ "$wport" = 0 ]; then
+			if [ "$(iptables -t filter -L INPUT -v -n --line-numbers | grep dpt:$ald_port | cut -d " " -f 1 | sort -nr | wc -l)" = 0 ]; then
 				iptables -t filter -I INPUT -p tcp --dport $ald_port -j ACCEPT
 				ip6tables -t filter -I INPUT -p tcp --dport $ald_port -j ACCEPT
 			fi
