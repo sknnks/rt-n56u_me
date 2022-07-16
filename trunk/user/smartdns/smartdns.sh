@@ -9,16 +9,16 @@ WHITELIST_IP_CONF="$SMARTDNS_CONF_DIR/smartdns_whitelist-ip.conf"
 CUSTOM_CONF="$SMARTDNS_CONF_DIR/smartdns_custom.conf"
 smartdns_file="/usr/bin/smartdns"
 sdns_enable=`nvram get sdns_enable`
-snds_name=`nvram get snds_name`
+sdns_name=`nvram get sdns_name`
 sdns_port=`nvram get sdns_port`
 sdns_tcp_server=`nvram get sdns_tcp_server`
 sdns_ipv6_server=`nvram get sdns_ipv6_server`
-snds_ip_change=`nvram get snds_ip_change`
+sdns_ip_change=`nvram get sdns_ip_change`
 sdns_ipv6=`nvram get sdns_ipv6`
 sdns_www=`nvram get sdns_www`
 sdns_exp=`nvram get sdns_exp`
-snds_redirect=`nvram get snds_redirect`
-snds_cache=`nvram get snds_cache`
+sdns_redirect=`nvram get sdns_redirect`
+sdns_cache=`nvram get sdns_cache`
 sdns_ttl=`nvram get sdns_ttl`
 sdns_ttl_min=`nvram get sdns_ttl_min`
 sdns_ttl_max=`nvram get sdns_ttl_max`
@@ -62,7 +62,7 @@ get_tz()
 gensmartconf(){
 rm -f $SMARTDNS_CONF
 touch $SMARTDNS_CONF
-echo "server-name $snds_name" >> $SMARTDNS_CONF
+echo "server-name $sdns_name" >> $SMARTDNS_CONF
 	if [ "$sdns_ipv6_server" = "1" ]; then
 		echo "bind" "[::]:$sdns_port" >> $SMARTDNS_CONF
 	else
@@ -76,7 +76,7 @@ echo "server-name $snds_name" >> $SMARTDNS_CONF
 		fi
 	fi
 gensdnssecond
-echo "cache-size $snds_cache" >> $SMARTDNS_CONF
+echo "cache-size $sdns_cache" >> $SMARTDNS_CONF
 if [ $sdns_ipv6 -eq 1 ]; then
 echo "force-AAAA-SOA yes" >> $SMARTDNS_CONF
 elif [ $sdns_ip_change -eq 1 ]; then
