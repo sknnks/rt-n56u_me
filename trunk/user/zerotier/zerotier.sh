@@ -3,7 +3,7 @@
 PROG=/usr/bin/zerotier-one
 PROGCLI=/usr/bin/zerotier-cli
 PROGIDT=/usr/bin/zerotier-idtool
-config_path="/etc/storage/zerotier-one"
+config_path="/var/lib/zerotier-one"
 start_instance() {
 	cfg="$1"
 	echo $cfg
@@ -128,7 +128,7 @@ kill_z() {
 	zerotier_process=$(pidof zerotier-one)
 	if [ -n "$zerotier_process" ]; then
 		logger -t "ZEROTIER" "关闭进程..."
-		killall zerotier-one >/dev/null 2>&1
+		killall -9 zerotier-one >/dev/null 2>&1
 		kill -9 "$zerotier_process" >/dev/null 2>&1
 	fi
 }
