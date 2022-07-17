@@ -123,19 +123,20 @@ zero_route(){
 start_zero() {
 	logger -t "zerotier" "正在启动zerotier"
 	kill_z
-	start_instance 'zerotier'
+	start_instance 'zerotier' &
 
 }
+
 kill_z() {
+	killall -9 zerotier-one >/dev/null 2>&1
 	zerotier_process=$(pidof zerotier-one)
 	if [ -n "$zerotier_process" ]; then
-		logger -t "ZEROTIER" "关闭进程..."
-		killall -9 zerotier-one >/dev/null 2>&1
 		kill -9 "$zerotier_process" >/dev/null 2>&1
 	fi
 }
+
 stop_zero() {
-	logger -t "zerotier" "关闭zerotier"
+	logger -t "ZEROTIER" "关闭进程..."
 	del_rules
 	zero_route "del"
 	kill_z
