@@ -3,30 +3,31 @@
 PROG=/usr/bin/zerotier-one
 PROGCLI=/usr/bin/zerotier-cli
 PROGIDT=/usr/bin/zerotier-idtool
-config_path="/etc/storage/zerotier-one"
+config_path="/var/lib/zerotier-one"
 
 start_instance() {
 	cfg="$1"
 	#echo $cfg
 	port=""
 	args=""
-	moonid="$(nvram get zerotier_moonid)"
 	secret="$(nvram get zerotier_secret)"
+	moonid="$(nvram get zerotier_moonid)"
 	enablemoonserv="$(nvram get zerotiermoon_enable)"
-	if [ ! -d "$config_path" ]; then
-		mkdir -p $config_path
+	path=/etc/storage/zerotier
+	[ -d "$path" ] || mkdir -p $path
+	if [ ! -d "$path" ]; then
+		echo "zerotier config path does not exist: $config_path"
+		return 1
 	fi
+	rm -rf $config_path && ln -s $path $config_path
 	mkdir -p $config_path/networks.d
-	rm -f /var/lib/zerotier-one
-	ln -s $config_path /var/lib/zerotier-one
 	if [ -n "$port" ]; then
 		args="$args -p$port"
 	fi
 	if [ -z "$secret" ]; then
 		logger -t "zerotier" "设备密匙为空,正在生成密匙,请稍后..."
-		sf="$config_path/identity.secret"
-		pf="$config_path/identity.public"
-		$PROGIDT generate "$sf" "$pf" >/dev/null
+		sf="/tmp/zt.$cfg.secret"
+		$PROGIDT generate "$sf" >/dev/null
 		[ $? -ne 0 ] && return 1
 		secret="$(cat $sf)"
 		rm "$sf"
@@ -36,8 +37,8 @@ start_instance() {
 	if [ -n "$secret" ]; then
 		logger -t "zerotier" "找到密匙,正在写入文件,请稍后..."
 		echo "$secret" >$config_path/identity.secret
-		#$PROGIDT getpublic $config_path/identity.secret >$config_path/identity.public
 		rm -f $config_path/identity.public
+		$PROGIDT getpublic $config_path/identity.secret >$config_path/identity.public
 	fi
 
 	add_join $(nvram get zerotier_id)
