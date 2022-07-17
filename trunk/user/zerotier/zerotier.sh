@@ -7,6 +7,7 @@ config_path="/etc/storage/zerotier-one"
 
 start_instance() {
 	cfg="$1"
+	#echo $cfg
 	port=""
 	args=""
 	moonid="$(nvram get zerotier_moonid)"
@@ -35,7 +36,7 @@ start_instance() {
 	if [ -n "$secret" ]; then
 		logger -t "zerotier" "找到密匙,正在写入文件,请稍后..."
 		echo "$secret" >$config_path/identity.secret
-		$PROGIDT getpublic $config_path/identity.secret >$config_path/identity.public
+		#$PROGIDT getpublic $config_path/identity.secret >$config_path/identity.public
 		rm -f $config_path/identity.public
 	fi
 
