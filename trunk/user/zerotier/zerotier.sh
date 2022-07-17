@@ -19,7 +19,7 @@ start_instance() {
 	rm -f /var/lib/zerotier-one
 	ln -s $config_path /var/lib/zerotier-one
 	if [ -n "$port" ]; then
-		args="$args -p${port}"
+		args="$args -p$port"
 	fi
 	if [ -z "$secret" ]; then
 		logger -t "zerotier" "设备密匙为空,正在生成密匙,请稍后..."
