@@ -137,7 +137,7 @@ kill_z() {
 }
 
 stop_zero() {
-	logger -t "ZEROTIER" "关闭进程..."
+	logger -t "zerotier" "关闭进程..."
 	del_rules
 	zero_route "del"
 	kill_z
