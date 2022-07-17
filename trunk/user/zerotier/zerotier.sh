@@ -124,7 +124,6 @@ start_zero() {
 	logger -t "zerotier" "正在启动zerotier"
 	kill_z
 	start_instance 'zerotier' &
-
 }
 
 kill_z() {
