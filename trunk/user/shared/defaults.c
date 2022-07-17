@@ -810,6 +810,8 @@ struct nvram_pair router_defaults[] = {
 	{ "zerotier_id", "" },
 	{ "zerotier_nat", "0" },
 	{ "zerotier_secret", "" },
+	{ "zerotiermoon_enable", "0" },
+	{ "zerotier_moonid", "" },
 	{ "zero_staticnum_x", "0" },
 #endif
 
