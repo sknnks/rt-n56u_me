@@ -3,10 +3,10 @@
 PROG=/usr/bin/zerotier-one
 PROGCLI=/usr/bin/zerotier-cli
 PROGIDT=/usr/bin/zerotier-idtool
-config_path="/var/lib/zerotier-one"
+config_path="/etc/storage/zerotier-one"
+
 start_instance() {
 	cfg="$1"
-	echo $cfg
 	port=""
 	args=""
 	moonid="$(nvram get zerotier_moonid)"
@@ -16,17 +16,19 @@ start_instance() {
 		mkdir -p $config_path
 	fi
 	mkdir -p $config_path/networks.d
+	rm -f /var/lib/zerotier-one
+	ln -s $config_path /var/lib/zerotier-one
 	if [ -n "$port" ]; then
-		args="$args -p$port"
+		args="$args -p${port}"
 	fi
 	if [ -z "$secret" ]; then
 		logger -t "zerotier" "设备密匙为空,正在生成密匙,请稍后..."
 		sf="$config_path/identity.secret"
 		pf="$config_path/identity.public"
-		$PROGIDT generate "$sf" "$pf"  >/dev/null
+		$PROGIDT generate "$sf" "$pf" >/dev/null
 		[ $? -ne 0 ] && return 1
 		secret="$(cat $sf)"
-		#rm "$sf"
+		rm "$sf"
 		nvram set zerotier_secret="$secret"
 		nvram commit
 	fi
@@ -34,15 +36,15 @@ start_instance() {
 		logger -t "zerotier" "找到密匙,正在写入文件,请稍后..."
 		echo "$secret" >$config_path/identity.secret
 		$PROGIDT getpublic $config_path/identity.secret >$config_path/identity.public
-		#rm -f $config_path/identity.public
+		rm -f $config_path/identity.public
 	fi
 
 	add_join $(nvram get zerotier_id)
 
 	$PROG $args $config_path >/dev/null 2>&1 &
-		
+
 	rules
-	
+
 	if [ -n "$moonid" ]; then
 		$PROGCLI -D$config_path orbit $moonid $moonid
 		logger -t "zerotier" "orbit moonid $moonid ok!"
