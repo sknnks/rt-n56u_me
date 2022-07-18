@@ -443,6 +443,7 @@ menu "WiFi Operation Modes"
     if WIFI_MODE_AP || WIFI_MODE_BOTH
 		source "drivers/net/wireless/ralink/mt7615_ap/Kconfig"
     endif
+
 endmenu	
 
 endif
