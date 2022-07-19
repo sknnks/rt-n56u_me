@@ -21,9 +21,9 @@ have that yet.
 +endif
 +
 +ifeq ($(ZT_SSO_SUPPORTED), 1)
- 	ifeq ($(ZT_DEBUG),1)
- 		LDLIBS+=zeroidc/target/debug/libzeroidc.a -ldl -lssl -lcrypto
- 	else
+ 	ifeq ($(ZT_EMBEDDED),)
+ 		override DEFS+=-DZT_SSO_SUPPORTED=1
+ 		ifeq ($(ZT_DEBUG),1)
 --- a/node/Constants.hpp
 +++ b/node/Constants.hpp
 @@ -73,6 +73,11 @@
