@@ -169,10 +169,6 @@ LIBS_INCLUDE_LIBSSL=y
 LIBS_INCLUDE_LIBPCAP=y
 endif
 
-ifeq ($(CONFIG_FIRMWARE_INCLUDE_TRANSMISSION),y)
-LIBS_INCLUDE_LIBEVENT=y
-endif
-
 ifeq ($(CONFIG_FIRMWARE_INCLUDE_REDSOCKS),y)
 LIBS_INCLUDE_LIBEVENT=y
 endif
@@ -224,7 +220,7 @@ dir_y						+= libconfuse
 ifneq ($(CONFIG_WITHOUT_KERNEL),y)
 dir_$(CONFIG_FIRMWARE_INCLUDE_IPSET)		+= libmnl
 endif
-dir_$(LIBS_INCLUDE_LIBPCAP)		+= libpcap
+dir_$(LIBS_INCLUDE_LIBPCAP)			+= libpcap
 
 # minidlna and firefly shared libs
 dir_$(LIBS_INCLUDE_MEDIA)			+= libid3tag
@@ -235,13 +231,15 @@ dir_$(CONFIG_FIRMWARE_INCLUDE_MINIDLNA)		+= libogg
 dir_$(CONFIG_FIRMWARE_INCLUDE_MINIDLNA)		+= libvorbis
 dir_$(LIBS_INCLUDE_MEDIA)			+= libflac
 dir_$(LIBS_INCLUDE_MEDIA)			+= libsqlite
-dir_$(LIBS_INCLUDE_LIBEVENT)			+= libevent
+
+# transmission shared libs
+dir_$(CONFIG_FIRMWARE_INCLUDE_TRANSMISSION)	+= libevent
 
 # aria2 shared libs
-dir_$(LIBS_INCLUDE_LIBXML2)		+= libxml2
+dir_$(LIBS_INCLUDE_LIBXML2)			+= libxml2
 
-dir_$(LIBS_INCLUDE_C_ARES)		+= c-ares
-dir_$(LIBS_INCLUDE_READLINE)		+= readline
+dir_$(LIBS_INCLUDE_C_ARES)			+= c-ares
+dir_$(LIBS_INCLUDE_READLINE)			+= readline
 
 ifneq (,$(filter y,$(CONFIG_FIRMWARE_INCLUDE_NFSD) $(CONFIG_FIRMWARE_INCLUDE_NFSC)))
 dir_y						+= libtirpc
@@ -280,4 +278,3 @@ clean:
 			rm -f $(DESTDIR)/.installed_$$i ; \
 		fi ; \
 	done
-
