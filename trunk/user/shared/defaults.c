@@ -222,7 +222,7 @@ struct nvram_pair router_defaults[] = {
 	{ "wl_greenap", "0" },
 	{ "wl_ldpc", "2" },
 	{ "wl_HT_RDG", "0" },
-#if defined (USE_WID_5G) && USE_WID_5G==7615
+#if defined (USE_WID_5G) && (USE_WID_5G==7615)
 	{ "wl_HT_AMSDU", "1" },
 	{ "wl_HT_BAWinSize", "256" },
 	{ "wl_mumimo", "0" },
@@ -332,7 +332,7 @@ struct nvram_pair router_defaults[] = {
 	{ "rt_HT_80211KV", "1" },
 	{ "rt_HT_80211R", "0" },
 	{ "rt_HT_MpduDensity", "5" },
-#if defined (USE_WID_2G) && USE_WID_2G==7615
+#if defined (USE_WID_2G) && (USE_WID_2G==7615)
 	{ "rt_HT_BAWinSize", "256" },
 	{ "rt_ldpc", "1" },
 	{ "rt_turbo_qam", "1" },
@@ -486,12 +486,12 @@ struct nvram_pair router_defaults[] = {
 	{ "aliddns_domain6", "" },
 #endif
 
-/*#if defined(APP_NVPPROXY)
-	#Nvpproxy
+#if defined(APP_NVPPROXY)
+	/* Nvpproxy */
 	{ "nvpproxy_enable", "0" },
 	{ "nvpproxy_wan_port", "9999" },
 	{ "nvpproxy_vpn_port", "1194" },
-#endif*/
+#endif
 
 	{ "hdd_spindt", "0" },
 	{ "hdd_apmoff", "0" },
@@ -770,6 +770,7 @@ struct nvram_pair router_defaults[] = {
 	/* AdguargHome */
 	{ "adg_enable", "0" },
 	{ "adg_redirect", "0" },
+	{ "adg_link", "https://cdn.jsdelivr.net/gh/chongshengB/rt-n56u/trunk/user/adguardhome/AdGuardHome" },
 #endif
 
 #if defined(APP_CADDY)

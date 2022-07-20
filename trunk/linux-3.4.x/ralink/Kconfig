@@ -389,6 +389,72 @@ endmenu
 endif
 
 if (RT_FIRST_IF_MT7615E || RT_SECOND_IF_MT7615E)
+menu "MT7615 common configs"
+
+choice
+        prompt "PA LNA Type of 1st Card"
+		depends on ! RT_FIRST_IF_NONE
+		
+		config FIRST_IF_EPAELNA
+		bool "ePAeLNA"
+		config FIRST_IF_IPAILNA
+		bool "iPAiLNA"		
+		config FIRST_IF_IPAELNA
+		bool "iPAeLNA"
+#		config FIRST_IF_EPAILNA
+#		bool "ePAiLNA"
+endchoice
+
+choice
+        prompt "PA LNA Type of 2nd Card"
+		depends on ! RT_SECOND_IF_NONE
+		
+		config SECOND_IF_EPAELNA
+		bool "ePAeLNA"
+		config SECOND_IF_IPAILNA
+		bool "iPAiLNA"		
+		config SECOND_IF_IPAELNA
+		bool "iPAeLNA"
+#		config SECOND_IF_EPAILNA
+#		bool "ePAiLNA"
+endchoice
+
+choice
+        prompt "PA LNA Type of 3rd Card"
+		depends on ! RT_THIRD_IF_NONE
+		
+		config THIRD_IF_EPAELNA
+		bool "ePAeLNA"
+		config THIRD_IF_IPAILNA
+		bool "iPAiLNA"		
+		config THIRD_IF_IPAELNA
+		bool "iPAeLNA"
+#		config THIRD_IF_EPAILNA
+#		bool "ePAiLNA"
+endchoice
+
+choice
+	prompt "Main Mode"
+	default WIFI_MODE_AP
+
+	config WIFI_MODE_AP
+			tristate "AP"
+			select MT_AP_SUPPORT
+
+	config WIFI_MODE_STA
+			tristate "STA"
+			select MT_STA_SUPPORT
+
+	config WIFI_MODE_BOTH
+			tristate "APSTA"
+			select MT_AP_SUPPORT
+			select MT_STA_SUPPORT
+endchoice
+
+endmenu
+endif
+
+if (RT_FIRST_IF_MT7615E || RT_SECOND_IF_MT7615E)
 menu "AP MODE MediaTek MT7615E PCIe Wireless driver"
 source "drivers/net/wireless/ralink/mt7615/embedded/Kconfig"
 endmenu

@@ -7,20 +7,19 @@ config_path="/var/lib/zerotier-one"
 
 start_instance() {
 	cfg="$1"
-	#echo $cfg
 	port=""
 	args=""
 	secret="$(nvram get zerotier_secret)"
 	moonid="$(nvram get zerotier_moonid)"
 	enablemoonserv="$(nvram get zerotiermoon_enable)"
-	path=/etc/storage/zerotier
+	path="/etc/storage/zerotier"
 	[ -d "$path" ] || mkdir -p $path
 	if [ ! -d "$path" ]; then
 		echo "zerotier config path does not exist: $config_path"
 		return 1
 	fi
-	rm -rf $config_path && ln -s $path $config_path
-	mkdir -p $config_path/networks.d
+	[ -d "$config_path" ] && rm -rf $config_path
+	ln -s $path $config_path
 	if [ -n "$port" ]; then
 		args="$args -p$port"
 	fi
@@ -65,6 +64,8 @@ start_instance() {
 }
 
 add_join() {
+		[ -d "$config_path/networks.d" ] || mkdir -p $config_path/networks.d
+		rm -f $config_path/networks.d/*
 		touch $config_path/networks.d/$1.conf
 }
 
