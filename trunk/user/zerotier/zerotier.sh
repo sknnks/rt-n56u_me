@@ -41,16 +41,13 @@ start_instance() {
 	fi
 
 	add_join $(nvram get zerotier_id)
-
 	$PROG $args $config_path >/dev/null 2>&1 &
-
 	rules
 
 	if [ -n "$moonid" ]; then
 		$PROGCLI -D$config_path orbit $moonid $moonid
 		logger -t "zerotier" "orbit moonid $moonid ok!"
 	fi
-
 
 	if [ -n "$enablemoonserv" ]; then
 		if [ "$enablemoonserv" -eq "1" ]; then
@@ -69,42 +66,37 @@ add_join() {
 		touch $config_path/networks.d/$1.conf
 }
 
-
 rules() {
 	while [ "$(ifconfig | grep zt | awk '{print $1}')" = "" ]; do
 		sleep 1
 	done
-	nat_enable=$(nvram get zerotier_nat)
 	zt0=$(ifconfig | grep zt | awk '{print $1}')
 	logger -t "zerotier" "zt interface $zt0 is started!"
 	del_rules
 	iptables -A INPUT -i $zt0 -j ACCEPT
 	iptables -A FORWARD -i $zt0 -o $zt0 -j ACCEPT
 	iptables -A FORWARD -i $zt0 -j ACCEPT
-	if [ $nat_enable -eq 1 ]; then
+	if [ "$(nvram get zerotier_nat)" -eq "1" ]; then
 		iptables -t nat -A POSTROUTING -o $zt0 -j MASQUERADE
-		while [ "$(ip route | grep "dev $zt0  proto" | awk '{print $1}')" = "" ]; do
-			sleep 1
-	    done
-		ip_segment=`ip route | grep "dev $zt0  proto" | awk '{print $1}'`
+		ip_segment="$(ip route | grep "dev $zt0  proto kernel" | awk '{print $1}')"
 		iptables -t nat -A POSTROUTING -s $ip_segment -j MASQUERADE
 		zero_route "add"
 	fi
-
 }
 
 del_rules() {
 	zt0=$(ifconfig | grep zt | awk '{print $1}')
-	ip_segment=`ip route | grep "dev $zt0  proto" | awk '{print $1}'`
 	iptables -D FORWARD -i $zt0 -j ACCEPT 2>/dev/null
 	iptables -D FORWARD -o $zt0 -j ACCEPT 2>/dev/null
 	iptables -D FORWARD -i $zt0 -o $zt0 -j ACCEPT
 	iptables -D INPUT -i $zt0 -j ACCEPT 2>/dev/null
 	iptables -t nat -D POSTROUTING -o $zt0 -j MASQUERADE 2>/dev/null
+	ip_segment="$(ip route | grep "dev $zt0  proto kernel" | awk '{print $1}')"
 	iptables -t nat -D POSTROUTING -s $ip_segment -j MASQUERADE 2>/dev/null
 }
 
 zero_route(){
+	zt0=$(ifconfig | grep zt | awk '{print $1}')
 	rulesnum=`nvram get zero_staticnum_x`
 	for i in $(seq 1 $rulesnum)
 	do
