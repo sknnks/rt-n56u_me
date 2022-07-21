@@ -37,7 +37,7 @@ start_instance() {
 		logger -t "zerotier" "找到密匙,正在写入文件,请稍后..."
 		echo "$secret" >$config_path/identity.secret
 		rm -f $config_path/identity.public
-		$PROGIDT getpublic $config_path/identity.secret >$config_path/identity.public
+		$PROGIDT getpublic "$config_path/identity.secret" >"$config_path/identity.public"
 	fi
 
 	add_join "$(nvram get zerotier_id)"
@@ -118,7 +118,7 @@ zero_route(){
 start_zero() {
 	logger -t "zerotier" "正在启动zerotier"
 	kill_z
-	start_instance 'zerotier' &
+	start_instance "zerotier" &
 }
 
 kill_z() {
