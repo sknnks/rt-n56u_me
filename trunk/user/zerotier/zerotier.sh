@@ -54,7 +54,7 @@ start_instance() {
 			logger -t "zerotier" "creat moon start"
 			creat_moon
 		else
-			logger -t "zerotier" "remove moon start"
+			logger -t "zerotier" "moon start cancelled"
 			remove_moon
 		fi
 	fi
