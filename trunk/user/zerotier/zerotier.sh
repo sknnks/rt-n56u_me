@@ -97,7 +97,7 @@ del_rules() {
 
 zero_route(){
 	zt0="$(ifconfig | grep zt | awk '{print $1}')"
-	rulesnum=`nvram get zero_staticnum_x`
+	rulesnum="`nvram get zero_staticnum_x`"
 	for i in $(seq 1 $rulesnum)
 	do
 		j="`expr $i - 1`"
