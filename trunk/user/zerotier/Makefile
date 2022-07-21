@@ -1,4 +1,4 @@
-SRC_NAME = ZeroTierOne-1.8.9
+SRC_NAME = ZeroTierOne-1.4.6
 THISDIR = $(shell pwd)
 FLAGS := DEFS=""
 CFLAGS := -O3 -ffunction-sections -fdata-sections
@@ -10,9 +10,7 @@ all: extract_test
 extract_test:
 	( if [ ! -d $(SRC_NAME) ]; then \
 		tar xf $(SRC_NAME).tar.gz ; \
-		patch -d $(SRC_NAME) -p1 -i ../0001-fix-makefile.patch; \
-		patch -d $(SRC_NAME) -p1 -i ../0002-fix-compilation-for-arm_cortex-a7-neon.patch; \
-		patch -d $(SRC_NAME) -p1 -i ../0003-do-not-use-zt-SSO-and-OIDC.patch; \
+		patch -d $(SRC_NAME) -p1 -i ../0002-remove-pie.patch; \
 	fi )
 
 config_test:
