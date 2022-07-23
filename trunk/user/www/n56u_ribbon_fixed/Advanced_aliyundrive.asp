@@ -29,6 +29,7 @@ var $j = jQuery.noConflict();
 
 $j(document).ready(function() {
 	init_itoggle('aliyundrive_enable');
+	init_itoggle('ald_skip_upload');
 	init_itoggle('ald_no_trash');
 	init_itoggle('ald_read_only');
 	init_itoggle('ald_domain_id');
@@ -182,13 +183,13 @@ function show_aliyundrive_dir(){
 
 										<tr>
 										<th>Refresh Token</th>
-										<td>
-											<input type="text" class="input" name="ald_refresh_token" id="ald_refresh_token" style="width: 200px" value="<% nvram_get_x("","ald_refresh_token"); %>" />
-										</td>
+											<td>
+												<input type="text" class="input" name="ald_refresh_token" id="ald_refresh_token" style="width: 200px" value="<% nvram_get_x("","ald_refresh_token"); %>" />
+											</td>
 										</tr>
 
 										<tr>
-											<th>云盘app存放目录:</th>
+										<th>云盘app存放目录:</th>
 											<td colspan="2">
 												<select name="aliyundrive_dir" id="aliyundrive_dir" class="input">
 												</select>
@@ -204,52 +205,76 @@ function show_aliyundrive_dir(){
 
 										<tr>
 										<th>监听主机</th>
-				<td>
-					<input type="text" class="input" name="ald_host" id="ald_host" style="width: 200px" value="<% nvram_get_x("","ald_host"); %>" />
-				</td>
-
+											<td>
+												<input type="text" class="input" name="ald_host" id="ald_host" style="width: 200px" value="<% nvram_get_x("","ald_host"); %>" />
+											</td>
 										</tr>
+
 										<tr>
 										<th>监听端口</th>
-				<td>
-					<input type="text" class="input" name="ald_port" id="ald_port" style="width: 200px" value="<% nvram_get_x("","ald_port"); %>" />
-				</td>
-
+											<td>
+												<input type="text" class="input" name="ald_port" id="ald_port" style="width: 200px" value="<% nvram_get_x("","ald_port"); %>" />
+											</td>
 										</tr>
+
 										<tr>
 										<th>用户名</th>
-				<td>
-					<input type="text" class="input" name="ald_auth_user" id="ald_auth_user" style="width: 200px" value="<% nvram_get_x("","ald_auth_user"); %>" />
-				</td>
-
+											<td>
+												<input type="text" class="input" name="ald_auth_user" id="ald_auth_user" style="width: 200px" value="<% nvram_get_x("","ald_auth_user"); %>" />
+											</td>
 										</tr>
+
 										<tr>
 										<th>密码</th>
-				<td>
-					<input type="text" class="input" name="ald_auth_password" id="ald_auth_password" style="width: 200px" value="<% nvram_get_x("","ald_auth_password"); %>" />
-				</td>
-
+											<td>
+												<input type="text" class="input" name="ald_auth_password" id="ald_auth_password" style="width: 200px" value="<% nvram_get_x("","ald_auth_password"); %>" />
+											</td>
 										</tr>
+
 										<tr>
 										<th>下载缓冲大小(bytes)</th>
-				<td>
-					<input type="text" class="input" name="ald_read_buffer_size" id="ald_read_buffer_size" style="width: 200px" value="<% nvram_get_x("","ald_read_buffer_size"); %>" />
-				</td>
-
+											<td>
+												<input type="text" class="input" name="ald_read_buffer_size" id="ald_read_buffer_size" style="width: 200px" value="<% nvram_get_x("","ald_read_buffer_size"); %>" />
+											</td>
 										</tr>
+
 										<tr>
 										<th>目录缓存大小</th>
-				<td>
-					<input type="text" class="input" name="ald_cache_size" id="ald_cache_size" style="width: 200px" value="<% nvram_get_x("","ald_cache_size"); %>" />
-				</td>
-
+											<td>
+												<input type="text" class="input" name="ald_cache_size" id="ald_cache_size" style="width: 200px" value="<% nvram_get_x("","ald_cache_size"); %>" />
+											</td>
 										</tr>
+
 										<tr>
 										<th>目录缓存过期时间（单位为秒）</th>
-				<td>
-					<input type="text" class="input" name="ald_cache_ttl" id="ald_cache_ttl" style="width: 200px" value="<% nvram_get_x("","ald_cache_ttl"); %>" />
-				</td>
-				<tr>
+											<td>
+												<input type="text" class="input" name="ald_cache_ttl" id="ald_cache_ttl" style="width: 200px" value="<% nvram_get_x("","ald_cache_ttl"); %>" />
+											</td>
+										</tr>
+
+										<tr>
+										<th>上传缓冲大小(bytes)</th>
+											<td>
+												<input type="text" class="input" name="ald_upload_buffer_size" id="ald_upload_buffer_size" style="width: 200px" value="<% nvram_get_x("","ald_upload_buffer_size"); %>" />
+											</td>
+										</tr>
+
+										<tr>
+										<th width="30%" style="border-top: 0 none;">上传时忽略大小相同文件</th>
+											<td style="border-top: 0 none;">
+													<div class="main_itoggle">
+													<div id="ald_skip_upload_on_of">
+														<input type="checkbox" id="ald_skip_upload_fake" <% nvram_match_x("", "ald_skip_upload", "1", "value=1 checked"); %><% nvram_match_x("", "ald_skip_upload", "0", "value=0"); %>  />
+													</div>
+												</div>
+												<div style="position: absolute; margin-left: -10000px;">
+													<input type="radio" value="1" name="ald_skip_upload" id="ald_skip_upload_1" class="input" value="1" <% nvram_match_x("", "ald_skip_upload", "1", "checked"); %> /><#checkbox_Yes#>
+													<input type="radio" value="0" name="ald_skip_upload" id="ald_skip_upload_0" class="input" value="0" <% nvram_match_x("", "ald_skip_upload", "0", "checked"); %> /><#checkbox_No#>
+												</div>
+											</td>
+										</tr>
+
+										<tr>
 										<th width="30%" style="border-top: 0 none;">禁止上传、修改和删除文件操作</th>
 											<td style="border-top: 0 none;">
 													<div class="main_itoggle">
@@ -262,8 +287,8 @@ function show_aliyundrive_dir(){
 													<input type="radio" value="0" name="ald_no_trash" id="ald_no_trash_0" class="input" value="0" <% nvram_match_x("", "ald_no_trash", "0", "checked"); %> /><#checkbox_No#>
 												</div>
 											</td>
-
 										</tr>
+
 										<tr>
 										<th width="30%" style="border-top: 0 none;">启用只读模式</th>
 											<td style="border-top: 0 none;">
@@ -277,7 +302,7 @@ function show_aliyundrive_dir(){
 													<input type="radio" value="0" name="ald_read_only" id="ald_read_only_0" class="input" value="0" <% nvram_match_x("", "ald_read_only", "0", "checked"); %> /><#checkbox_No#>
 												</div>
 											</td>
-										</tr>								
+										</tr>
 										<!--
 										<tr>
 										<th width="30%" style="border-top: 0 none;">阿里云相册与云盘服务 domainId</th>

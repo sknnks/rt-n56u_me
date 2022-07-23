@@ -26,7 +26,7 @@ start_instance() {
 	if [ -z "$secret" ]; then
 		logger -t "zerotier" "设备密匙为空,正在生成密匙,请稍后..."
 		sf="/tmp/zt.$cfg.secret"
-		$PROGIDT generate "$sf" >/dev/null
+		$PROGIDT generate $sf >/dev/null
 		[ $? -ne 0 ] && return 1
 		secret="$(cat $sf)"
 		rm "$sf"
@@ -37,7 +37,7 @@ start_instance() {
 		logger -t "zerotier" "找到密匙,正在写入文件,请稍后..."
 		echo "$secret" >$config_path/identity.secret
 		rm -f $config_path/identity.public
-		$PROGIDT getpublic "$config_path/identity.secret" >"$config_path/identity.public"
+		$PROGIDT getpublic $config_path/identity.secret >$config_path/identity.public
 	fi
 
 	add_join "$(nvram get zerotier_id)"
@@ -71,8 +71,8 @@ rules() {
 		sleep 1
 	done
 	zt0="$(ifconfig | grep zt | awk '{print $1}')"
+	del_rules "$zt0"
 	logger -t "zerotier" "zt interface $zt0 is started!"
-	del_rules
 	iptables -A INPUT -i "$zt0" -j ACCEPT
 	iptables -A FORWARD -i "$zt0" -o "$zt0" -j ACCEPT
 	iptables -A FORWARD -i "$zt0" -j ACCEPT
@@ -80,37 +80,31 @@ rules() {
 		iptables -t nat -A POSTROUTING -o "$zt0" -j MASQUERADE
 		ip_segment="$(ip route | grep "dev $zt0  proto kernel" | awk '{print $1}')"
 		iptables -t nat -A POSTROUTING -s "${ip_segment}" -j MASQUERADE
-		zero_route "add"
+		zero_route "add" "$zt0"
 	fi
 }
 
 del_rules() {
-	zt0="$(ifconfig | grep zt | awk '{print $1}')"
-	ip_segment="$(ip route | grep "dev $zt0  proto kernel" | awk '{print $1}')"
-	iptables -D FORWARD -i "$zt0" -j ACCEPT 2>/dev/null
-	iptables -D FORWARD -o "$zt0" -j ACCEPT 2>/dev/null
-	iptables -D FORWARD -i "$zt0" -o "$zt0" -j ACCEPT 2>/dev/null
-	iptables -D INPUT -i "$zt0" -j ACCEPT 2>/dev/null
-	iptables -t nat -D POSTROUTING -o "$zt0" -j MASQUERADE 2>/dev/null
+	ip_segment="$(ip route | grep "dev $1  proto kernel" | awk '{print $1}')"
+	iptables -D FORWARD -i "$1" -j ACCEPT 2>/dev/null
+	iptables -D FORWARD -o "$1" -j ACCEPT 2>/dev/null
+	iptables -D FORWARD -i "$1" -o "$1" -j ACCEPT 2>/dev/null
+	iptables -D INPUT -i "$1" -j ACCEPT 2>/dev/null
+	iptables -t nat -D POSTROUTING -o "$1" -j MASQUERADE 2>/dev/null
 	iptables -t nat -D POSTROUTING -s "${ip_segment}" -j MASQUERADE 2>/dev/null
 }
 
 zero_route(){
-	zt0="$(ifconfig | grep zt | awk '{print $1}')"
 	rulesnum="`nvram get zero_staticnum_x`"
 	for i in $(seq 1 $rulesnum)
 	do
 		j="`expr $i - 1`"
-		route_enable="`nvram get zero_enable_x$j`"
 		zero_ip="`nvram get zero_ip_x$j`"
 		zero_route="`nvram get zero_route_x$j`"
 		if [ "$1" = "add" ]; then
-			if [ "$route_enable" -ne 0 ]; then
-				ip route add "$zero_ip" via "$zero_route" dev "$zt0"
-				echo "$zt0"
-			fi
-		else
-			ip route del "$zero_ip" via "$zero_route" dev "$zt0"
+			[ "$(nvram get zero_enable_x$j)" -eq 1 ] && ip route add "$zero_ip" via "$zero_route" dev "$2"
+		elif [ "$1" = "del" ]; then
+			[ -n "ip route | grep $zero_ip" ] && ip route del "$zero_ip" via "$zero_route" dev "$2"
 		fi
 	done
 }
@@ -118,7 +112,7 @@ zero_route(){
 start_zero() {
 	logger -t "zerotier" "正在启动zerotier"
 	kill_z
-	start_instance "zerotier" &
+	start_instance 'zerotier' &
 }
 
 kill_z() {
@@ -132,7 +126,7 @@ kill_z() {
 stop_zero() {
 	logger -t "zerotier" "关闭进程..."
 	del_rules
-	zero_route "del"
+	zero_route "del" "$(ifconfig | grep zt | awk '{print $1}')"
 	kill_z
 	rm -rf $config_path
 }
@@ -158,7 +152,7 @@ creat_moon(){
 	logger -t "zerotier" "moonip $ip_addr"
 	if [ -e "$config_path/identity.public" ]; then
 
-		$PROGIDT initmoon "$config_path/identity.public" > "$config_path/moon.json"
+		$PROGIDT initmoon $config_path/identity.public >$config_path/moon.json
 		if `sed -i "s/\[\]/\[ \"$ip_addr\/9993\" \]/" $config_path/moon.json >/dev/null 2>/dev/null`; then
 			logger -t "zerotier" "生成moon配置文件成功"
 		else
@@ -168,7 +162,7 @@ creat_moon(){
 		logger -t "zerotier" "生成签名文件"
 		cd $config_path
 		pwd
-		$PROGIDT genmoon "$config_path/moon.json"
+		$PROGIDT genmoon $config_path/moon.json
 		[ $? -ne 0 ] && return 1
 		logger -t "zerotier" "创建moons.d文件夹，并把签名文件移动到文件夹内"
 		[ -d "$config_path/moons.d" ] || mkdir -p "$config_path/moons.d"
