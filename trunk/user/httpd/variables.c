@@ -732,6 +732,8 @@
 			{"ddns_hostname2_x", "", NULL, EVM_RESTART_DDNS},
 			{"ddns_hostname3_x", "", NULL, EVM_RESTART_DDNS},
 			{"ddns_wildcard_x", "", NULL, EVM_RESTART_DDNS},
+			{"ddns2_wildcard_x", "", NULL, EVM_RESTART_DDNS},
+			{"ddns_ipv6", "", NULL, EVM_RESTART_DDNS},
 			{"ddns_cst_svr", "", NULL, EVM_RESTART_DDNS },
 			{"ddns_cst_url", "", NULL, EVM_RESTART_DDNS },
 			{"ddns_period", "", NULL, EVM_RESTART_DDNS },
@@ -739,6 +741,7 @@
 			{"ddns_verbose", "", NULL, EVM_RESTART_DDNS },
 			{"ddns_source", "", NULL, EVM_RESTART_DDNS },
 			{"ddns_checkip", "", NULL, EVM_RESTART_DDNS },
+			{"ddns2_checkip", "", NULL, EVM_RESTART_DDNS },
 #if defined (SUPPORT_DDNS_SSL)
 			{"ddns_ssl", "", NULL, EVM_RESTART_DDNS },
 			{"ddns2_ssl", "", NULL, EVM_RESTART_DDNS },
@@ -1260,12 +1263,14 @@
 			{"ald_host", "", NULL, EVM_RESTART_ALDRIVER},
 			{"ald_port", "", NULL, EVM_RESTART_ALDRIVER},
 			{"ald_root", "", NULL, EVM_RESTART_ALDRIVER},
-			{"ald_domain_id", "", NULL, EVM_RESTART_ALDRIVER},
+			{"ald_upload_buffer_size", "", NULL, EVM_RESTART_ALDRIVER},
+			{"ald_skip_upload", "", NULL, EVM_RESTART_ALDRIVER},
 			{"ald_no_trash", "", NULL, EVM_RESTART_ALDRIVER},
 			{"ald_read_only", "", NULL, EVM_RESTART_ALDRIVER},
+			{"ald_domain_id", "", NULL, EVM_RESTART_ALDRIVER},
 			{"scripts.aliyundrive_script.sh", "File", NULL, EVM_RESTART_ALDRIVER},
 			{0,0,0,0}
-		};
+	};
 #endif
 
 	struct variable variables_DwebConf[] = {
