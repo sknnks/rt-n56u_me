@@ -885,6 +885,7 @@ struct nvram_pair router_defaults[] = {
 	{ "ald_auth_user", "" },
 	{ "ald_auth_pswd", "" },
 	{ "ald_read_buffer_size", "10485760" },
+	{ "ald_upload_buffer_size", "16777216" },
 	{ "ald_cache_size", "1000" },
 	{ "ald_cache_ttl", "600" },
 	{ "ald_host", "0.0.0.0" },
