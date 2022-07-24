@@ -27,8 +27,8 @@ start_ald() {
 stop_ald() {
 	aliyun_process=$(pidof $NAME)
 	if [ -n "$aliyun_process" ]; then
+		logger -t "【阿里云webdav】" "关闭程序..."
 		ip_rules "del"
-		logger -t "【阿里云webdav】" "关闭进程..."
 		killall -q $NAME >/dev/null 2>&1
 		kill -9 "$aliyun_process" >/dev/null 2>&1
 	fi
