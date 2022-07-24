@@ -889,6 +889,7 @@ struct nvram_pair router_defaults[] = {
 	{ "ald_cache_ttl", "600" },
 	{ "ald_host", "0.0.0.0" },
 	{ "ald_port", "8080" },
+	{ "aliyun_wan", "0" },
 	{ "ald_root", "/" },
 	{ "ald_domain_id", "0" },
 	{ "ald_upload_buffer_size", "8388608" },

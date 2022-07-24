@@ -1262,6 +1262,7 @@
 			{"ald_cache_ttl", "", NULL, EVM_RESTART_ALDRIVER},
 			{"ald_host", "", NULL, EVM_RESTART_ALDRIVER},
 			{"ald_port", "", NULL, EVM_RESTART_ALDRIVER},
+			{"aliyun_wan", "", NULL, EVM_RESTART_ALDRIVER},
 			{"ald_root", "", NULL, EVM_RESTART_ALDRIVER},
 			{"ald_upload_buffer_size", "", NULL, EVM_RESTART_ALDRIVER},
 			{"ald_skip_upload", "", NULL, EVM_RESTART_ALDRIVER},

@@ -29,6 +29,7 @@ var $j = jQuery.noConflict();
 
 $j(document).ready(function() {
 	init_itoggle('aliyundrive_enable');
+	init_itoggle('aliyun_wan');
 	init_itoggle('ald_skip_upload');
 	init_itoggle('ald_no_trash');
 	init_itoggle('ald_read_only');
@@ -214,6 +215,21 @@ function show_aliyundrive_dir(){
 										<th>监听端口</th>
 											<td>
 												<input type="text" class="input" name="ald_port" id="ald_port" style="width: 200px" value="<% nvram_get_x("","ald_port"); %>" />
+											</td>
+										</tr>
+
+										<tr>
+										<th>WAN 访问开关</th>
+											<td>
+													<div class="main_itoggle">
+													<div id="aliyun_wan_on_of">
+														<input type="checkbox" id="aliyun_wan_fake" <% nvram_match_x("", "aliyun_wan", "1", "value=1 checked"); %><% nvram_match_x("", "aliyun_wan", "0", "value=0"); %>  />
+													</div>
+												</div>
+												<div style="position: absolute; margin-left: -10000px;">
+													<input type="radio" value="1" name="aliyun_wan" id="aliyun_wan_1" class="input" value="1" <% nvram_match_x("", "aliyun_wan", "1", "checked"); %> /><#checkbox_Yes#>
+													<input type="radio" value="0" name="aliyun_wan" id="aliyun_wan_0" class="input" value="0" <% nvram_match_x("", "aliyun_wan", "0", "checked"); %> /><#checkbox_No#>
+												</div>
 											</td>
 										</tr>
 
