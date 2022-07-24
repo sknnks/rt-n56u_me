@@ -36,12 +36,12 @@ stop_ald() {
 
 ip_rules(){
 	if [ "$1" = "add" ]; then
-		if [ -z "$(iptables -t filter -L INPUT -v -n --line-numbers | grep "tcp dpt:$ald_port" ]; then
+		if [ -z "$(iptables -t filter -L INPUT -v -n --line-numbers | grep "tcp dpt:$ald_port")" ]; then
 			iptables -t filter -I INPUT -p tcp --dport $ald_port -j ACCEPT
 			ip6tables -t filter -I INPUT -p tcp --dport $ald_port -j ACCEPT
 		fi
 	elif [ "$1" = "del" ]; then 
-		if [ -n "$(iptables -t filter -L INPUT -v -n --line-numbers | grep "tcp dpt:$ald_port" ]; then
+		if [ -n "$(iptables -t filter -L INPUT -v -n --line-numbers | grep "tcp dpt:$ald_port")" ]; then
 			iptables -t filter -D INPUT -p tcp --dport $ald_port -j ACCEPT
 			ip6tables -t filter -D INPUT -p tcp --dport $ald_port -j ACCEPT
 		fi
