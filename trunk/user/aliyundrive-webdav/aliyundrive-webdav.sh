@@ -2,7 +2,7 @@
 
 NAME=aliyundrive-webdav
 ald_port=$(nvram get ald_port)
-ald_port=$(nvram get aliyun_wan)
+aliyun_wan=$(nvram get aliyun_wan)
 
 start_ald() {
 	if [ -z "$(pidof $NAME)" ]; then
@@ -36,15 +36,11 @@ stop_ald() {
 
 ip_rules(){
 	if [ "$1" = "add" ]; then
-		if [ -z "$(iptables -t filter -L INPUT -v -n --line-numbers | grep "tcp dpt:$ald_port")" ]; then
-			iptables -t filter -I INPUT -p tcp --dport $ald_port -j ACCEPT
-			ip6tables -t filter -I INPUT -p tcp --dport $ald_port -j ACCEPT
-		fi
+		[ -z "$(iptables -t filter -L INPUT -v -n --line-numbers | grep "tcp dpt:$ald_port")" ] && iptables -t filter -I INPUT -p tcp --dport $ald_port -j ACCEPT
+		[ -z "$(ip6tables -t filter -L INPUT -v -n --line-numbers | grep "tcp dpt:$ald_port")" ] && ip6tables -t filter -I INPUT -p tcp --dport $ald_port -j ACCEPT
 	elif [ "$1" = "del" ]; then 
-		if [ -n "$(iptables -t filter -L INPUT -v -n --line-numbers | grep "tcp dpt:$ald_port")" ]; then
-			iptables -t filter -D INPUT -p tcp --dport $ald_port -j ACCEPT
-			ip6tables -t filter -D INPUT -p tcp --dport $ald_port -j ACCEPT
-		fi
+		[ -n "$(iptables -t filter -L INPUT -v -n --line-numbers | grep "tcp dpt:$ald_port")" ] && iptables -t filter -D INPUT -p tcp --dport $ald_port -j ACCEPT
+		[ -n "$(ip6tables -t filter -L INPUT -v -n --line-numbers | grep "tcp dpt:$ald_port")" ] && ip6tables -t filter -D INPUT -p tcp --dport $ald_port -j ACCEPT
 	fi
 }
 
