@@ -14,9 +14,13 @@ start_ald() {
 			stop_ald
 			exit 1
 		fi
-	[ -n "$(pidof $NAME)" ] && echo "$(pidof $NAME)" > /var/run/aliyun.pid 2>&1 && logger -t "【阿里云webdav】" "启动成功!"
 	fi
 	
+	while [ "$(pidof $NAME)" = "" ]; do
+		sleep 1
+	done
+	echo "$(pidof $NAME)" > /var/run/aliyun.pid 2>&1 && logger -t "【阿里云webdav】" "启动成功!"
+
 	if [ "$aliyun_wan" -eq 1 ]; then
 		ip_rules "add" && logger -t "【阿里云webdav】" "WAN $ald_port 端口开放"
 	else
@@ -34,7 +38,7 @@ stop_ald() {
 	fi
 }
 
-ip_rules(){
+ip_rules() {
 	if [ "$1" = "add" ]; then
 		[ -z "$(iptables -t filter -L INPUT -v -n --line-numbers | grep "tcp dpt:$ald_port")" ] && iptables -t filter -I INPUT -p tcp --dport $ald_port -j ACCEPT
 		[ -z "$(ip6tables -t filter -L INPUT -v -n --line-numbers | grep "tcp dpt:$ald_port")" ] && ip6tables -t filter -I INPUT -p tcp --dport $ald_port -j ACCEPT
