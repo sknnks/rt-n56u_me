@@ -211,6 +211,7 @@ function show_aliyundrive_dir(){
 									<th>监听主机</th>
 										<td>
 											<input type="text" class="input" name="ald_host" id="ald_host" style="width: 200px" value="<% nvram_get_x("","ald_host"); %>" />
+											<div><span style="color:#888;">0.0.0.0(IPv4)/::(IPv6)表示所有IP</span></div>
 										</td>
 									</tr>
 
@@ -218,6 +219,7 @@ function show_aliyundrive_dir(){
 									<th>监听端口</th>
 										<td>
 											<input type="text" class="input" name="ald_port" id="ald_port" style="width: 200px" value="<% nvram_get_x("","ald_port"); %>" />
+											&nbsp;<span style="color:#888;">[80..65535]</span>
 										</td>
 									</tr>
 
@@ -240,6 +242,7 @@ function show_aliyundrive_dir(){
 									<th>用户名</th>
 										<td>
 											<input type="text" class="input" name="ald_auth_user" id="ald_auth_user" style="width: 200px" value="<% nvram_get_x("","ald_auth_user"); %>" />
+											<div><span style="color:#888;">无需用户名和密码登录请留空</span></div>
 										</td>
 									</tr>
 
@@ -247,6 +250,7 @@ function show_aliyundrive_dir(){
 									<th>密码</th>
 										<td>
 											<input type="text" class="input" name="ald_auth_password" id="ald_auth_password" style="width: 200px" value="<% nvram_get_x("","ald_auth_password"); %>" />
+											<button style="margin-left: -5px;" class="btn" type="button" onclick="passwordShowHide('ald_auth_password')"><i class="icon-eye-close"></i></button>
 										</td>
 									</tr>
 
