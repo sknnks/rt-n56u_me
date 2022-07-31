@@ -211,7 +211,7 @@ function show_aliyundrive_dir(){
 									<th>监听主机</th>
 										<td>
 											<input type="text" class="input" name="ald_host" id="ald_host" style="width: 200px" value="<% nvram_get_x("","ald_host"); %>" />
-											<div><span style="color:#888;">0.0.0.0(IPv4)或::(IPv6)表示所有IP</span></div>
+											<div><span style="color:#888;">"0.0.0.0"(IPv4) 或 "::"(IPv6)表示所有IP</span></div>
 										</td>
 									</tr>
 
