@@ -857,7 +857,7 @@
 #if defined(USE_MT76X2_AP)
 			{"wl_VgaClamp", "", NULL, EVM_RESTART_WIFI5},
 #endif
-#if defined (USE_WID_5G) && USE_WID_5G==7615
+#if defined (USE_WID_5G) && (USE_WID_5G==7615)
 			{"wl_band_steering", "", NULL, EVM_RESTART_WIFI5},
 			{"wl_mumimo", "", NULL, EVM_RESTART_WIFI5},
 #endif
@@ -1228,15 +1228,14 @@
 	};
 #endif
 
-
-/*#if defined(APP_NVPPROXY)
-	struct variable variables_NvpproxyConf[] = {
+#if defined(APP_NVPPROXY)
+    struct variable variables_NvpproxyConf[] = {
 			{"nvpproxy_enable", "", NULL, EVM_RESTART_NVPPROXY},
 			{"nvpproxy_wan_port", "", NULL, EVM_RESTART_SMARTDNS},
 			{"nvpproxy_vpn_port", "", NULL, EVM_RESTART_SMARTDNS},
 			{0,0,0,0}
 	};
-#endif*/
+#endif
 
 #if defined(APP_WIREGUARD)
 	struct variable variables_WIREGUARD[] = {
@@ -1345,7 +1344,7 @@
 #if defined(USE_MT76X2_AP)
 			{"rt_VgaClamp", "", NULL, EVM_RESTART_WIFI2},
 #endif
-#if defined (USE_WID_2G) && USE_WID_2G==7615
+#if defined (USE_WID_2G) && (USE_WID_2G==7615)
 			{"rt_turbo_qam", "", NULL, EVM_RESTART_WIFI2},
 			{"rt_airtimefairness", "", NULL, EVM_RESTART_WIFI2},
 #endif
@@ -1444,9 +1443,9 @@
 #if defined(APP_SMARTDNS)
 		{"SmartdnsConf",	variables_SmartdnsConf},
 #endif
-/*#if defined(APP_NVPPROXY)
+#if defined(APP_NVPPROXY)
 		{"NvpproxyConf",	variables_NvpproxyConf},
-#endif*/
+#endif
 #if defined(APP_WIREGUARD)
 		{"WIREGUARD",		variables_WIREGUARD},
 #endif
