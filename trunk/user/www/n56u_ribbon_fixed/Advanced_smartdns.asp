@@ -605,7 +605,7 @@ function showMRULESList(){
 										<table width="100%" cellpadding="4" cellspacing="0" class="table">
 										<tbody>
 										<tr>
-										 <th width="50%">启用:</th>
+										 <th width="50%">启用</th>
 										 <td>
 												<div class="main_itoggle">
 												<div id="sdnss_enable_x_0_on_of">
@@ -619,19 +619,19 @@ function showMRULESList(){
 											</td>
 											</tr>
 										<tr>
-										<th>上游名称:</th>
+										<th>上游名称</th>
 										<td>
 												<input type="text" maxlength="255" class="span12" style="width: 200px" size="200" name="sdnss_name_x_0" value="<% nvram_get_x("", "sdnss_name_x_0"); %>" onKeyPress="return is_string(this,event);"/>
 											</td>
 											</tr>
 										<tr>
-										<th>上游地址:</th>
+										<th>上游地址</th>
 										<td>
 												<input type="text" maxlength="255" class="span12" style="width: 200px" size="200" name="sdnss_ip_x_0" value="<% nvram_get_x("", "sdnss_ip_x_0"); %>" onKeyPress="return is_string(this,event);"/>
 											</td>
 											</tr>
 										<tr>
-										<th>上游服务器端口:</th>
+										<th>上游服务器端口</th>
 										<td>
 												<input type="text" maxlength="255" class="span12" style="width: 200px" size="200" name="sdnss_port_x_0" value="default" onKeyPress="return is_string(this,event);"/>
 											</td>
@@ -659,13 +659,13 @@ function showMRULESList(){
 										</tr>
 											<tr><th colspan="2" style="background-color: #E3E3E3;">指定服务器组可用于单独解析gfwlist,如果不需要配合SS解析gfwlist,可以不填</th></tr>
 											<tr>
-											<th>服务器组(留空为不指定):</th>
+											<th>服务器组(留空为不指定)</th>
 										<td>
 											<input type="text" maxlength="255" class="span12" style="width: 200px" size="200" name="sdnss_named_x_0" value="<% nvram_get_x("", "sdnss_named_x_0"); %>" />
 											</td>
 											</tr>
 											<tr>
-											<th>加入ipset(解析gfwlist要用):</th>
+											<th>加入ipset(解析gfwlist要用)</th>
 										<td>
 											<input type="text" maxlength="255" class="span12" style="width: 200px" size="200" name="sdnss_ipset_x_0" value="<% nvram_get_x("", "sdnss_ipset_x_0"); %>" />注意IP直接填,如果是域名:例如https://ndns.233py.com/dns-query 只填写ndns.233py.com就可以了.
 											</td>

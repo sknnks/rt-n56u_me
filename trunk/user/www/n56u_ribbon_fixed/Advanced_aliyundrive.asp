@@ -156,7 +156,7 @@ function show_aliyundrive_dir(){
 										</p>
 									</div>
 
-									<table width="100%" align="center" cellpadding="4" cellspacing="0" class="table">
+									<table width="100%" cellpadding="4" cellspacing="0" class="table">
 									<tr> <th><#running_status#></th>
 										<td id="aliyundrive_status" colspan="2"></td>
 									</tr>
@@ -191,7 +191,7 @@ function show_aliyundrive_dir(){
 									</tr>
 
 									<tr>
-									<th>云盘app存放目录:</th>
+									<th>云盘app存放目录</th>
 										<td colspan="2">
 											<select name="aliyundrive_dir" id="aliyundrive_dir" class="input">
 											</select>
