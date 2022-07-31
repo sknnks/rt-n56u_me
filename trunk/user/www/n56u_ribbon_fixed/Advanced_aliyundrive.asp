@@ -159,197 +159,198 @@ function show_aliyundrive_dir(){
 									</div>
 									<table width="100%" align="center" cellpadding="4" cellspacing="0" class="table">
 									<tr> <th><#running_status#></th>
-                                    <td id="aliyundrive_status" colspan="3"></td>
+                                    	<td id="aliyundrive_status" colspan="3"></td>
 									</tr>
-										<tr>
-											<th>获取 refresh token</th>
-											<td>
-													<input type="button" class="btn btn-success" value="点击查看获取 refresh token 的方法" onclick="window.open('https://github.com/messense/aliyundrive-webdav#%E8%8E%B7%E5%8F%96-refresh_token')" size="0">
-											</td>
-										</tr>
-										<tr>
-										<th width="30%" style="border-top: 0 none;">启用阿里云盘 WebDAV</th>
-											<td style="border-top: 0 none;">
-												<div class="main_itoggle">
-													<div id="aliyundrive_enable_on_of">
-														<input type="checkbox" id="aliyundrive_enable_fake" <% nvram_match_x("", "aliyundrive_enable", "1", "value=1 checked"); %><% nvram_match_x("", "aliyundrive_enable", "0", "value=0"); %>  />
-													</div>
+
+									<tr>
+									<th width="30%" style="border-top: 0 none;">启用阿里云盘 WebDAV</th>
+										<td style="border-top: 0 none;">
+											<div class="main_itoggle">
+												<div id="aliyundrive_enable_on_of">
+													<input type="checkbox" id="aliyundrive_enable_fake" <% nvram_match_x("", "aliyundrive_enable", "1", "value=1 checked"); %><% nvram_match_x("", "aliyundrive_enable", "0", "value=0"); %>  />
 												</div>
-												<div style="position: absolute; margin-left: -10000px;">
-													<input type="radio" value="1" name="aliyundrive_enable" id="aliyundrive_enable_1" class="input" value="1" <% nvram_match_x("", "aliyundrive_enable", "1", "checked"); %> /><#checkbox_Yes#>
-													<input type="radio" value="0" name="aliyundrive_enable" id="aliyundrive_enable_0" class="input" value="0" <% nvram_match_x("", "aliyundrive_enable", "0", "checked"); %> /><#checkbox_No#>
+											</div>
+											<div style="position: absolute; margin-left: -10000px;">
+												<input type="radio" value="1" name="aliyundrive_enable" id="aliyundrive_enable_1" class="input" value="1" <% nvram_match_x("", "aliyundrive_enable", "1", "checked"); %> /><#checkbox_Yes#>
+												<input type="radio" value="0" name="aliyundrive_enable" id="aliyundrive_enable_0" class="input" value="0" <% nvram_match_x("", "aliyundrive_enable", "0", "checked"); %> /><#checkbox_No#>
+											</div>
+										</td>
+									</tr>
+
+									<tr>
+									<th>获取 refresh token</th>
+										<td>
+											<input type="button" class="btn btn-success" value="查看获取 refresh token 的方法" onclick="window.open('https://github.com/messense/aliyundrive-webdav')" size="0">
+										</td>
+									</tr>
+
+									<tr>
+									<th>Refresh Token</th>
+										<td>
+											<input type="text" class="input" name="ald_refresh_token" id="ald_refresh_token" style="width: 200px" value="<% nvram_get_x("","ald_refresh_token"); %>" />
+										</td>
+									</tr>
+
+									<tr>
+									<th>云盘app存放目录:</th>
+										<td colspan="2">
+											<select name="aliyundrive_dir" id="aliyundrive_dir" class="input">
+											</select>
+										</td>
+									</tr>
+
+									<tr>
+									<th>云盘根目录</th>
+										<td>
+											<input type="text" class="input" name="ald_root" id="ald_root" style="width: 200px" value="<% nvram_get_x("","ald_root"); %>" />
+										</td>
+									</tr>
+
+									<tr>
+									<th>监听主机</th>
+										<td>
+											<input type="text" class="input" name="ald_host" id="ald_host" style="width: 200px" value="<% nvram_get_x("","ald_host"); %>" />
+										</td>
+									</tr>
+
+									<tr>
+									<th>监听端口</th>
+										<td>
+											<input type="text" class="input" name="ald_port" id="ald_port" style="width: 200px" value="<% nvram_get_x("","ald_port"); %>" />
+										</td>
+									</tr>
+
+									<tr>
+									<th>WAN 访问开关</th>
+										<td>
+											<div class="main_itoggle">
+												<div id="aliyun_wan_on_of">
+													<input type="checkbox" id="aliyun_wan_fake" <% nvram_match_x("", "aliyun_wan", "1", "value=1 checked"); %><% nvram_match_x("", "aliyun_wan", "0", "value=0"); %>  />
 												</div>
-											</td>
-										</tr>
+											</div>
+											<div style="position: absolute; margin-left: -10000px;">
+												<input type="radio" value="1" name="aliyun_wan" id="aliyun_wan_1" class="input" value="1" <% nvram_match_x("", "aliyun_wan", "1", "checked"); %> /><#checkbox_Yes#>
+												<input type="radio" value="0" name="aliyun_wan" id="aliyun_wan_0" class="input" value="0" <% nvram_match_x("", "aliyun_wan", "0", "checked"); %> /><#checkbox_No#>
+											</div>
+										</td>
+									</tr>
 
-										<tr>
-										<th>Refresh Token</th>
-											<td>
-												<input type="text" class="input" name="ald_refresh_token" id="ald_refresh_token" style="width: 200px" value="<% nvram_get_x("","ald_refresh_token"); %>" />
-											</td>
-										</tr>
+									<tr>
+									<th>用户名</th>
+										<td>
+											<input type="text" class="input" name="ald_auth_user" id="ald_auth_user" style="width: 200px" value="<% nvram_get_x("","ald_auth_user"); %>" />
+										</td>
+									</tr>
 
-										<tr>
-										<th>云盘app存放目录:</th>
-											<td colspan="2">
-												<select name="aliyundrive_dir" id="aliyundrive_dir" class="input">
-												</select>
-											</td>
-										</tr>
+									<tr>
+									<th>密码</th>
+										<td>
+											<input type="text" class="input" name="ald_auth_password" id="ald_auth_password" style="width: 200px" value="<% nvram_get_x("","ald_auth_password"); %>" />
+										</td>
+									</tr>
 
-										<tr>
-										<th>云盘根目录</th>
-											<td>
-												<input type="text" class="input" name="ald_root" id="ald_root" style="width: 200px" value="<% nvram_get_x("","ald_root"); %>" />
-											</td>
-										</tr>
+									<tr>
+									<th>下载缓冲大小(bytes)</th>
+										<td>
+											<input type="text" class="input" name="ald_read_buffer_size" id="ald_read_buffer_size" style="width: 200px" value="<% nvram_get_x("","ald_read_buffer_size"); %>" />
+										</td>
+									</tr>
 
-										<tr>
-										<th>监听主机</th>
-											<td>
-												<input type="text" class="input" name="ald_host" id="ald_host" style="width: 200px" value="<% nvram_get_x("","ald_host"); %>" />
-											</td>
-										</tr>
+									<tr>
+									<th>目录缓存大小</th>
+										<td>
+											<input type="text" class="input" name="ald_cache_size" id="ald_cache_size" style="width: 200px" value="<% nvram_get_x("","ald_cache_size"); %>" />
+										</td>
+									</tr>
 
-										<tr>
-										<th>监听端口</th>
-											<td>
-												<input type="text" class="input" name="ald_port" id="ald_port" style="width: 200px" value="<% nvram_get_x("","ald_port"); %>" />
-											</td>
-										</tr>
+									<tr>
+									<th>目录缓存过期时间（单位为秒）</th>
+										<td>
+											<input type="text" class="input" name="ald_cache_ttl" id="ald_cache_ttl" style="width: 200px" value="<% nvram_get_x("","ald_cache_ttl"); %>" />
+										</td>
+									</tr>
 
-										<tr>
-										<th>WAN 访问开关</th>
-											<td>
-													<div class="main_itoggle">
-													<div id="aliyun_wan_on_of">
-														<input type="checkbox" id="aliyun_wan_fake" <% nvram_match_x("", "aliyun_wan", "1", "value=1 checked"); %><% nvram_match_x("", "aliyun_wan", "0", "value=0"); %>  />
-													</div>
+									<tr>
+									<th>上传缓冲大小(bytes)</th>
+										<td>
+											<input type="text" class="input" name="ald_upload_buffer_size" id="ald_upload_buffer_size" style="width: 200px" value="<% nvram_get_x("","ald_upload_buffer_size"); %>" />
+										</td>
+									</tr>
+
+									<tr>
+									<th width="30%" style="border-top: 0 none;">上传时忽略大小相同文件</th>
+										<td style="border-top: 0 none;">
+											<div class="main_itoggle">
+												<div id="ald_skip_upload_on_of">
+													<input type="checkbox" id="ald_skip_upload_fake" <% nvram_match_x("", "ald_skip_upload", "1", "value=1 checked"); %><% nvram_match_x("", "ald_skip_upload", "0", "value=0"); %>  />
 												</div>
-												<div style="position: absolute; margin-left: -10000px;">
-													<input type="radio" value="1" name="aliyun_wan" id="aliyun_wan_1" class="input" value="1" <% nvram_match_x("", "aliyun_wan", "1", "checked"); %> /><#checkbox_Yes#>
-													<input type="radio" value="0" name="aliyun_wan" id="aliyun_wan_0" class="input" value="0" <% nvram_match_x("", "aliyun_wan", "0", "checked"); %> /><#checkbox_No#>
+											</div>
+											<div style="position: absolute; margin-left: -10000px;">
+												<input type="radio" value="1" name="ald_skip_upload" id="ald_skip_upload_1" class="input" value="1" <% nvram_match_x("", "ald_skip_upload", "1", "checked"); %> /><#checkbox_Yes#>
+												<input type="radio" value="0" name="ald_skip_upload" id="ald_skip_upload_0" class="input" value="0" <% nvram_match_x("", "ald_skip_upload", "0", "checked"); %> /><#checkbox_No#>
+											</div>
+										</td>
+									</tr>
+
+									<tr>
+									<th width="30%" style="border-top: 0 none;">禁止上传、修改和删除文件操作</th>
+										<td style="border-top: 0 none;">
+											<div class="main_itoggle">
+												<div id="ald_no_trash_on_of">
+													<input type="checkbox" id="ald_no_trash_fake" <% nvram_match_x("", "ald_no_trash", "1", "value=1 checked"); %><% nvram_match_x("", "ald_no_trash", "0", "value=0"); %>  />
 												</div>
-											</td>
-										</tr>
+											</div>
+											<div style="position: absolute; margin-left: -10000px;">
+												<input type="radio" value="1" name="ald_no_trash" id="ald_no_trash_1" class="input" value="1" <% nvram_match_x("", "ald_no_trash", "1", "checked"); %> /><#checkbox_Yes#>
+												<input type="radio" value="0" name="ald_no_trash" id="ald_no_trash_0" class="input" value="0" <% nvram_match_x("", "ald_no_trash", "0", "checked"); %> /><#checkbox_No#>
+											</div>
+										</td>
+									</tr>
 
-										<tr>
-										<th>用户名</th>
-											<td>
-												<input type="text" class="input" name="ald_auth_user" id="ald_auth_user" style="width: 200px" value="<% nvram_get_x("","ald_auth_user"); %>" />
-											</td>
-										</tr>
-
-										<tr>
-										<th>密码</th>
-											<td>
-												<input type="text" class="input" name="ald_auth_password" id="ald_auth_password" style="width: 200px" value="<% nvram_get_x("","ald_auth_password"); %>" />
-											</td>
-										</tr>
-
-										<tr>
-										<th>下载缓冲大小(bytes)</th>
-											<td>
-												<input type="text" class="input" name="ald_read_buffer_size" id="ald_read_buffer_size" style="width: 200px" value="<% nvram_get_x("","ald_read_buffer_size"); %>" />
-											</td>
-										</tr>
-
-										<tr>
-										<th>目录缓存大小</th>
-											<td>
-												<input type="text" class="input" name="ald_cache_size" id="ald_cache_size" style="width: 200px" value="<% nvram_get_x("","ald_cache_size"); %>" />
-											</td>
-										</tr>
-
-										<tr>
-										<th>目录缓存过期时间（单位为秒）</th>
-											<td>
-												<input type="text" class="input" name="ald_cache_ttl" id="ald_cache_ttl" style="width: 200px" value="<% nvram_get_x("","ald_cache_ttl"); %>" />
-											</td>
-										</tr>
-
-										<tr>
-										<th>上传缓冲大小(bytes)</th>
-											<td>
-												<input type="text" class="input" name="ald_upload_buffer_size" id="ald_upload_buffer_size" style="width: 200px" value="<% nvram_get_x("","ald_upload_buffer_size"); %>" />
-											</td>
-										</tr>
-
-										<tr>
-										<th width="30%" style="border-top: 0 none;">上传时忽略大小相同文件</th>
-											<td style="border-top: 0 none;">
-													<div class="main_itoggle">
-													<div id="ald_skip_upload_on_of">
-														<input type="checkbox" id="ald_skip_upload_fake" <% nvram_match_x("", "ald_skip_upload", "1", "value=1 checked"); %><% nvram_match_x("", "ald_skip_upload", "0", "value=0"); %>  />
-													</div>
+									<tr>
+									<th width="30%" style="border-top: 0 none;">启用只读模式</th>
+										<td style="border-top: 0 none;">
+											<div class="main_itoggle">
+												<div id="ald_read_only_on_of">
+													<input type="checkbox" id="ald_read_only_fake" <% nvram_match_x("", "ald_read_only", "1", "value=1 checked"); %><% nvram_match_x("", "ald_read_only", "0", "value=0"); %>  />
 												</div>
-												<div style="position: absolute; margin-left: -10000px;">
-													<input type="radio" value="1" name="ald_skip_upload" id="ald_skip_upload_1" class="input" value="1" <% nvram_match_x("", "ald_skip_upload", "1", "checked"); %> /><#checkbox_Yes#>
-													<input type="radio" value="0" name="ald_skip_upload" id="ald_skip_upload_0" class="input" value="0" <% nvram_match_x("", "ald_skip_upload", "0", "checked"); %> /><#checkbox_No#>
+											</div>
+											<div style="position: absolute; margin-left: -10000px;">
+												<input type="radio" value="1" name="ald_read_only" id="ald_read_only_1" class="input" value="1" <% nvram_match_x("", "ald_read_only", "1", "checked"); %> /><#checkbox_Yes#>
+												<input type="radio" value="0" name="ald_read_only" id="ald_read_only_0" class="input" value="0" <% nvram_match_x("", "ald_read_only", "0", "checked"); %> /><#checkbox_No#>
+											</div>
+										</td>
+									</tr>
+									<!--
+									<tr>
+									<th width="30%" style="border-top: 0 none;">阿里云相册与云盘服务 domainId</th>
+										<td style="border-top: 0 none;">
+											<div class="main_itoggle">
+												<div id="ald_domain_id_on_of">
+													<input type="checkbox" id="ald_domain_id_fake" <% nvram_match_x("", "ald_domain_id", "1", "value=1 checked"); %><% nvram_match_x("", "ald_domain_id", "0", "value=0"); %>  />
 												</div>
-											</td>
-										</tr>
+											</div>
+											<div style="position: absolute; margin-left: -10000px;">
+												<input type="radio" value="1" name="ald_domain_id" id="ald_domain_id_1" class="input" value="1" <% nvram_match_x("", "ald_domain_id", "1", "checked"); %> /><#checkbox_Yes#>
+												<input type="radio" value="0" name="ald_domain_id" id="ald_domain_id_0" class="input" value="0" <% nvram_match_x("", "ald_domain_id", "0", "checked"); %> /><#checkbox_No#>
+											</div>
+										</td>
+									</tr>-->
+									<tr id="row_post_wan_script">
+										<td colspan="2">
+											<i class="icon-hand-right"></i> <a href="javascript:spoiler_toggle('script2')"><span>aliyundrive脚本</span></a>
+											<div id="script2">
+												<textarea rows="18" wrap="off" spellcheck="false" maxlength="314571" class="span12" name="scripts.aliyundrive_script.sh" style="font-family:'Courier New'; font-size:12px;"><% nvram_dump("scripts.aliyundrive_script.sh",""); %></textarea>
+											</div>
+										</td>
+									</tr>
 
-										<tr>
-										<th width="30%" style="border-top: 0 none;">禁止上传、修改和删除文件操作</th>
-											<td style="border-top: 0 none;">
-													<div class="main_itoggle">
-													<div id="ald_no_trash_on_of">
-														<input type="checkbox" id="ald_no_trash_fake" <% nvram_match_x("", "ald_no_trash", "1", "value=1 checked"); %><% nvram_match_x("", "ald_no_trash", "0", "value=0"); %>  />
-													</div>
-												</div>
-												<div style="position: absolute; margin-left: -10000px;">
-													<input type="radio" value="1" name="ald_no_trash" id="ald_no_trash_1" class="input" value="1" <% nvram_match_x("", "ald_no_trash", "1", "checked"); %> /><#checkbox_Yes#>
-													<input type="radio" value="0" name="ald_no_trash" id="ald_no_trash_0" class="input" value="0" <% nvram_match_x("", "ald_no_trash", "0", "checked"); %> /><#checkbox_No#>
-												</div>
-											</td>
-										</tr>
-
-										<tr>
-										<th width="30%" style="border-top: 0 none;">启用只读模式</th>
-											<td style="border-top: 0 none;">
-													<div class="main_itoggle">
-													<div id="ald_read_only_on_of">
-														<input type="checkbox" id="ald_read_only_fake" <% nvram_match_x("", "ald_read_only", "1", "value=1 checked"); %><% nvram_match_x("", "ald_read_only", "0", "value=0"); %>  />
-													</div>
-												</div>
-												<div style="position: absolute; margin-left: -10000px;">
-													<input type="radio" value="1" name="ald_read_only" id="ald_read_only_1" class="input" value="1" <% nvram_match_x("", "ald_read_only", "1", "checked"); %> /><#checkbox_Yes#>
-													<input type="radio" value="0" name="ald_read_only" id="ald_read_only_0" class="input" value="0" <% nvram_match_x("", "ald_read_only", "0", "checked"); %> /><#checkbox_No#>
-												</div>
-											</td>
-										</tr>
-										<!--
-										<tr>
-										<th width="30%" style="border-top: 0 none;">阿里云相册与云盘服务 domainId</th>
-											<td style="border-top: 0 none;">
-													<div class="main_itoggle">
-													<div id="ald_domain_id_on_of">
-														<input type="checkbox" id="ald_domain_id_fake" <% nvram_match_x("", "ald_domain_id", "1", "value=1 checked"); %><% nvram_match_x("", "ald_domain_id", "0", "value=0"); %>  />
-													</div>
-												</div>
-												<div style="position: absolute; margin-left: -10000px;">
-													<input type="radio" value="1" name="ald_domain_id" id="ald_domain_id_1" class="input" value="1" <% nvram_match_x("", "ald_domain_id", "1", "checked"); %> /><#checkbox_Yes#>
-													<input type="radio" value="0" name="ald_domain_id" id="ald_domain_id_0" class="input" value="0" <% nvram_match_x("", "ald_domain_id", "0", "checked"); %> /><#checkbox_No#>
-												</div>
-											</td>
-
-										</tr>-->
-										<tr id="row_post_wan_script">
-											<td colspan="2">
-												<i class="icon-hand-right"></i> <a href="javascript:spoiler_toggle('script2')"><span>aliyundrive脚本</span></a>
-												<div id="script2">
-													<textarea rows="18" wrap="off" spellcheck="false" maxlength="314571" class="span12" name="scripts.aliyundrive_script.sh" style="font-family:'Courier New'; font-size:12px;"><% nvram_dump("scripts.aliyundrive_script.sh",""); %></textarea>
-												</div>
-											</td>
-										</tr>
-
-										<tr>
-											<td colspan="4" style="border-top: 0 none;">
-												<br />
-												<center><input class="btn btn-primary" style="width: 219px" type="button" value="<#CTL_apply#>" onclick="applyRule()" /></center>
-											</td>
-										</tr>
+									<tr>
+										<td colspan="4" style="border-top: 0 none;">
+											<br />
+											<center><input class="btn btn-primary" style="width: 219px" type="button" value="<#CTL_apply#>" onclick="applyRule()" /></center>
+										</td>
+									</tr>
 									</table>
 								</div>
 							</div>
