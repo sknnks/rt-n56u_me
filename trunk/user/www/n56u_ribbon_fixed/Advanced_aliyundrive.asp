@@ -22,11 +22,11 @@
 <script type="text/javascript" src="/popup.js"></script>
 <script type="text/javascript" src="/help.js"></script>
 <script type="text/javascript" src="/help_b.js"></script>
+
 <script>
 var $j = jQuery.noConflict();
 <% aliyundrive_status(); %>
 <% disk_pool_mapping_info(); %>
-
 $j(document).ready(function() {
 	init_itoggle('aliyundrive_enable');
 	init_itoggle('aliyun_wan');
@@ -34,12 +34,10 @@ $j(document).ready(function() {
 	init_itoggle('ald_no_trash');
 	init_itoggle('ald_read_only');
 	init_itoggle('ald_domain_id');
-
 });
-
 </script>
-<script>
 
+<script>
 <% login_state_hook(); %>
 
 function initial(){
@@ -321,6 +319,7 @@ function show_aliyundrive_dir(){
 											</div>
 										</td>
 									</tr>
+
 									<!--
 									<tr>
 									<th width="30%" style="border-top: 0 none;">阿里云相册与云盘服务 domainId</th>
@@ -336,6 +335,7 @@ function show_aliyundrive_dir(){
 											</div>
 										</td>
 									</tr>-->
+
 									<tr id="row_post_wan_script">
 										<td colspan="2">
 											<i class="icon-hand-right"></i> <a href="javascript:spoiler_toggle('script2')"><span>aliyundrive脚本</span></a>
@@ -367,4 +367,3 @@ function show_aliyundrive_dir(){
 </div>
 </body>
 </html>
-
