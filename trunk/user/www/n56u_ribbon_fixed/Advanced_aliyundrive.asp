@@ -155,9 +155,10 @@ function show_aliyundrive_dir(){
 										<p>阿里云盘 WebDAV<br>
 										</p>
 									</div>
+
 									<table width="100%" align="center" cellpadding="4" cellspacing="0" class="table">
 									<tr> <th><#running_status#></th>
-                                    	<td id="aliyundrive_status" colspan="3"></td>
+										<td id="aliyundrive_status" colspan="2"></td>
 									</tr>
 
 									<tr>

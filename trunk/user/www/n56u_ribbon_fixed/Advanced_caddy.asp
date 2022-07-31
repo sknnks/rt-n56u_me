@@ -187,7 +187,6 @@ if (b=="2"){
 									<div id="tabMenu" class="submenuBlock"></div>
 									<div class="alert alert-info" style="margin: 10px;">File Browser是一个基于GO的轻量级文件管理系统支持登录系统 角色系统、在线PDF、图片、视频浏览、上传下载、打包下载等功能。
 									WEBDAV 是一种文件服务，类似的服务有 SMB、NFS、FTP 等，特点是基于 HTTP/HTTPS 协议。
-									
 									</div>
 
 									<table width="100%" align="center" cellpadding="4" cellspacing="0" class="table">
