@@ -1,8 +1,13 @@
-SRC_NAME=libxml2-2.9.13
-SRC_URL=http://xmlsoft.org/sources/$(SRC_NAME).tar.gz
+SRC_NAME=libxml2-2.9.14
+SRC_URL=http://download.gnome.org/sources/libxml2/2.9/$(SRC_NAME).tar.xz
 
-all: config_test
+all: extract_test config_test
 	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)
+
+extract_test:
+	( if [ ! -d $(SRC_NAME) ]; then \
+		tar xJf $(SRC_NAME).tar.xz ; \
+	fi )
 
 config_test:
 	( if [ -f ./config_done ]; then \
