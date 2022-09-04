@@ -152,7 +152,7 @@ function show_aliyundrive_dir(){
 							<div class="row-fluid">
 								<div id="tabMenu" class="submenuBlock"></div>
 									<div class="alert alert-info" style="margin: 10px;">阿里云盘 WebDAV<br>
-									获取 refresh token：登录阿里云盘 <a href="https://www.aliyundrive.com/drive">https://www.aliyundrive.com/drive</a>，通过[F12]进入控制台执行"JSON.parse(localStorage.token).refresh_token"
+									获取 refresh token：登录阿里云盘 <a href="https://www.aliyundrive.com/drive">https://www.aliyundrive.com/drive</a>，通过[F12]进入控制台执行 "JSON.parse(localStorage.token).refresh_token"
 									</div>
 
 								<table width="100%" cellpadding="4" cellspacing="0" class="table">
@@ -248,7 +248,7 @@ function show_aliyundrive_dir(){
 									<tr>
 									<th>密码</th>
 										<td>
-											<input type="text" class="input" name="ald_auth_password" id="ald_auth_password" style="width: 200px" value="<% nvram_get_x("","ald_auth_password"); %>" />
+											<input type="password" class="input" name="ald_auth_password" id="ald_auth_password" style="width: 200px" value="<% nvram_get_x("","ald_auth_password"); %>" />
 											<button style="margin-left: -5px;" class="btn" type="button" onclick="passwordShowHide('ald_auth_password')"><i class="icon-eye-close"></i></button>
 										</td>
 									</tr>
