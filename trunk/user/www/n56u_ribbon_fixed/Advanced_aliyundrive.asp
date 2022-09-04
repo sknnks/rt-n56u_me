@@ -151,12 +151,11 @@ function show_aliyundrive_dir(){
 							</div>
 							<div class="row-fluid">
 								<div id="tabMenu" class="submenuBlock"></div>
-									<div class="alert alert-info" style="margin: 10px;">
-										<p>阿里云盘 WebDAV<br>
-										</p>
+									<div class="alert alert-info" style="margin: 10px;">阿里云盘 WebDAV<br>
+									获取 refresh token：登录阿里云盘 <a href="https://www.aliyundrive.com/drive">https://www.aliyundrive.com/drive</a>，通过[F12]进入控制台执行"JSON.parse(localStorage.token).refresh_token"
 									</div>
-								<table width="100%" cellpadding="4" cellspacing="0" class="table">
 
+								<table width="100%" cellpadding="4" cellspacing="0" class="table">
 									<tr>
 									<th><#running_status#></th>
 										<td id="aliyundrive_status" colspan="2">
@@ -179,9 +178,9 @@ function show_aliyundrive_dir(){
 									</tr>
 
 									<tr>
-									<th>获取 refresh token</th>
+									<th>使用说明</th>
 										<td>
-											<input type="button" class="btn btn-success" value="查看获取 refresh token 的方法" onclick="window.open('https://github.com/messense/aliyundrive-webdav')" size="0">
+											<input type="button" class="btn btn-success" value="查看使用说明" onclick="window.open('https://github.com/messense/aliyundrive-webdav')" size="0">
 										</td>
 									</tr>
 
@@ -193,7 +192,7 @@ function show_aliyundrive_dir(){
 									</tr>
 
 									<tr>
-									<th>云盘app存放目录</th>
+									<th>云盘App存放目录</th>
 										<td colspan="2">
 											<select name="aliyundrive_dir" id="aliyundrive_dir" class="input">
 											</select>
@@ -347,7 +346,7 @@ function show_aliyundrive_dir(){
 										<td colspan="2">
 											<i class="icon-hand-right"></i> <a href="javascript:spoiler_toggle('script2')"><span>Aliyundrive脚本</span></a>
 											<div id="script2">
-												<textarea rows="18" wrap="off" spellcheck="false" maxlength="314571" class="span12" name="scripts.aliyundrive_script.sh" style="font-family:'Courier New'; font-size:12px;"><% nvram_dump("scripts.aliyundrive_script.sh",""); %></textarea>
+												<textarea rows="10" wrap="off" spellcheck="false" maxlength="314571" class="span12" name="scripts.aliyundrive_script.sh" style="font-family:'Courier New'; font-size:12px;"><% nvram_dump("scripts.aliyundrive_script.sh",""); %></textarea>
 											</div>
 										</td>
 									</tr>
