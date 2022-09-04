@@ -29,7 +29,7 @@ $j(document).ready(function(){
 	init_itoggle('sdns_enable');
 	init_itoggle('sdns_tcp_server');
 	init_itoggle('sdns_ipv6_server');
-	init_itoggle('sdns_ip_change');
+	init_itoggle('sdns_ip_change', sdns_ip_change_changed);
 	init_itoggle('sdns_www');
 	init_itoggle('sdns_ipv6');
 	init_itoggle('sdns_exp');
@@ -157,6 +157,10 @@ function markGroupRULES(o, c, b) {
 function showmenu(){
 showhide_div('adglink', found_app_adguardhome());
 }
+function sdns_ip_change_changed(){
+	var v = document.form.sdns_ip_change[0].checked;
+	showhide_div('row_sdns_ip_change_time', v);
+}
 function showMRULESList(){
 	var code = '<table width="100%" cellspacing="0" cellpadding="3" class="table table-list">';
 	if(m_list.length == 0)
@@ -283,7 +287,7 @@ function showMRULESList(){
 						</div>
 								<div class="row-fluid">
 									<div id="tabMenu" class="submenuBlock"></div>
-									<div class="alert alert-info" style="margin: 10px;">SmartDNS是一个本地高性能DNS服务器，支持避免域名污染，支持返回最快IP，支持广告过滤。</br>
+									<div class="alert alert-info" style="margin: 10px;">SmartDNS是一个本地高性能DNS服务器，支持避免域名污染，支持返回最快IP，支持广告过滤。<br>
 									SmartDNS官方网站:<a href="https://pymumu.github.io/smartdns/">https://pymumu.github.io/smartdns/</a>
 									</div>
 									</div>
@@ -344,6 +348,25 @@ function showMRULESList(){
 												</div>
 											</td>
 										</tr>
+										<tr> <th>双栈IP优选</th>
+											<td>
+												<div class="main_itoggle">
+												<div id="sdns_ip_change_on_of">
+													<input type="checkbox" id="sdns_ip_change_fake" <% nvram_match_x("", "sdns_ip_change", "1", "value=1 checked"); %><% nvram_match_x("", "sdns_ip_change", "0", "value=0"); %>>
+												</div>
+												</div>
+												<div style="position: absolute; margin-left: -10000px;">
+													<input type="radio" value="1" name="sdns_ip_change" id="sdns_ip_change_1" class="input" onclick="sdns_ip_change_changed();" <% nvram_match_x("", "sdns_ip_change", "1", "checked"); %>/><#checkbox_Yes#>
+													<input type="radio" value="0" name="sdns_ip_change" id="sdns_ip_change_0" class="input" onclick="sdns_ip_change_changed();" <% nvram_match_x("", "sdns_ip_change", "0", "checked"); %>/><#checkbox_No#>
+												</div>
+											</td>
+										</tr>
+										<tr id="row_sdns_ip_change_time" style="display:none;">
+										<th width="50%">双栈IP优选阈值</th>
+											<td>
+												<input type="text" maxlength="64" class="input" size="64" name="sdns_ip_change_time" style="width: 50px" value="<% nvram_get_x("", "sdns_ip_change_time"); %>"> 毫秒（0-1000）
+											</td>
+										</tr>
 										<tr> <th>禁用IPV6解析</th>
 											<td>
 												<div class="main_itoggle">
@@ -355,24 +378,7 @@ function showMRULESList(){
 													<input type="radio" value="1" name="sdns_ipv6" id="sdns_ipv6_1" <% nvram_match_x("", "sdns_ipv6", "1", "checked"); %>><#checkbox_Yes#>
 													<input type="radio" value="0" name="sdns_ipv6" id="sdns_ipv6_0" <% nvram_match_x("", "sdns_ipv6", "0", "checked"); %>><#checkbox_No#>
 												</div>
-											</td>
-										</tr>
-										<tr> <th>双栈IP优选</th>
-											<td>
-												<div class="main_itoggle">
-												<div id="sdns_ip_change_on_of">
-													<input type="checkbox" id="sdns_ip_change_fake" <% nvram_match_x("", "sdns_ip_change", "1", "value=1 checked"); %><% nvram_match_x("", "sdns_ip_change", "0", "value=0"); %>>
-												</div>
-												</div>
-												<div style="position: absolute; margin-left: -10000px;">
-													<input type="radio" value="1" name="sdns_ip_change" id="sdns_ip_change_1" <% nvram_match_x("", "sdns_ip_change", "1", "checked"); %>><#checkbox_Yes#>
-													<input type="radio" value="0" name="sdns_ip_change" id="sdns_ip_change_0" <% nvram_match_x("", "sdns_ip_change", "0", "checked"); %>><#checkbox_No#>
-												</div>
-											</td>
-										</tr>
-										<tr> <th width="50%">双栈IP优选阈值</th>
-											<td>
-												<input type="text" maxlength="64" class="input" size="64" name="sdns_ip_change_time" style="width: 50px" value="<% nvram_get_x("", "sdns_ip_change_time"); %>"> 毫秒（0-1000）
+												<div><span style="color:#888;">启用"双栈IP优选"不要禁用IPV6解析</span></div>
 											</td>
 										</tr>
 										<tr> <th>域名预加载</th>
@@ -412,7 +418,7 @@ function showMRULESList(){
 													<input type="radio" value="1" name="ss_white" id="ss_white_1" <% nvram_match_x("", "ss_white", "1", "checked"); %>><#checkbox_Yes#>
 													<input type="radio" value="0" name="ss_white" id="ss_white_0" <% nvram_match_x("", "ss_white", "0", "checked"); %>><#checkbox_No#>
 												</div>
-												<div><span style="color:#888;">此项可配合科学上网来实现大陆IP才走国内DNS</span></div>
+												<div><span style="color:#888;">可通过[-whitelist-ip]参数实现"国内DNS"只解析大陆IP地址</span></div>
 											</td>
 										</tr>
 										<tr> <th>加载ChnrouteIP为黑名单</th>
@@ -426,7 +432,7 @@ function showMRULESList(){
 													<input type="radio" value="1" name="ss_black" id="ss_black_1" <% nvram_match_x("", "ss_black", "1", "checked"); %>><#checkbox_Yes#>
 													<input type="radio" value="0" name="ss_black" id="ss_black_0" <% nvram_match_x("", "ss_black", "0", "checked"); %>><#checkbox_No#>
 												</div>
-												<div><span style="color:#888;">此项可配合科学上网来实现大陆IP禁止走国外DNS</span></div>
+												<div><span style="color:#888;">可通过[-blacklist-ip]参数实现"国外DNS"不解析大陆IP地址</span></div>
 											</td>
 										</tr>
 										<tr>
@@ -439,7 +445,7 @@ function showMRULESList(){
 												</select>
 											</td>
 										</tr>
-										<tr> <th>缓存大小</th>
+										<tr> <th>DNS缓存大小</th>
 											<td>
 												<input type="text" maxlength="64" class="input" size="15" name="sdns_cache" style="width: 200px" value="<% nvram_get_x("", "sdns_cache"); %>">
 												<div><span style="color:#888;">缓存DNS的结果，缓存大小，配置0则不缓存</span></div>
@@ -572,7 +578,7 @@ function showMRULESList(){
 												</div>
 											</td>
 										</tr>
-										<tr> <th>跳过双栈优选</th>
+										<tr> <th>跳过双栈IP优选</th>
 											<td>
 												<div class="main_itoggle">
 												<div id="sdnse_ipc_on_of">
@@ -585,7 +591,7 @@ function showMRULESList(){
 												</div>
 											</td>
 										</tr>
-										<tr> <th>跳过cache</th>
+										<tr> <th>跳过Cache</th>
 											<td>
 												<div class="main_itoggle">
 												<div id="sdnse_cache_on_of">
@@ -749,7 +755,7 @@ function showMRULESList(){
 											<td colspan="6" >
 												<i class="icon-hand-right"></i> <a href="javascript:spoiler_toggle('script11')"><span>自定义设置:</span></a>
 												<div id="script11">
-													<textarea rows="8" wrap="off" spellcheck="false" class="span12" name="scripts.smartdns_custom.conf" style="font-family:'Courier New'; font-size:12px;"><% nvram_dump("scripts.smartdns_custom.conf",""); %></textarea>
+													<textarea rows="16" wrap="off" spellcheck="false" class="span12" name="scripts.smartdns_custom.conf" style="font-family:'Courier New'; font-size:12px;"><% nvram_dump("scripts.smartdns_custom.conf",""); %></textarea>
 												</div>
 											</td>
 										</tr>
