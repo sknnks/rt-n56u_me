@@ -41,8 +41,7 @@ start_instance() {
 	fi
 
 	add_join "$(nvram get zerotier_id)"
-	$PROG $args $config_path >/dev/null 2>&1 &
-	rules
+	$PROG $args $config_path >/dev/null 2>&1
 
 	if [ -n "$moonid" ]; then
 		$PROGCLI -D$config_path orbit $moonid $moonid
@@ -50,7 +49,7 @@ start_instance() {
 	fi
 
 	if [ -n "$enablemoonserv" ]; then
-		if [ "$enablemoonserv" -eq "1" ]; then
+		if [ "$enablemoonserv" -eq 1 ]; then
 			logger -t "zerotier" "creat moon start"
 			creat_moon
 		else
@@ -58,6 +57,9 @@ start_instance() {
 			remove_moon
 		fi
 	fi
+
+	sleep 10
+	iprules
 }
 
 add_join() {
@@ -66,7 +68,7 @@ add_join() {
 		touch $config_path/networks.d/$1.conf
 }
 
-rules() {
+iprules() {
 	while [ "$(ifconfig | grep zt | awk '{print $1}')" = "" ]; do
 		sleep 1
 	done
@@ -81,6 +83,7 @@ rules() {
 		ip_segment="$(ip route | grep "dev $zt0  proto kernel" | awk '{print $1}')"
 		iptables -t nat -A POSTROUTING -s "${ip_segment}" -j MASQUERADE
 		zero_route "add" "$zt0"
+		logger -t "zerotier" "zerotier nat start"
 	fi
 }
 
@@ -110,9 +113,11 @@ zero_route(){
 }
 
 start_zero() {
-	logger -t "zerotier" "正在启动zerotier"
-	kill_z
-	start_instance 'zerotier' &
+	if [ "$(nvram get zerotier_enable)" -eq 1 ]; then
+		logger -t "zerotier" "正在启动zerotier"
+		kill_z
+		start_instance 'zerotier' &
+	fi
 }
 
 kill_z() {
