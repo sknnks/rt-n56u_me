@@ -434,8 +434,12 @@ if (found_app_caddy()){
 	tabtitle[18] = new Array("", "<#menu5_27_1#>");
 }
 if (found_app_wyy()){
-	tabtitle[18] = new Array("", "<#menu5_31_1#>");
+	tabtitle[19] = new Array("", "<#menu5_31_1#>");
 }
+if (found_app_aldriver()){
+	tabtitle[20] = new Array("", "<#menu5_36_1#>");
+}
+
 //Level 3 Tab title
 
 tablink[0] = new Array("", "Advanced_Wireless2g_Content.asp", "Advanced_WGuest2g_Content.asp", "Advanced_WMode2g_Content.asp", "Advanced_ACL2g_Content.asp", "Advanced_WSecurity2g_Content.asp", "Advanced_WAdvanced2g_Content.asp");
@@ -488,6 +492,8 @@ if (found_app_aliddns()){
 if (found_app_frp()){
 	frp_array = new Array("","Advanced_frp.asp");
 	tablink[17] = (frp_array);
+	tabtitle[9].push('<#menu5_25_1#>');
+	tablink[9].push('Advanced_frp_log.asp');
 }
 if (found_app_caddy()){
 	caddy_array = new Array("","Advanced_caddy.asp");
@@ -496,6 +502,10 @@ if (found_app_caddy()){
 if (found_app_wyy()){
 	wyy_array = new Array("","Advanced_wyy.asp");
 	tablink[19] = (wyy_array);
+}
+if (found_app_aldriver()){
+	aldriver_array = new Array("","Advanced_aliyundrive.asp");
+	tablink[20] = (aldriver_array);
 }
 
 //Level 2 Menu
@@ -547,6 +557,10 @@ if (found_app_wyy()){
 	menuL2_title.push("<#menu5_31#>");
 } else menuL2_title.push("");
 
+if (found_app_aldriver()){
+	menuL2_title.push("<#menu5_36#>");
+} else menuL2_title.push("");
+
 menuL2_link  = new Array("", tablink[0][1], tablink[1][1], tablink[2][1], tablink[3][1], tablink[4][1], tablink[5][1], tablink[6][1], tablink[7][1], support_2g_radio() ? tablink[8][1] : "Main_EStatus_Content.asp", tablink[9][1]);
 if (found_app_scutclient()){
 	menuL2_link.push(scutclient_array[1]);
@@ -586,6 +600,9 @@ if (found_app_caddy()){
 } else menuL2_link.push("");
 if (found_app_wyy()){
 	menuL2_link.push(wyy_array[1]);
+} else menuL2_link.push("");
+if (found_app_aldriver()){
+	menuL2_link.push(aldriver_array[1]);
 } else menuL2_link.push("");
 
 //Level 1 Menu in Gateway, Router mode
@@ -1265,6 +1282,21 @@ function inputCtrl(obj, flag){
 	obj.disabled = (flag == 0);
 }
 
+function IsPC() {
+	var userAgentInfo = navigator.userAgent;
+	var Agents = ["Android", "iPhone",
+		"SymbianOS", "Windows Phone",
+		"iPad", "iPod"];
+	var flag = true;
+	for (var v = 0; v < Agents.length; v++) {
+		if (userAgentInfo.indexOf(Agents[v]) > 0) {
+			flag = false;
+			break;
+		}
+	}
+	return flag;
+}
+
 // add eagle23
 jQuery(document).ready(function(){
     var $j = jQuery.noConflict();
@@ -1454,6 +1486,7 @@ function removeFromLocalStorage(name){
         localStorage.removeItem(name);
     }
 }
+
 //WEB自定义菜单
 var w_ai = '<% nvram_get_x("", "w_ai"); %>';
 var w_vpn_s = '<% nvram_get_x("", "w_vpn_s"); %>';
@@ -1468,6 +1501,7 @@ var w_dnsf = '<% nvram_get_x("", "w_dnsf"); %>';
 var w_ss = '<% nvram_get_x("", "w_ss"); %>';
 var w_men = '<% nvram_get_x("", "w_men"); %>';
 var w_adbyby = '<% nvram_get_x("", "w_adbyby"); %>';
+var w_pdnsd = '<% nvram_get_x("", "w_pdnsd"); %>';
 
 if (w_ai==0){
 	menuL1_link[2] = "";
@@ -1521,6 +1555,7 @@ if (w_adbyby==0){
 	menuL2_link[15] = "";
 	menuL2_title[15] = "";
 }
+
 (function($){
     var $j = $.noConflict();
     $j.fn.tabSlideOut = function(callerSettings){

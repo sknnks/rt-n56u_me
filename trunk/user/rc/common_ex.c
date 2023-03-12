@@ -146,7 +146,7 @@ get_eeprom_params(void)
 	char regspec_code[8];
 	char wps_pin[12];
 	char productid[16];
-	char fwver[8], fwver_sub[32];
+	char fwver[16], fwver_sub[32];
 
 #if (BOARD_5G_IN_SOC || !BOARD_HAS_5G_RADIO)
 	i_offset = OFFSET_MAC_ADDR_WSOC;
@@ -349,6 +349,8 @@ get_eeprom_params(void)
 #endif
 #endif
 
+#if defined (USE_MT7615_AP) || defined (USE_MT7915_AP)
+	// TXBF, not used yet
 	{
 		int i, count_0xff = 0;
 		unsigned char txbf_para[33];
@@ -362,10 +364,10 @@ get_eeprom_params(void)
 					count_0xff++;
 			}
 		}
-		
+
 		nvram_wlan_set_int(1, "txbf_en", (count_0xff == 33) ? 0 : 1);
 	}
-
+#endif
 }
 
 void
@@ -838,7 +840,7 @@ rename_if_dir_exist(const char *dir, const char *subdir)
 {
 	DIR *dirp;
 	struct dirent *direntp;
-	char oldpath[64], newpath[64];
+	char oldpath[257], newpath[257];
 
 	if (!dir || !subdir)
 		return 0;
@@ -864,7 +866,7 @@ if_dircase_exist(const char *dir, const char *subdir)
 {
 	DIR *dirp;
 	struct dirent *direntp;
-	char oldpath[64];
+	char oldpath[257];
 
 	if (!dir || !subdir)
 		return NULL;

@@ -1,12 +1,18 @@
-SRC_NAME = smartdns-Release31
+SRC_NAME = smartdns-Release41
+SRC_URL=https://github.com/pymumu/smartdns/archive/refs/tags/Release41.tar.gz
 THISDIR = $(shell pwd)
 
-all: extract_test config_test
+all: download_test extract_test config_test
 	$(MAKE) -C $(SRC_NAME)
+
+download_test:
+	( if [ ! -f $(SRC_NAME).tar.gz ]; then \
+		wget -t5 --timeout=20 --no-check-certificate -O $(SRC_NAME).tar.gz $(SRC_URL); \
+	fi )
 
 extract_test:
 	( if [ ! -d $(SRC_NAME) ]; then \
-		tar zxf $(SRC_NAME).tar.gz ; \
+		tar -xf $(SRC_NAME).tar.gz ; \
 	fi )
 
 config_test:

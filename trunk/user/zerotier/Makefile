@@ -12,6 +12,7 @@ extract_test:
 		tar xf $(SRC_NAME).tar.gz ; \
 		patch -d $(SRC_NAME) -p1 -i ../0002-remove-pie.patch; \
 	fi )
+
 config_test:
 
 clean:
@@ -25,4 +26,3 @@ romfs:
 	ln -sf zerotier-one $(ROMFSDIR)/usr/bin/zerotier-cli
 	ln -sf zerotier-one $(ROMFSDIR)/usr/bin/zerotier-idtool
 	cp -fP $(CONFIG_CROSS_COMPILER_ROOT)/mipsel-linux-uclibc/sysroot/lib/libstdc++.so* $(ROMFSDIR)/lib
-

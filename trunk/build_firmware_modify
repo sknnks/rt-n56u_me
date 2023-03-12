@@ -1,11 +1,13 @@
 #!/bin/bash
 
 if [ -z "$1" ] || [ "$EUID" != 0 ]; then
-	echo "Please run 'fakeroot $0 PRODUCT_NAME' to start build (see 'configs/templates/') " && exit 1
+	echo "Please run 'fakeroot $0 PRODUCT_NAME' to start build (see 'configs/templates/')"
+	echo "For Windows Subsystem for Linux(WSL), use 'fakeroot-tcp' instead of 'fakeroot', or run with sudo"
+	exit 1
 fi
 if [ -z "$2" ];then
 if [ ! -f configs/templates/$1.config ] ; then
-	echo "configs/templates/$1.config not found "
+	echo "configs/templates/$1.config not found!"
 	exit 1
 fi
 
@@ -21,6 +23,7 @@ sed -i 's/CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS=y/CONFIG_FIRMWARE_INCLUDE_SHADOWSO
 ##科学上网##
 echo "CONFIG_FIRMWARE_INCLUDE_SHADOWSOCKS=n" >> .config #科学上网插件，选择n后全部有关插件都不集成
 echo "CONFIG_FIRMWARE_INCLUDE_V2RAY=n" >> .config #集成v2ray执行文件，如果不集成，会从网上下载下来执行，不影响正常使用
+echo "CONFIG_FIRMWARE_INCLUDE_XRAY=n" >> .config #集成xray执行文件，可以代替v2ray，大小5M多，如果闪存太小不够还是建议使用v2ray
 echo "CONFIG_FIRMWARE_INCLUDE_TROJAN=n" >> .config #集成trojan执行文件，如果不集成，会从网上下载下来执行，不影响正常使用
 echo "CONFIG_FIRMWARE_INCLUDE_SSOBFS=n" >> .config #simple-obfs混淆插件
 ##科学上网##
@@ -49,10 +52,17 @@ echo "CONFIG_FIRMWARE_INCLUDE_WYYBIN=n" >> .config #网易云解锁GO版本执�
 ##内网穿透服务##
 echo "CONFIG_FIRMWARE_INCLUDE_ZEROTIER=n" >> .config #zerotier ~1.3M
 echo "CONFIG_FIRMWARE_INCLUDE_ALIDDNS=n" >> .config #aliddns
+echo "CONFIG_FIRMWARE_INCLUDE_FRPC=n" >> .config #frpc
+echo "CONFIG_FIRMWARE_INCLUDE_FRPS=n" >> .config #frps
+echo "CONFIG_FIRMWARE_INCLUDE_DDNSTO=n" >> .config #ddnsto
+#echo "CONFIG_FIRMWARE_INCLUDE_NPC=n" >> .config #npc
 ##内网穿透服务##
 
-fi
+echo "CONFIG_FIRMWARE_INCLUDE_ALDRIVER=n" >> .config
 sed -i 's/CONFIG_FIRMWARE_INCLUDE_OPENSSL_EXE=n/CONFIG_FIRMWARE_INCLUDE_OPENSSL_EXE=y/g' .config
+
+fi
+
 ROOTDIR=`pwd`
 export ROOTDIR=$ROOTDIR
 
@@ -188,7 +198,7 @@ rm -rf "$dir_wifi_dst/mt7615"
 mkdir -p "$dir_wifi_dst/mt76x3"
 cp -f "$dir_wifi_src/rtpci/4.1.X.X/mt76x3/Kconfig" "$dir_wifi_dst/mt76x3/Kconfig"
 mkdir -p "$dir_wifi_dst/mt7615/embedded"
-cp -f "$dir_wifi_src/rtpci/4.4.2.1/mt7615/embedded/Kconfig" "$dir_wifi_dst/mt7615/embedded/Kconfig"
+cp -f "$dir_wifi_src/rtpci/5.0.4.0/mt7615/embedded/Kconfig" "$dir_wifi_dst/mt7615/embedded/Kconfig"
 
 if [ -n "$CONFIG_RT2860V2_AP" ] ; then
 	dir_wifi_ver="2.7.X.X"
@@ -262,16 +272,9 @@ if [ -n "$CONFIG_MT7628_AP" ] ; then
 fi
 if [ -n "$CONFIG_MT7615_AP" ] ; then
 	dir_wifi_ver="4.4.2.1"
-	if [ "$CONFIG_FIRMWARE_WIFI_DRIVER" = "5.0.3.0" ] || \
-		[ "$CONFIG_FIRMWARE_WIFI2_DRIVER" = "5.0.3.0" ] || \
-		[ "$CONFIG_FIRMWARE_WIFI5_DRIVER" = "5.0.3.0" ]; then
-		dir_wifi_ver="5.0.3.0"
-	elif [ "$CONFIG_FIRMWARE_WIFI_DRIVER" = "5.0.4.0" ] || \
+	if [ "$CONFIG_FIRMWARE_WIFI_DRIVER" = "5.0.4.0" ] || \
 		[ "$CONFIG_FIRMWARE_WIFI2_DRIVER" = "5.0.4.0" ] || \
 		[ "$CONFIG_FIRMWARE_WIFI5_DRIVER" = "5.0.4.0" ]; then
-		dir_wifi_ver="5.0.4.0"
-	fi
-	if [ "$CONFIG_FIRMWARE_WIFI_DRIVER" = "5.0.4.0" ] || [ "$CONFIG_FIRMWARE_WIFI2_DRIVER" = "5.0.4.0" ] || [ "$CONFIG_FIRMWARE_WIFI5_DRIVER" = "5.0.4.0" ]; then
 		dir_wifi_ver="5.0.4.0"
 	fi
 	cp -rfL "$dir_wifi_src/rtpci/$dir_wifi_ver/mt7615" "$dir_wifi_dst/"
@@ -343,8 +346,12 @@ fi
 #SFE
 if [ "$CONFIG_FIRMWARE_INCLUDE_SFE" = "y" ] ; then
 	func_enable_kernel_param "CONFIG_SHORTCUT_FE"
+	func_enable_kernel_param "CONFIG_NF_CONNTRACK_EVENTS"
+	func_enable_kernel_param "CONFIG_NF_CONNTRACK_CHAIN_EVENTS"
 else
 	func_disable_kernel_param "CONFIG_SHORTCUT_FE"
+	func_disable_kernel_param "CONFIG_NF_CONNTRACK_EVENTS"
+	func_disable_kernel_param "CONFIG_NF_CONNTRACK_CHAIN_EVENTS"
 fi
 ############################# USB #####################################
 if [ "$CONFIG_FIRMWARE_ENABLE_USB" != "y" ] || [ -z "$CONFIG_USB_SUPPORT" ] ; then

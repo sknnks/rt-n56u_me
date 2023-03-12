@@ -2,8 +2,6 @@ THISDIR = $(shell pwd)
 
 all:
 
-config_test:
-
 clean:
 
 romfs:

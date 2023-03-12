@@ -893,7 +893,7 @@ ipt_filter_rules(char *man_if, char *wan_if, char *lan_if, char *lan_ip,
 			if (wport == lport || !is_nat_enabled)
 				fprintf(fp, "-A %s -p tcp --dport %d -j %s\n", dtype, lport, logaccept);
 			else
-				fprintf(fp, "-A %s -p tcp -d %s --dport %d -j %s\n", dtype, lan_ip, lport, logaccept);
+				fprintf(fp, "-A %s -p tcp -d %s --dport %d -j %s\n", dtype, lan_ip, wport, logaccept);
 		}
 #if defined (SUPPORT_HTTPS)
 		if ((i_http_proto == 1 || i_http_proto == 2) && nvram_match("https_wopen", "1")) {
@@ -902,7 +902,7 @@ ipt_filter_rules(char *man_if, char *wan_if, char *lan_if, char *lan_ip,
 			if (wport == lport || !is_nat_enabled)
 				fprintf(fp, "-A %s -p tcp --dport %d -j %s\n", dtype, lport, logaccept);
 			else
-				fprintf(fp, "-A %s -p tcp -d %s --dport %d -j %s\n", dtype, lan_ip, lport, logaccept);
+				fprintf(fp, "-A %s -p tcp -d %s --dport %d -j %s\n", dtype, lan_ip, wport, logaccept);
 		}
 #endif
 #if defined (APP_SSHD)
@@ -913,7 +913,7 @@ ipt_filter_rules(char *man_if, char *wan_if, char *lan_if, char *lan_ip,
 			if (wport == lport || !is_nat_enabled)
 				fprintf(fp, "-A %s -p tcp --dport %d -j %s\n", dtype, lport, IPT_CHAIN_NAME_BFP_LIMIT);
 			else
-				fprintf(fp, "-A %s -p tcp -d %s --dport %d -j %s\n", dtype, lan_ip, lport, IPT_CHAIN_NAME_BFP_LIMIT);
+				fprintf(fp, "-A %s -p tcp -d %s --dport %d -j %s\n", dtype, lan_ip, wport, IPT_CHAIN_NAME_BFP_LIMIT);
 		}
 #endif
 #if defined (APP_FTPD)
@@ -923,7 +923,7 @@ ipt_filter_rules(char *man_if, char *wan_if, char *lan_if, char *lan_ip,
 			if (wport == lport || !is_nat_enabled)
 				fprintf(fp, "-A %s -p tcp --dport %d -j %s\n", dtype, lport, logaccept);
 			else
-				fprintf(fp, "-A %s -p tcp -d %s --dport %d -j %s\n", dtype, lan_ip, lport, logaccept);
+				fprintf(fp, "-A %s -p tcp -d %s --dport %d -j %s\n", dtype, lan_ip, wport, logaccept);
 		}
 #endif
 		lport = nvram_get_int("udpxy_enable_x");
@@ -932,7 +932,7 @@ ipt_filter_rules(char *man_if, char *wan_if, char *lan_if, char *lan_ip,
 			if (wport == lport || !is_nat_enabled)
 				fprintf(fp, "-A %s -p tcp --dport %d -j %s\n", dtype, lport, logaccept);
 			else
-				fprintf(fp, "-A %s -p tcp -d %s --dport %d -j %s\n", dtype, lan_ip, lport, logaccept);
+				fprintf(fp, "-A %s -p tcp -d %s --dport %d -j %s\n", dtype, lan_ip, wport, logaccept);
 		}
 #if defined (APP_TRMD)
 		if (nvram_match("trmd_enable", "1") && is_torrent_support()) {
@@ -972,9 +972,10 @@ ipt_filter_rules(char *man_if, char *wan_if, char *lan_if, char *lan_ip,
 				
 				if (i_vpns_ov_mode == 0)
 					i_need_vpnlist = 0;
-				if (i_ov_prot == 1 || i_ov_prot == 3)
+				if (i_ov_prot == 1 || i_ov_prot == 3 || i_ov_prot == 5)
 					ov_prot = "tcp";
-				fprintf(fp, "-A %s -p %s --dport %d -j %s\n", dtype, ov_prot, i_ov_port, logaccept);
+				if (i_ov_prot == 0 || i_ov_prot == 1 || i_ov_prot == 4 || i_ov_prot == 5)
+					fprintf(fp, "-A %s -p %s --dport %d -j %s\n", dtype, ov_prot, i_ov_port, logaccept);
 			} else
 #endif
 			if (i_vpns_type == 1) {
@@ -1507,9 +1508,10 @@ ip6t_filter_rules(char *man_if, char *wan_if, char *lan_if,
 				int i_ov_port = nvram_safe_get_int("vpns_ov_port", 1194, 1, 65535);
 				int i_ov_prot = nvram_get_int("vpns_ov_prot");
 				
-				if (i_ov_prot == 1 || i_ov_prot == 3)
+				if (i_ov_prot == 1 || i_ov_prot == 3 || i_ov_prot == 5)
 					ov_prot = "tcp";
-				fprintf(fp, "-A %s -p %s --dport %d -j %s\n", dtype, ov_prot, i_ov_port, logaccept);
+				if (i_ov_prot == 2 || i_ov_prot == 3 || i_ov_prot == 4 || i_ov_prot == 5)
+					fprintf(fp, "-A %s -p %s --dport %d -j %s\n", dtype, ov_prot, i_ov_port, logaccept);
 			} else
 #endif
 			if (i_vpns_type == 1) {
@@ -2121,9 +2123,6 @@ start_firewall_ex(void)
 #if defined (APP_SHADOWSOCKS)
 	const char *shadowsocks_iptables_script = "/tmp/shadowsocks_iptables.save";
 #endif
-#if defined (APP_ADBYBY)
-	const char *adbyby_iptables = "/tmp/adbyby.save";
-#endif
 
 	unit = 0;
 
@@ -2197,10 +2196,6 @@ start_firewall_ex(void)
 #if defined (APP_SHADOWSOCKS)
 	if (check_if_file_exist(shadowsocks_iptables_script))
 		doSystem("sh %s", shadowsocks_iptables_script);
-#endif
-#if defined (APP_ADBYBY)
-	if (check_if_file_exist(adbyby_iptables))
-		doSystem("iptables-restore -n %s", adbyby_iptables);
 #endif
 	if (check_if_file_exist(int_iptables_script))
 		doSystem("%s", int_iptables_script);

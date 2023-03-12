@@ -1,5 +1,5 @@
 #!/bin/sh
-#chongshengB 2020
+
 caddy_enable=`nvram get caddy_enable`
 caddy_wan=`nvram get caddy_wan`
 caddy_file=`nvram get caddy_file`
@@ -17,14 +17,14 @@ caddy_start ()
 		caddybin="/usr/bin/caddy_filebrowser"
 		if [ ! -f "$caddybin" ]; then
 			if [ ! -f "$caddy_dir/caddy/caddy_filebrowser" ]; then
-				curl -k -s -o $caddy_dir/caddy/caddy_filebrowser --connect-timeout 10 --retry 3 https://cdn.jsdelivr.net/gh/chongshengB/rt-n56u/trunk/user/caddy/caddy_filebrowser
-				if [ ! -f "$caddy_dir/caddy/caddy_filebrowser" ]; then
+				curl -k -s -o /tmp/caddy_filebrowser --connect-timeout 10 --retry 3 https://cdn.jsdelivr.net/gh/chongshengB/rt-n56u/trunk/user/caddy/caddy_filebrowser
+				if [ $? -ne 0 ]; then
 					logger -t "caddy" "caddy_filebrowser二进制文件下载失败，可能是地址失效或者网络异常！"
 					nvram set caddy_enable=0
 					caddy_close
 				else
 					logger -t "caddy" "caddy_filebrowser二进制文件下载成功"
-					chmod -R 777 $caddy_dir/caddy/caddy_filebrowser
+					mv -f /tmp/caddy_filebrowser $caddy_dir/caddy/ && chmod 0755 "$caddy_dir/caddy/caddy_filebrowser"
 				fi
 			fi
 		fi
@@ -67,7 +67,6 @@ caddy_close ()
 		killall -9 caddy_filebrowser
 		[ -z "`pidof caddy_filebrowser`" ] && logger -t "caddy" "已关闭文件管理服务."
 	fi
-
 }
 
 case $1 in

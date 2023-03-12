@@ -529,7 +529,7 @@ svc_timecheck(void)
 				svcStatus[GUEST2_ACTIVE] = -1;
 		}
 	}
-	
+
 	char reboot_schedule[PATH_MAX];
 	if (nvram_match("reboot_schedule_enable", "1"))
 	{
@@ -569,7 +569,7 @@ svc_timecheck(void)
 
 	return 0;
 }
-	
+
 static void
 update_svc_status_wifi2()
 {
@@ -1014,11 +1014,11 @@ static void httpd_process_check(void)
 	if (httpd_missing == 1)
 		return;
 
-	if (!httpd_is_run
+	if ((!httpd_is_run
 #ifdef HTTPD_CHECK
 	    || !httpd_check_v2()
 #endif
-	)
+	    ) && nvram_match("httpd_started", "1"))
 	{
 		printf("## restart httpd ##\n");
 		httpd_missing = 0;
@@ -1070,8 +1070,8 @@ ntpc_updated_main(int argc, char *argv[])
 		system("hwclock -w");
 #endif
 		logmessage("NTP Client", "System time changed, offset: %ss", offset);
-		sleep(5);
-		nvram_set_int("ntp_ready", 1);
+                sleep(5);
+                nvram_set_int("ntp_ready", 1);
 	}
 
 	return 0;
@@ -1289,3 +1289,4 @@ watchdog_main(int argc, char *argv[])
 
 	return 0;
 }
+

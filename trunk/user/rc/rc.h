@@ -38,6 +38,7 @@
 
 #define DNS_RESOLV_CONF			"/etc/resolv.conf"
 #define DNS_SERVERS_FILE		"/tmp/dnsmasq.servers"
+#define DNS_RELAY_QUERIES_MAX		512
 
 #define SCRIPT_UDHCPC_LAN		"/tmp/udhcpc_lan.script"
 #define SCRIPT_UDHCPC_WAN		"/tmp/udhcpc.script"
@@ -576,6 +577,16 @@ void stop_frp(void);
 void start_frp(void);
 void restart_frp(void);
 #endif
+/*#if defined(APP_NPC)
+void stop_npc(void);
+void start_npc(void);
+void restart_npc(void);
+#endif*/
+#if defined(APP_DDNSTO)
+void stop_ddnsto(void);
+void start_ddnsto(void);
+void restart_ddnsto(void);
+#endif
 #if defined(APP_CADDY)
 void stop_caddy(void);
 void start_caddy(void);
@@ -595,6 +606,21 @@ void restart_zerotier(void);
 void stop_dnsforwarder(void);
 void start_dnsforwarder(void);
 void restart_dnsforwarder(void);
+#endif
+#if defined(APP_NVPPROXY)
+void stop_nvpproxy(void);
+void start_nvpproxy(void);
+void restart_nvpproxy(void);
+#endif
+#if defined(APP_WIREGUARD)
+void stop_wireguard(void);
+void start_wireguard(void);
+void restart_wireguard(void);
+#endif
+#if defined(APP_ALDRIVER)
+void stop_aldriver(void);
+void start_aldriver(void);
+void restart_aldriver(void);
 #endif
 
 /* services_ex.c */

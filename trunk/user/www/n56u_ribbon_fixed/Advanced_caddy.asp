@@ -26,7 +26,6 @@ var $j = jQuery.noConflict();
 <% caddy_status(); %>
 <% disk_pool_mapping_info(); %>
 
-
 $j(document).ready(function() {
     init_itoggle('caddy_enable');
 	init_itoggle('caddy_wan');
@@ -44,10 +43,10 @@ function initial(){
 	show_banner(2);
 	show_menu(5,19);
 	show_footer();
-show_caddy_stroage();
-show_caddy_dir();
-switch_caddy_type();
-fill_status(caddy_status());
+	show_caddy_storage();
+	show_caddy_dir();
+	switch_caddy_type();
+	fill_status(caddy_status());
 	var o1 = document.form.caddy_storage;
 	var o2 = document.form.caddy_dir;
 	o1.value = '<% nvram_get_x("","caddy_storage"); %>';
@@ -86,14 +85,12 @@ function done_validating(action){
 	refreshpage();
 }
 
-function show_caddy_stroage(){
-
+function show_caddy_storage(){
 	var code = '<option value="-1" >请选择存储设备</option>';
 	code +='<option value="/media/" >/media/</option>';
 	if(pool_names().length == 0)
 		code +='<option value="non" >未发现存储设备</option>';
 	else{
-	
 		for(var i = 0; i < pool_names().length; ++i){
 			code +='<option value="/media/'+ pool_names()[i] +'" >/media/'+ pool_names()[i] + '/</option>';
 		}
@@ -102,12 +99,10 @@ function show_caddy_stroage(){
 }
 
 function show_caddy_dir(){
-
-	var code = '<option value="/tmp" >/tmp/caddy</option>';
+	var code = '<option value="/tmp/" >/tmp/caddy</option>';
 	if(pool_names().length == 0)
 		code +='<option value="non" >未插入存储设备</option>';
 	else{
-	
 		for(var i = 0; i < pool_names().length; ++i){
 			code +='<option value="/media/'+ pool_names()[i] +'" >/media/'+ pool_names()[i] + '/caddy</option>';
 		}
@@ -192,13 +187,12 @@ if (b=="2"){
 									<div id="tabMenu" class="submenuBlock"></div>
 									<div class="alert alert-info" style="margin: 10px;">File Browser是一个基于GO的轻量级文件管理系统支持登录系统 角色系统、在线PDF、图片、视频浏览、上传下载、打包下载等功能。
 									WEBDAV 是一种文件服务，类似的服务有 SMB、NFS、FTP 等，特点是基于 HTTP/HTTPS 协议。
-									
 									</div>
 
 									<table width="100%" align="center" cellpadding="4" cellspacing="0" class="table">
 									<tr width="50%"> <th><#running_status#></th>
-                                            <td id="caddy_status" colspan="2"></td>
-                                        </tr>
+									<td id="caddy_status" colspan="2"></td>
+									</tr>
 										<tr>
 											<th width="50%">总开关</th>
 											<td>
@@ -242,64 +236,62 @@ if (b=="2"){
 												</div>
 											</td>
 										</tr>
-											<tr>
-                                            <th width="30%">启动模式:</th>
-                                            <td colspan="2">
-                                                <select id="caddy_file" name="caddy_file" class="input" onchange="switch_caddy_type()">
-                                                    <option value="0" <% nvram_match_x("","caddy_file", "0","selected"); %>>File Browser</option>
-                                                    <option value="1" <% nvram_match_x("","caddy_file", "1","selected"); %>>WebDAV</option>
+										<tr>
+											<th width="30%">启动模式:</th>
+											<td colspan="2">
+												<select id="caddy_file" name="caddy_file" class="input" onchange="switch_caddy_type()">
+													<option value="0" <% nvram_match_x("","caddy_file", "0","selected"); %>>File Browser</option>
+													<option value="1" <% nvram_match_x("","caddy_file", "1","selected"); %>>WebDAV</option>
 													<option value="2" <% nvram_match_x("","caddy_file", "2","selected"); %>>File Browser+WebDAV</option>
-                                                </select>
-                                            </td>
-                                        </tr>
+												</select>
+											</td>
+										</tr>
 										<tr>
-                                            <th width="30%">Caddy存放目录:</th>
-                                            <td colspan="2">
-                                                <select name="caddy_dir" id="caddy_dir" class="input">
-                                                </select>
-                                            </td>
-                                        </tr>
+											<th width="30%">Caddy存放目录:</th>
+											<td colspan="2">
+												<select name="caddy_dir" id="caddy_dir" class="input">
+												</select>
+											</td>
+										</tr>
 										<tr>
-                                            <th width="30%">主目录:</th>
-                                            <td colspan="2">
-                                                <select name="caddy_storage" id="caddy_storage" class="input">
-
-                                                </select>
-                                            </td>
-                                        </tr>
+											<th width="30%">主目录:</th>
+											<td colspan="2">
+												<select name="caddy_storage" id="caddy_storage" class="input">
+												</select>
+											</td>
+										</tr>
 										<tr>
-                                            <th>File Browser端口:</th>
-                                            <td>
-                                                <input type="text" name="caddyf_wan_port" maxlength="8"  class="input" size="60" value="<% nvram_get_x("","caddyf_wan_port"); %>" /><a href="http://<% nvram_get_x("", "lan_ipaddr_t"); %>:<% nvram_get_x("","caddyf_wan_port"); %>" target="_blank">打开管理页面</a>
-                                            </td>
-                                        </tr>
+											<th>File Browser端口:</th>
+											<td>
+												<input type="text" name="caddyf_wan_port" maxlength="8"  class="input" size="60" value="<% nvram_get_x("","caddyf_wan_port"); %>" /><a href="http://<% nvram_get_x("", "lan_ipaddr_t"); %>:<% nvram_get_x("","caddyf_wan_port"); %>" target="_blank">打开管理页面</a>
+											</td>
+										</tr>
 										<tr>
-                                            <th>webdav端口:</th>
-                                            <td>
-                                                <input type="text" name="caddyw_wan_port" maxlength="8"  class="input" size="60" value="<% nvram_get_x("","caddyw_wan_port"); %>" /><a href="http://<% nvram_get_x("", "lan_ipaddr_t"); %>:<% nvram_get_x("","caddyw_wan_port"); %>" target="_blank">打开管理页面</a>
-                                            </td>
-                                        </tr>
+											<th>webdav端口:</th>
+											<td>
+												<input type="text" name="caddyw_wan_port" maxlength="8"  class="input" size="60" value="<% nvram_get_x("","caddyw_wan_port"); %>" /><a href="http://<% nvram_get_x("", "lan_ipaddr_t"); %>:<% nvram_get_x("","caddyw_wan_port"); %>" target="_blank">打开管理页面</a>
+											</td>
+										</tr>
 										<tr id="row_wname" style="display:none;">
-                                            <th>webdav用户名:</th>
-                                            <td>
-                                                <input type="text" name="caddy_wname" maxlength="8"  class="input" size="60" value="<% nvram_get_x("","caddy_wname"); %>" />
-                                            </td>
-                                        </tr>
+											<th>webdav用户名:</th>
+											<td>
+												<input type="text" name="caddy_wname" maxlength="8"  class="input" size="60" value="<% nvram_get_x("","caddy_wname"); %>" />
+											</td>
+										</tr>
 										<tr id="row_wpassword" style="display:none;">  <th width="50%">webdav密码:</th>
-				<td>
-					<input type="password" class="input" size="32" name="caddy_wpassword" id="w_key" value="<% nvram_get_x("","caddy_wpassword"); %>" />
-					<button style="margin-left: -5px;" class="btn" type="button" onclick="passwordShowHide('w_key')"><i class="icon-eye-close"></i></button>
-				</td>
-			</tr>
+											<td>
+												<input type="password" class="input" size="32" name="caddy_wpassword" id="w_key" value="<% nvram_get_x("","caddy_wpassword"); %>" />
+												<button style="margin-left: -5px;" class="btn" type="button" onclick="passwordShowHide('w_key')"><i class="icon-eye-close"></i></button>
+											</td>
+										</tr>
 										<tr id="row_post_wan_script">
 											<td colspan="2">
-												<i class="icon-hand-right"></i> <a href="javascript:spoiler_toggle('script2')"><span>caddy脚本-不懂请不要乱改！！！</span></a>
+												<i class="icon-hand-right"></i> <a href="javascript:spoiler_toggle('script2')"><span>Caddy脚本</span></a>
 												<div id="script2">
 													<textarea rows="18" wrap="off" spellcheck="false" maxlength="314571" class="span12" name="scripts.caddy_script.sh" style="font-family:'Courier New'; font-size:12px;"><% nvram_dump("scripts.caddy_script.sh",""); %></textarea>
 												</div>
 											</td>
 										</tr>
-										
 
 										<tr>
 											<td colspan="2" style="border-top: 0 none;">

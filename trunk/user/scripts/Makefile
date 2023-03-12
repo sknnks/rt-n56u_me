@@ -5,6 +5,7 @@ clean:
 
 romfs:
 	./makedevlinks $(ROMFSDIR)
+	$(ROMFSINST) /sbin/radio2_kicksta
 	$(ROMFSINST) /sbin/dev_init.sh
 	$(ROMFSINST) /sbin/reset_ss.sh
 	$(ROMFSINST) /sbin/mtd_storage.sh
@@ -17,7 +18,9 @@ ifdef CONFIG_BLK_DEV_SD
 	$(ROMFSINST) /sbin/hddtune.sh
 	$(ROMFSINST) /sbin/spindown.sh
 endif
-	$(ROMFSINST) /etc_ro/ld.so.conf
+ifdef CONFIG_MTD_UBI
+	$(ROMFSINST) /sbin/rwfs2ubi.sh
+endif
 	$(ROMFSINST) /etc_ro/protocols
 	$(ROMFSINST) /etc_ro/services
 	$(ROMFSINST) /etc_ro/profile
@@ -27,3 +30,4 @@ endif
 	mkdir -p $(INSTALLDIR)/usr/share/terminfo
 	tar -xzf ./terminfo.tar.gz -C $(INSTALLDIR)/usr/share
 	$(ROMFSINST) /sbin/check_crontab.sh
+	$(ROMFSINST) $(THISDIR)/certs.tgz /etc_ro/certs.tgz

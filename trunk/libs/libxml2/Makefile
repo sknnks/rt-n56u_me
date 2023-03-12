@@ -1,17 +1,12 @@
-SRC_NAME=libxml2-2.9.9
-SRC_URL=http://xmlsoft.org/sources/$(SRC_NAME).tar.gz
+SRC_NAME=libxml2-2.9.14
+SRC_URL=http://download.gnome.org/sources/libxml2/2.9/$(SRC_NAME).tar.xz
 
-all: download_test extract_test config_test
+all: extract_test config_test
 	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)
-
-download_test:
-	( if [ ! -f $(SRC_NAME).tar.gz ]; then \
-		wget -t5 --timeout=20 --no-check-certificate -O $(SRC_NAME).tar.gz $(SRC_URL); \
-	fi )
 
 extract_test:
 	( if [ ! -d $(SRC_NAME) ]; then \
-		tar zxf $(SRC_NAME).tar.gz ; \
+		tar xJf $(SRC_NAME).tar.xz ; \
 	fi )
 
 config_test:
@@ -23,6 +18,7 @@ config_test:
 
 configure:
 	( cd $(SRC_NAME) ; \
+        ./autogen.sh;\
 	./configure \
 		--prefix=$(STAGEDIR) \
 		--enable-static \

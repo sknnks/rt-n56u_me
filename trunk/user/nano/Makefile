@@ -1,5 +1,5 @@
-SRC_NAME = nano-3.0
-SRC_URL = https://www.nano-editor.org/dist/v3/nano-3.0.tar.gz
+SRC_NAME = nano-5.3
+SRC_URL = https://www.nano-editor.org/dist/v5/nano-5.3.tar.gz
 THISDIR = $(shell pwd)
 
 all: download_test extract_test config_test
@@ -12,7 +12,7 @@ download_test:
 
 extract_test:
 	( if [ ! -d $(SRC_NAME) ]; then \
-		tar zxf $(SRC_NAME).tar.gz; \
+		tar -xf $(SRC_NAME).tar.gz; \
 	fi )
 
 config_test:

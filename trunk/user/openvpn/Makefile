@@ -1,10 +1,17 @@
-SRC_NAME=openvpn-2.4.x
+THISDIR = $(shell pwd)
+SRC_NAME=openvpn-2.5.6
 
 CFLAGS += -ffunction-sections -fdata-sections
 LDFLAGS += -Wl,--gc-sections
 
-all: config_test
-	$(MAKE) -C $(SRC_NAME)
+all: extract_test config_test
+	$(MAKE) -j$(HOST_NCPU) -C $(SRC_NAME)
+
+extract_test:
+	( if [ ! -d $(SRC_NAME) ]; then \
+		tar -xf $(SRC_NAME).tar.xz; \
+		patch -d $(SRC_NAME) -p1 < $(SRC_NAME).patch ; \
+	fi )
 
 config_test:
 	( if [ -f ./config_done ]; then \
@@ -41,6 +48,7 @@ configure:
 		--enable-ssl \
 		--enable-crypto \
 		--enable-lzo \
+		--disable-lz4 \
 		--with-crypto-library=openssl \
 		OPENSSL_CRYPTO_CFLAGS="-I$(STAGEDIR)/include" \
 		OPENSSL_CRYPTO_LIBS="-L$(STAGEDIR)/lib -lcrypto" \
@@ -61,4 +69,4 @@ clean:
 
 romfs:
 	$(ROMFSINST) $(SRC_NAME)/src/openvpn/openvpn /usr/sbin/openvpn
-	$(ROMFSINST) /usr/bin/openvpn-cert.sh
+	$(ROMFSINST) -p +x $(THISDIR)/openvpn-cert.sh /usr/bin/openvpn-cert.sh

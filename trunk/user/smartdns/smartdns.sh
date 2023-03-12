@@ -1,6 +1,6 @@
 #!/bin/sh
-# Copyright (C) 2018 Nick Peng (pymumu@gmail.com)
-# Copyright (C) 2019 chongshengB
+# Copyright (C) 2020 Nick Peng (pymumu@gmail.com)
+
 SMARTDNS_CONF_DIR="/etc/storage"
 SMARTDNS_CONF="$SMARTDNS_CONF_DIR/smartdns.conf"
 ADDRESS_CONF="$SMARTDNS_CONF_DIR/smartdns_address.conf"
@@ -9,16 +9,16 @@ WHITELIST_IP_CONF="$SMARTDNS_CONF_DIR/smartdns_whitelist-ip.conf"
 CUSTOM_CONF="$SMARTDNS_CONF_DIR/smartdns_custom.conf"
 smartdns_file="/usr/bin/smartdns"
 sdns_enable=`nvram get sdns_enable`
-snds_name=`nvram get snds_name`
+sdns_name=`nvram get sdns_name`
 sdns_port=`nvram get sdns_port`
 sdns_tcp_server=`nvram get sdns_tcp_server`
 sdns_ipv6_server=`nvram get sdns_ipv6_server`
-snds_ip_change=`nvram get snds_ip_change`
-snds_ipv6=`nvram get snds_ipv6`
+sdns_ip_change=`nvram get sdns_ip_change`
+sdns_ipv6=`nvram get sdns_ipv6`
 sdns_www=`nvram get sdns_www`
 sdns_exp=`nvram get sdns_exp`
-snds_redirect=`nvram get snds_redirect`
-snds_cache=`nvram get snds_cache`
+sdns_redirect=`nvram get sdns_redirect`
+sdns_cache=`nvram get sdns_cache`
 sdns_ttl=`nvram get sdns_ttl`
 sdns_ttl_min=`nvram get sdns_ttl_min`
 sdns_ttl_max=`nvram get sdns_ttl_max`
@@ -62,7 +62,7 @@ get_tz()
 gensmartconf(){
 rm -f $SMARTDNS_CONF
 touch $SMARTDNS_CONF
-echo "server-name $snds_name" >> $SMARTDNS_CONF
+echo "server-name $sdns_name" >> $SMARTDNS_CONF
 	if [ "$sdns_ipv6_server" = "1" ]; then
 		echo "bind" "[::]:$sdns_port" >> $SMARTDNS_CONF
 	else
@@ -76,24 +76,24 @@ echo "server-name $snds_name" >> $SMARTDNS_CONF
 		fi
 	fi
 gensdnssecond
-echo "cache-size $snds_cache" >> $SMARTDNS_CONF
-if [ $snds_ip_change -eq 1 ];then
-echo "dualstack-ip-selection yes" >> $SMARTDNS_CONF
-echo "dualstack-ip-selection-threshold $(nvram get snds_ip_change_time)" >> $SMARTDNS_CONF
-elif [ $snds_ipv6 -eq 1 ];then
+echo "cache-size $sdns_cache" >> $SMARTDNS_CONF
+if [ $sdns_ipv6 -eq 1 ]; then
 echo "force-AAAA-SOA yes" >> $SMARTDNS_CONF
+elif [ $sdns_ip_change -eq 1 ]; then
+echo "dualstack-ip-selection yes" >> $SMARTDNS_CONF
+echo "dualstack-ip-selection-threshold $(nvram get sdns_ip_change_time)" >> $SMARTDNS_CONF
 fi
-if [ $sdns_www -eq 1 ];then
+if [ $sdns_www -eq 1 ]; then
 echo "prefetch-domain yes" >> $SMARTDNS_CONF
 else
 echo "prefetch-domain no" >> $SMARTDNS_CONF
 fi
-if [ $sdns_exp -eq 1 ];then
+if [ $sdns_exp -eq 1 ]; then
 echo "serve-expired yes" >> $SMARTDNS_CONF
 else
 echo "serve-expired no" >> $SMARTDNS_CONF
 fi
-echo "log-level info" >> $SMARTDNS_CONF
+echo "log-level error" >> $SMARTDNS_CONF
 listnum=`nvram get sdnss_staticnum_x`
 for i in $(seq 1 $listnum)
 do
@@ -149,7 +149,7 @@ fi
 if [ $sdnss_ipset != "" ]; then
 #ipset add gfwlist $sdnss_ipset 2>/dev/null
 CheckIPAddr $sdnss_ipset
-if [ "$?" == "1" ];then
+if [ "$?" == "1" ]; then
 echo "ipset /$sdnss_ipset/smartdns" >> $SMARTDNS_CONF
 else
 ipset add smartdns $sdnss_ipset 2>/dev/null
@@ -304,9 +304,9 @@ if [ "$sdns_coredump" = "1" ]; then
 	#fi
 $smartdns_file -f -c $SMARTDNS_CONF $args &>/dev/null &
 logger -t "SmartDNS" "SmartDNS启动成功"
-if [ $snds_redirect = "2" ]; then
+if [ $sdns_redirect = "2" ]; then
 		set_iptable $sdns_ipv6_server $sdns_tcp_server
-	elif [ $snds_redirect = "1" ]; then
+	elif [ $sdns_redirect = "1" ]; then
 		change_dns
 	fi
 
@@ -339,7 +339,7 @@ stop_smartdns(){
 rm -f /tmp/whitelist.conf
 rm -f /tmp/blacklist.conf
 smartdns_process=`pidof smartdns`
-if [ -n "$smartdns_process" ];then 
+if [ -n "$smartdns_process" ]; then 
 	logger -t "SmartDNS" "关闭smartdns进程..."
 	killall smartdns >/dev/null 2>&1
 	kill -9 "$smartdns_process" >/dev/null 2>&1
@@ -347,9 +347,9 @@ fi
 ipset -X smartdns 2>/dev/null
 del_dns
 clear_iptable $sdns_port $sdns_ipv6_server
-if [ "$snds_redirect" = "2" ]; then
+if [ "$sdns_redirect" = "2" ]; then
 		clear_iptable $sdns_port $sdns_ipv6_server
-	elif [ "$snds_redirect" = "1" ]; then
+	elif [ "$sdns_redirect" = "1" ]; then
 		del_dns
 	fi
 logger -t "SmartDNS" "SmartDNS已关闭"
