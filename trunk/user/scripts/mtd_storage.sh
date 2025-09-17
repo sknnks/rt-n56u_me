@@ -563,6 +563,8 @@ EOF
 # Custom user hosts file
 # Example:
 # 192.168.1.100		Boo
+192.168.2.1	my.k2
+192.168.2.1	p.to
 
 EOF
 		chmod 644 "$user_hosts"
