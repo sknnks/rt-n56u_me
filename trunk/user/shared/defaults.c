@@ -217,7 +217,7 @@ struct nvram_pair router_defaults[] = {
 	{ "wl_stream_tx", STR(BOARD_NUM_ANT_5G_TX) },
 	{ "wl_stream_rx", STR(BOARD_NUM_ANT_5G_RX) },
 	{ "wl_preamble", "1" },
-	{ "wl_greenap", "0" },
+	{ "wl_greenap", "1" },
 	{ "wl_ldpc", "2" },
 	{ "wl_HT_RDG", "0" },
 #if defined (USE_WID_5G) && USE_WID_5G==7615
