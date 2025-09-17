@@ -32,7 +32,7 @@
  *					The password may be specified in ethernet hex format\n"
  *					or dotted decimal (Internet address)\n"
  *		-p 00:22:44:66:88:aa\n"
- *		-p 192.168.1.1\n";
+ *		-p 192.168.2.1\n";
  *
  *
  *	This program generates and transmits a Wake-On-LAN (WOL) "Magic Packet",
