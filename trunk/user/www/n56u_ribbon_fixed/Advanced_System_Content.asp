@@ -183,7 +183,7 @@ function blanktest(obj, flag){
 
 function openLink(s) {
 	var link_params = "toolbar=yes,location=yes,directories=no,status=yes,menubar=yes,scrollbars=yes,resizable=yes,copyhistory=no,width=640,height=480";
-	var tourl = "http://ntp.org.cn";
+	var tourl = "http://ntp.org.cn/pool";
 	link = window.open(tourl, "NTPLink", link_params);
 	if (!link.opener) link.opener = self;
 }
