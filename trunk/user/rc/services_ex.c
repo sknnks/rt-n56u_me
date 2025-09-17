@@ -899,7 +899,7 @@ static const char *
 inadyn_checkip_url[] = {
 	"",
 	"checkip.dyndns.org /",
-	"checkip.dyndns.org:8245 /",
+	"ddns.oray.com /checkip",
 	"echo.tzo.com /",
 	"ip.dnsexit.com /",
 	"ip.changeip.com /",
