@@ -608,7 +608,7 @@ function checkDDNSReturnCode(){
                                                 <select name="ddns_checkip" class="input" onchange="disable_update();">
                                                     <option value="0" <% nvram_match_x("", "ddns_checkip", "0","selected"); %>><#DDNS_CheckIP_item0#></option>
                                                     <option value="1" <% nvram_match_x("", "ddns_checkip", "1","selected"); %>>checkip.dyndns.org</option>
-                                                    <option value="2" <% nvram_match_x("", "ddns_checkip", "2","selected"); %>>checkip.dyndns.org:8245</option>
+                                                    <option value="2" <% nvram_match_x("", "ddns_checkip", "2","selected"); %>>ddns.oray.com</option>
                                                     <option value="3" <% nvram_match_x("", "ddns_checkip", "3","selected"); %>>echo.tzo.com</option>
                                                     <option value="4" <% nvram_match_x("", "ddns_checkip", "4","selected"); %>>ip.dnsexit.com</option>
                                                     <option value="5" <% nvram_match_x("", "ddns_checkip", "5","selected"); %>>ip.changeip.com</option>
