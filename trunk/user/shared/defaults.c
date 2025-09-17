@@ -946,7 +946,7 @@ struct nvram_pair router_defaults[] = {
 	{ "fn2_action_long", "0" },
 #endif
 	{ "watchdog_cpu", "0" },
-	{ "front_led_all", "1" },
+	{ "front_led_all", "0" },
 	{ "front_led_wan", "2" },
 	{ "front_led_lan", "1" },
 	{ "front_led_wif", "1" },
