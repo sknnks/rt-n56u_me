@@ -172,7 +172,7 @@ struct nvram_pair router_defaults[] = {
 	{ "wl_closed", "0" },			/* Closed (hidden) network */
 	{ "wl_macmode", "disabled" },		/* "allow" only, "deny" only, or "disabled"(allow all) */
 	{ "wl_maclist", "" },			/* xx:xx:xx:xx:xx:xx ... */
-	{ "wl_wme", "0" },			/* WME mode (off|on) */
+	{ "wl_wme", "1" },			/* WME mode (off|on) */
 	{ "wl_wme_no_ack", "off" },		/* WME No-Acknowledgment mode */
 	{ "wl_auth_mode", "psk" },		/* Network authentication mode: WPAx Personal */
 	{ "wl_key", "1" },			/* Current WEP key */
@@ -184,7 +184,7 @@ struct nvram_pair router_defaults[] = {
 	{ "wl_mrate", "2" },			/* Mcast Rate */
 	{ "wl_crypto", "aes" },			/* WPA data encryption */
 	{ "wl_wpa_psk", DEF_WLAN_5G_PSK },			/* WPA pre-shared key */
-	{ "wl_wpa_gtk_rekey", "3600" },		/* GTK rotation interval */
+	{ "wl_wpa_gtk_rekey", "36000" },		/* GTK rotation interval */
 	{ "wl_radius_ipaddr", ""},		/* RADIUS server IP address */
 	{ "wl_radius_port", "1812" },		/* RADIUS server UDP port */
 	{ "wl_radius_key", "" },		/* RADIUS shared secret */
@@ -193,14 +193,14 @@ struct nvram_pair router_defaults[] = {
 	{ "wl_TxPower", "100" },
 	{ "wl_TxBurst", "1" },
 	{ "wl_PktAggregate", "1" },
-	{ "wl_APSDCapable", "0" },
+	{ "wl_APSDCapable", "1" },
 	{ "wl_HT_OpMode", "0" },
 #if BOARD_HAS_5G_11AC
 	{ "wl_HT_BW", "2" },
 #else
 	{ "wl_HT_BW", "1" },
 #endif
-	{ "wl_txbf", "1" },
+	{ "wl_txbf", "0" },
 	{ "wl_ssid2",  DEF_WLAN_5G_SSID },
 	{ "wl_mode_x", "0" },
 	{ "wl_wdsapply_x", "0" },
@@ -278,17 +278,17 @@ struct nvram_pair router_defaults[] = {
 	{ "rt_HT_BW", "1" },
 	{ "rt_HT_EXTCHA", "1" },
 	{ "rt_HT_OpMode", "0" },
-	{ "rt_wme", "0" },
+	{ "rt_wme", "1" },
 	{ "rt_wme_no_ack", "off" },
 	{ "rt_IgmpSnEnable", "1" },
 	{ "rt_TxPower", "100" },
 	{ "rt_TxBurst", "1" },
 	{ "rt_PktAggregate", "1" },
-	{ "rt_APSDCapable", "0" },
+	{ "rt_APSDCapable", "1" },
 	{ "rt_auth_mode", "psk" },
 	{ "rt_crypto", "aes" },
 	{ "rt_wpa_psk", DEF_WLAN_2G_PSK },
-	{ "rt_wpa_gtk_rekey", "3600" },
+	{ "rt_wpa_gtk_rekey", "36000" },
 	{ "rt_key", "1" },
 	{ "rt_key_type", "0" } ,
 	{ "rt_key1", "" },
@@ -300,7 +300,7 @@ struct nvram_pair router_defaults[] = {
 	{ "rt_radius_key", "" },
 	{ "rt_radio_x", "1" },
 	{ "rt_ssid2", DEF_WLAN_2G_SSID },
-	{ "rt_mode_x", "0" },
+	{ "rt_mode_x", "4" },
 	{ "rt_wdsapply_x", "0" },
 	{ "rt_wdsnum_x", "0" },
 	{ "rt_wep_x", "0" },
@@ -315,7 +315,7 @@ struct nvram_pair router_defaults[] = {
 	{ "rt_stream_tx", STR(BOARD_NUM_ANT_2G_TX) },
 	{ "rt_stream_rx", STR(BOARD_NUM_ANT_2G_RX) },
 	{ "rt_preamble", "1" },
-	{ "rt_greenap", "0" },
+	{ "rt_greenap", "1" },
 	{ "rt_ldpc", "0" },
 	{ "rt_HT_RDG", "0" },
 	{ "rt_HT_AMSDU", "0" },
@@ -509,7 +509,7 @@ struct nvram_pair router_defaults[] = {
 	{ "ip6_lan_sfpe", "4352" }, // 0x1100
 
 	{ "upnp_enable_x", "1" },
-	{ "upnp_proto", "0" },
+	{ "upnp_proto", "2" },
 	{ "upnp_secure", "1" },
 	{ "upnp_clean_min", "10" },
 	{ "upnp_clean_int", "600" },
@@ -786,10 +786,10 @@ struct nvram_pair router_defaults[] = {
 	{ "ddns_hostname2_x", "" },
 	{ "ddns_hostname3_x", "" },
 	{ "ddns_wildcard_x", "0" },
-	{ "ddns_cst_svr", "" },
-	{ "ddns_cst_url", "" },
-	{ "ddns_period", "24" },
-	{ "ddns_forced", "10" },
+	{ "ddns_cst_svr", "ddns.oray.com" },
+	{ "ddns_cst_url", "/ph/update?&hostname=" },
+	{ "ddns_period", "3" },
+	{ "ddns_forced", "7" },
 	{ "ddns_verbose", "1" },
 	{ "ddns_source", "0" },
 	{ "ddns_checkip", "0" },
@@ -879,7 +879,7 @@ struct nvram_pair router_defaults[] = {
 
 	{ "wol_mac_last", "" },
 	{ "gw_arp_ping", "0" },
-	{ "ez_action_short", "0" },
+	{ "ez_action_short", "9" },
 #if !defined(BOARD_GPIO_BTN_RESET)
 	{ "ez_action_long", "15" },	/* Reset */
 #else
@@ -893,7 +893,7 @@ struct nvram_pair router_defaults[] = {
 	{ "fn2_action_short", "0" },
 	{ "fn2_action_long", "0" },
 #endif
-	{ "watchdog_cpu", "1" },
+	{ "watchdog_cpu", "0" },
 	{ "front_led_all", "1" },
 	{ "front_led_wan", "2" },
 	{ "front_led_lan", "1" },
